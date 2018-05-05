@@ -97,11 +97,8 @@ var fragmentShaderSource = `
 
 
 
-function Surface(scene, projPos, enableForms, disableForms) {
+function Surface(scene) {
 	this.scene = scene;
-
-	this.enableForms = enableForms;
-	this.disableForms = disableForms;
 	
 	this.state = "Initializing";
 	var preGeometry = new THREE.CylinderGeometry(1, 1, 4, 512, 1, true);
@@ -171,7 +168,7 @@ function Surface(scene, projPos, enableForms, disableForms) {
 	
 	var uniforms = {
 		texture1: { type: "t", value: new THREE.TextureLoader().load('images/boundaries.png') },
-		projOrigin: { type: "v3", value: projPos },
+		projOrigin: { type: "v3", value: new THREE.Vector3(0.0, 0.0, 0.0) },
 		opacity: { type: "f", value: 1.0 },
 		keepVertices: { type: "i", value: 0 }
 	};
@@ -195,6 +192,9 @@ function Surface(scene, projPos, enableForms, disableForms) {
 	this.scene.add(this.earthCenter);	
 	
 	this.updateGeometry();
+	
+	this.enableForms = function(){};
+	this.disableForms = function(){};
 		
 	this.state = "Waiting";
 }
@@ -475,7 +475,7 @@ Surface.prototype.toggleRoll = function()
 {
 	if (this.state == "Rolling" || this.state == "Unrolling")
 	{
-		return;		
+		return;
 	}
 	else if (this.state == "Waiting")
 	{
@@ -495,12 +495,8 @@ Surface.prototype.setProjectionCenter = function(center)
 }
 
 
-Surface.prototype.show = function()
+Surface.prototype.setFormsCallbacks = function(enableForms, disableForms)
 {
-    this.scene.add(this.earthCenter);
-}
-
-Surface.prototype.hide = function()
-{
-    this.scene.remove(this.earthCenter);
+	this.enableForms = enableForms;
+	this.disableForms = disableForms;
 }
