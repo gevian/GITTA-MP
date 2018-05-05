@@ -1,0 +1,434 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			#web-gl-canvas {
+				width: 750px;
+				height: 750px;
+				
+				display: inline-block;
+			
+			}
+			
+			#controls {
+				display: inline-block;
+				vertical-align: top;
+			}
+		</style>
+	</head>
+	<body>
+		<div id ="controls">
+			  <form style="font-weight: normal" id="surface_geometry">
+				<fieldset>
+				<b>geometry</b>
+				<br>
+				<table>
+				 <tr>
+				  <td>axis length</td>
+				  <td><input id="axis_slider" class="slider" type="range"  min="0" max="4" step="0.01" value="4"/></td>
+				  <td><input id="axis_box"    class="box"    type="number" min="0" max="4" step="0.01" value="4"/><br></td>
+				 </tr>
+				 <tr>
+				  <td>upper radius</td>
+				  <td><input id="upper_radius_slider" class="slider" type="range"  min="0.01" max="4" step="0.01" value="1"/></td>
+				  <td><input id="upper_radius_box"    class="box"    type="number" min="0.01" max="4" step="0.01" value="1"/></td>
+				 </tr>
+				 <tr>
+				  <td>lower radius</td>
+				  <td><input id="lower_radius_slider" class="slider" type="range"  min="0.01" max="4" step="0.01" value="1"/></td>
+				  <td><input id="lower_radius_box"    class="box"    type="number" min="0.01" max="4" step="0.01" value="1"/></td>
+				 </tr>
+				 <tr>
+				  <td>offset</td>
+				  <td><input id="geometry_offset_slider" class="slider" type="range"  min="-2" max="2" step="0.01" value="0"/></td>
+				  <td><input id="geometry_offset_box"    class="box"    type="number" min="-2" max="2" step="0.01" value="0"/></td>
+				 </tr>
+				</table>
+				 </fieldset>
+			  </form>
+			  
+			  <form style="font-weight: normal" id="surface_orientation">
+				<fieldset>
+				  <b>orientation</b>
+				  <br>
+				  <table>
+				  <tr>
+					<td>lat&nbsp;[°]</td>
+					<td><input id="lat_slider" class="slider" type="range" min="-90" max="90" step="1" value="90"/></td>
+					<td><input id="lat_box"    class="box" type="number" min="-90" max="90" step="1" value="0"/><br></td>
+				  </tr>
+				  <tr>
+					<td>lon&nbsp;[°]</td>
+					<td><input id="lon_slider" class="slider" type="range" min="-180" max="180" step="1" value="0"/></td>
+					<td><input id="lon_box"    class="box" type="number" min="-180" max="180" step="1" value="0"/></td>
+				  </tr>
+				  <tr>
+					<td>rot&nbsp;[°]</td>
+					<td><input id="rot_slider" class="slider" type="range" min="0" max="180" step="1" value="0"/></td>
+					<td><input id="rot_box"    class="box" type="number" min="0" max="180" step="1" value="0"/></td>
+				  </tr>
+				  </table>
+				</fieldset>  
+			  </form>
+			  
+			  <form style="font-weight: normal" id="lightsource">
+				<fieldset>
+				  <b>light source</b>
+				  <br>
+				  <table>
+				 <tr>
+				  <td>offset</td>
+				  <td><input id="lightsource_offset_slider" class="slider" type="range"  min="-2" max="2" step="0.01" value="0"/></td>
+				  <td><input id="lightsource_offset_box"    class="box"    type="number" min="-2" max="2" step="0.01" value="0"/></td>
+				 </tr>
+				  </table>
+				</fieldset>
+			  </form>
+			  
+			  <form style="font-weight: normal" id="textures">
+				<fieldset>
+				  <b>texture</b>
+				  <br>
+				  <table>
+				 <tr>
+				  <td>borders</td>
+				  <td><input type="checkbox" id="borders-checkbox" onchange="bordersChanged()"><br></td>
+				 </tr>
+				 <tr>
+				  <td>graticule</td>
+				  <td><input type="checkbox" id="graticule-checkbox" onchange="graticuleChanged()"><br></td>
+				 </tr>
+				 <tr>
+				  <td>Tissots indicatrices</td>
+				  <td><input type="checkbox" id="tissot-checkbox" onchange="tissotChanged()"><br></td>
+				 </tr>
+				  </table>
+				</fieldset>  
+			  </form>
+				<table>
+				 <tr>
+				  <td><button type="button" id="roll-button" onclick="rollPressed()">unroll</button><br></td>
+				 </tr>
+				</table>
+		</div>
+		<div id="web-gl-canvas">
+		
+		</div>
+		<script src="js/three.js"></script>
+		<script src="js/TrackballControl.js"></script>
+		<script src="surface.js"></script>
+		<script>
+			var _this = this;
+		
+			document.getElementById("surface_orientation").reset();
+			document.getElementById("surface_geometry").reset();
+			document.getElementById("lightsource").reset();
+			document.getElementById("textures").reset();
+			
+			var glContainer = document.getElementById("web-gl-canvas");
+			var width  = glContainer.offsetWidth;
+			var height = glContainer.offsetHeight;
+			
+			var clock = new THREE.Clock();
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 75, width/height, 0.1, 1000 );
+
+			
+			camera.position.y = 5;
+			camera.position.z = 0;
+			
+			
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( width, height );
+
+			glContainer.appendChild( renderer.domElement );
+			var gl = renderer.getContext();
+			
+			var trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
+			
+			var light = new THREE.DirectionalLight( 0xeeeeee );
+			light.position.set( 1, 1, 1 ).normalize();
+			scene.add(light);
+			
+			this.scene.add(new THREE.AmbientLight(0x111111));
+			
+			//control light source to come 
+			this.trackballControls.addEventListener('change', function(){
+				var p = camera.position;
+				_this.light.position.set(p.x, p.y + 1,p.z);
+			});
+			
+			
+			function enableForms() {
+				var fieldsets = document.getElementsByTagName('fieldset');
+
+				for(var i = 0; i < fieldsets.length; i++) {
+					fieldsets[i].disabled = false;
+				}
+			}
+			
+			function disableForms() {
+				var fieldsets = document.getElementsByTagName('fieldset');
+
+				for(var i = 0; i < fieldsets.length; i++) {
+					fieldsets[i].disabled = true;
+				}
+			}
+			
+			var surface = new Surface(scene, new THREE.Vector3(0.0, 0.0, 0.0), enableForms, disableForms);
+
+			
+			var earthMesh =  new THREE.Mesh(
+								new THREE.SphereGeometry(1.0, 128, 128),
+								new THREE.MeshPhongMaterial({
+									map: new THREE.TextureLoader().load('images/boundaries.png'),
+									transparent: true,
+									opacity: 0.5,
+                                    side: THREE.DoubleSide,
+							   })
+						  );
+			
+			scene.add(earthMesh);
+			
+			
+			this.projectionCenter = new THREE.Mesh(new THREE.SphereGeometry(0.1, 32, 32),
+												  new THREE.MeshBasicMaterial({color: 0xffff00}));
+			
+			scene.add(this.projectionCenter);
+			
+			this.earthCenter = new THREE.Object3D();
+	
+			this.earthCenter.add(this.projectionCenter);
+			this.scene.add(this.earthCenter);	
+			
+			var axisHelper = new THREE.AxisHelper( 2 );
+			scene.add( axisHelper );
+			
+			/*
+			var sgeom = new THREE.SphereGeometry( 0.1, 32, 32 );
+			var smat = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+			var sphere = new THREE.Mesh( sgeom, smat );
+			sphere.position.set(0, 1, 0);
+			//scene.add( sphere );
+			
+
+			var geo = new THREE.EdgesGeometry( geometry, 0 ); // or WireframeGeometry( geometry )
+			var mat = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2, transparency: true } );
+			var wireframe = new THREE.LineSegments( geo, mat );
+			scene.add( wireframe );
+			*/
+			
+			camera.position.z = 5;
+
+			var startTime = new Date();
+			
+			
+			var animate = function () {
+				requestAnimationFrame( animate );
+
+				renderer.render(scene, camera);
+				
+				var delta = clock.getDelta();
+
+				trackballControls.update(delta);
+				this.surface.update(delta);
+			};
+
+			animate();
+			
+			
+			
+
+			function rollPressed() {
+				surface.toggleRoll();
+			}
+			
+						
+			this.latSlider = document.getElementById("lat_slider");
+			this.lonSlider = document.getElementById("lon_slider");
+			this.rotSlider = document.getElementById("rot_slider");
+
+			this.latBox = document.getElementById("lat_box");
+			this.lonBox = document.getElementById("lon_box");
+			this.rotBox = document.getElementById("rot_box");
+
+			this.latSlider.oninput = orientationSliderChanged;
+			this.lonSlider.oninput = orientationSliderChanged;
+			this.rotSlider.oninput = orientationSliderChanged;
+
+			this.latBox.oninput = orientationBoxChanged;
+			this.lonBox.oninput = orientationBoxChanged;
+			this.rotBox.oninput = orientationBoxChanged;
+			
+			
+
+			
+			function orientationSliderChanged(event) {
+			   _this.latBox.oninput = null;
+			   _this.lonBox.oninput = null;
+			   _this.rotBox.oninput = null;
+			   
+			   _this.latBox.value = latSlider.value;
+			   _this.lonBox.value = lonSlider.value;
+			   _this.rotBox.value = rotSlider.value;
+			   
+			   _this.latBox.oninput = orientationBoxChanged;
+			   _this.lonBox.oninput = orientationBoxChanged;
+			   _this.rotBox.oninput = orientationBoxChanged;
+			   
+			   var lat = (((_this.latSlider.value-90) / 360.0) * 2*Math.PI);
+			   var lon = ((_this.lonSlider.value / 360.0) * 2 * Math.PI);
+			   var rot = ((_this.rotSlider.value / 360.0) * 2*Math.PI);
+			   
+			   surface.setOrientation(lat, lon, rot);
+			   
+			   _this.earthCenter.rotation.z = lat;
+			   _this.earthCenter.rotation.y = lon;
+			   
+			   surface.setProjectionCenter(_this.projectionCenter.getWorldPosition());
+			}
+			
+			function orientationBoxChanged(event) {
+			   _this.latSlider.oninput = null;
+			   _this.lonSlider.oninput = null;
+			   _this.rotSlider.oninput = null;
+			   
+			   _this.latSlider.value = latBox.value;
+			   _this.lonSlider.value = lonBox.value;
+			   _this.rotSlider.value = rotBox.value;
+			   
+			   _this.latSlider.oninput = orientationSliderChanged;
+			   _this.lonSlider.oninput = orientationSliderChanged;
+			   _this.rotSlider.oninput = orientationSliderChanged;
+			   
+			   var lat = (((_this.latSlider.value-90) / 360.0) * 2*Math.PI);
+			   var lon = ((_this.lonSlider.value / 360.0) * 2 * Math.PI);
+			   var rot = ((_this.rotSlider.value / 360.0) * 2*Math.PI);
+			   
+			   surface.setOrientation(lat, lon, rot);
+			   
+			   _this.earthCenter.rotation.z = lat;
+			   _this.earthCenter.rotation.y = lon;
+			   
+			   surface.setProjectionCenter(_this.projectionCenter.getWorldPosition());
+			}
+					
+			this.axisSlider           = document.getElementById("axis_slider");
+			this.upperRadiusSlider    = document.getElementById("upper_radius_slider");
+			this.lowerRadiusSlider    = document.getElementById("lower_radius_slider");
+			this.geometryOffsetSlider = document.getElementById("geometry_offset_slider");
+			
+			this.axisBox              = document.getElementById("axis_box");
+			this.upperRadiusBox       = document.getElementById("upper_radius_box");
+			this.lowerRadiusBox       = document.getElementById("lower_radius_box");
+			this.geometryOffsetBox    = document.getElementById("geometry_offset_box");
+			
+			this.axisSlider.oninput = axisSliderChanged;
+			this.upperRadiusSlider.oninput = upperRadiusSliderChanged;
+			this.lowerRadiusSlider.oninput = lowerRadiusSliderChanged;
+			this.geometryOffsetSlider.oninput = geometryOffsetSliderChanged;
+			
+			this.axisBox.oninput = axisBoxChanged;
+			this.upperRadiusBox.oninput = upperRadiusBoxChanged;
+			this.lowerRadiusBox.oninput = lowerRadiusBoxChanged;
+			this.geometryOffsetBox.oninput = geometryOffsetBoxChanged;
+			
+			function axisSliderChanged(event) {
+				_this.axisBox.oninput = null;
+				_this.axisBox.value   = _this.axisSlider.value;
+				_this.axisBox.oninput = axisBoxChanged;
+				
+				surface.setAxisLength(_this.axisBox.value);
+			}
+			
+			
+			function axisBoxChanged(event) {
+				_this.axisSlider.oninput = null;
+				_this.axisSlider.value   = _this.axisBox.value;
+				_this.axisSlider.oninput = axisSliderChanged; 
+				
+				surface.setAxisLength(_this.axisBox.value);
+			}
+			
+			
+			function upperRadiusSliderChanged(event) {
+				_this.upperRadiusBox.oninput = null;
+				_this.upperRadiusBox.value   = _this.upperRadiusSlider.value;
+				_this.upperRadiusBox.oninput = upperRadiusBoxChanged;
+				
+				surface.setTopRadius(_this.upperRadiusBox.value);
+			}
+			
+			
+			function upperRadiusBoxChanged(event) {
+				_this.upperRadiusSlider.oninput = null;
+				_this.upperRadiusSlider.value   = _this.upperRadiusBox.value;
+				_this.upperRadiusSlider.oninput = upperRadiusSliderChanged; 
+				
+				surface.setTopRadius(_this.upperRadiusBox.value);
+			}
+			
+			function lowerRadiusSliderChanged(event) {
+				_this.lowerRadiusBox.oninput = null;
+				_this.lowerRadiusBox.value   = _this.lowerRadiusSlider.value;
+				_this.lowerRadiusBox.oninput = lowerRadiusBoxChanged;
+				
+				surface.setBottomRadius(_this.lowerRadiusBox.value);
+			}
+			
+			
+			function lowerRadiusBoxChanged(event) {
+				_this.lowerRadiusSlider.oninput = null;
+				_this.lowerRadiusSlider.value   = _this.lowerRadiusBox.value;
+				_this.lowerRadiusSlider.oninput = lowerRadiusSliderChanged; 
+				
+				surface.setBottomRadius(_this.lowerRadiusBox.value);
+			}
+			
+			
+			function geometryOffsetSliderChanged(event) {
+				_this.geometryOffsetBox.oninput = null;
+				_this.geometryOffsetBox.value   = _this.geometryOffsetSlider.value;
+				_this.geometryOffsetBox.oninput = geometryOffsetBoxChanged;
+				
+				surface.setGeometryOffset(_this.geometryOffsetBox.value);
+			}
+			
+			function geometryOffsetBoxChanged(event) {
+				_this.geometryOffsetSlider.oninput = null;
+				_this.geometryOffsetSlider.value   = _this.geometryOffsetBox.value;
+				_this.geometryOffsetSlider.oninput = geometryOffsetSliderChanged; 
+				
+				surface.setGeometryOffset(_this.geometryOffsetBox.value);
+			}
+			
+			this.lightSourceOffsetSlider = document.getElementById("lightsource_offset_slider");
+			this.lightSourceOffsetBox    = document.getElementById("lightsource_offset_box");
+			
+			this.lightSourceOffsetSlider.oninput = lightSourceOffsetSliderChanged;
+			this.lightSourceOffsetBox.oninput    = lightSourceOffsetBoxChanged;
+			
+			function lightSourceOffsetSliderChanged(event) {
+				_this.lightSourceOffsetBox.oninput = null;
+				_this.lightSourceOffsetBox.value   = _this.lightSourceOffsetSlider.value;
+				_this.lightSourceOffsetBox.oninput = lightSourceOffsetBoxChanged;
+				
+				_this.projectionCenter.position.y = _this.lightSourceOffsetBox.value;
+				
+			   surface.setProjectionCenter(_this.projectionCenter.getWorldPosition());
+			}
+			
+			function lightSourceOffsetBoxChanged(event) {
+				_this.lightSourceOffsetSlider.oninput = null;
+				_this.lightSourceOffsetSlider.value   = _this.lightSourceOffsetBox.value;
+				_this.lightSourceOffsetSlider.oninput = lightSourceOffsetSliderChanged; 
+				
+				_this.projectionCenter.position.y = _this.lightSourceOffsetBox.value;
+
+			   surface.setProjectionCenter(_this.projectionCenter.getWorldPosition());
+			}
+			
+		</script>
+	</body>
+</html>
