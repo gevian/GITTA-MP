@@ -1,7 +1,7 @@
 function ProjectionCenter(scene) {
 	this.scene = scene;
 	this.sphere = new THREE.Mesh(new THREE.SphereGeometry(0.1, 32, 32),
-										  new THREE.MeshBasicMaterial({color: 0xffff00}));
+								 new THREE.MeshBasicMaterial({color: 0xffff00}));
 
 	scene.add(this.sphere);
 

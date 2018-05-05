@@ -64,8 +64,8 @@
 				  </tr>
 				  <tr>
 					<td>rot&nbsp;[°]</td>
-					<td><input id="rot_slider" class="slider" type="range" min="0" max="180" step="1" value="0"/></td>
-					<td><input id="rot_box"    class="box" type="number" min="0" max="180" step="1" value="0"/></td>
+					<td><input id="rot_slider" class="slider" type="range" min="-180" max="180" step="1" value="0"/></td>
+					<td><input id="rot_box"    class="box" type="number" min="-180" max="180" step="1" value="0"/></td>
 				  </tr>
 				  </table>
 				</fieldset>  
@@ -120,7 +120,7 @@
 		<script src="glcanvas.js"></script>
 		<script src="surface.js"></script>
 		<script src="projectionCenter.js"></script>
-		<script src="cutLine.js"></script>
+		<script src="cutIndicator.js"></script>
 		
 		<script src="controls.js"></script>		
 
@@ -130,8 +130,9 @@
 		
 		var surface = new Surface(glcanvas.scene);
 		var projectionCenter = new ProjectionCenter(glcanvas.scene);
-
-		var controls = new Controls(surface, projectionCenter);
+		var cutIndicator = new CutIndicator(surface, glcanvas.scene);
+		
+		var controls = new Controls(surface, projectionCenter, cutIndicator);
 		controls.reset();
 			
 		var clock  = new THREE.Clock();
@@ -142,6 +143,7 @@
 
 			glcanvas.update(delta);
 			surface.update(delta);
+			cutIndicator.updateGeometry();
 		};
 
 		animate();

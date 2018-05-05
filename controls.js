@@ -1,8 +1,9 @@
-function Controls(surface, projectionCenter)
+function Controls(surface, projectionCenter, cutIndicator)
 {
 	var _this = this;		
 	this.surface = surface;
 	this.projectionCenter = projectionCenter;
+	this.cutIndicator = cutIndicator;
 	
 	this.surface.setFormsCallbacks(this.enableForms, this.disableForms);
 	
@@ -76,6 +77,7 @@ function Controls(surface, projectionCenter)
 	   _this.projectionCenter.setOrientation(lat, lon);
 	   
 	   _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
+	   _this.cutIndicator.updateGeometry();
 	}
 	
 	function orientationBoxChanged(event) {
@@ -99,6 +101,7 @@ function Controls(surface, projectionCenter)
 	   _this.projectionCenter.setOrientation(lat, lon);
 	   
 	   _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
+	   _this.cutIndicator.updateGeometry();
 	}
 			
 
@@ -108,6 +111,7 @@ function Controls(surface, projectionCenter)
 		_this.axisBox.oninput = axisBoxChanged;
 		
 		_this.surface.setAxisLength(_this.axisBox.value);
+		_this.cutIndicator.updateGeometry();
 	}
 	
 	
@@ -117,6 +121,7 @@ function Controls(surface, projectionCenter)
 		_this.axisSlider.oninput = axisSliderChanged; 
 		
 		_this.surface.setAxisLength(_this.axisBox.value);
+		_this.cutIndicator.updateGeometry();
 	}
 	
 	
@@ -126,6 +131,7 @@ function Controls(surface, projectionCenter)
 		_this.upperRadiusBox.oninput = upperRadiusBoxChanged;
 		
 		_this.surface.setTopRadius(_this.upperRadiusBox.value);
+		_this.cutIndicator.updateGeometry();
 	}
 	
 	
@@ -135,6 +141,7 @@ function Controls(surface, projectionCenter)
 		_this.upperRadiusSlider.oninput = upperRadiusSliderChanged; 
 		
 		_this.surface.setTopRadius(_this.upperRadiusBox.value);
+		_this.cutIndicator.updateGeometry();
 	}
 	
 	function lowerRadiusSliderChanged(event) {
@@ -143,6 +150,7 @@ function Controls(surface, projectionCenter)
 		_this.lowerRadiusBox.oninput = lowerRadiusBoxChanged;
 		
 		_this.surface.setBottomRadius(_this.lowerRadiusBox.value);
+		_this.cutIndicator.updateGeometry();
 	}
 	
 	
@@ -152,6 +160,7 @@ function Controls(surface, projectionCenter)
 		_this.lowerRadiusSlider.oninput = lowerRadiusSliderChanged; 
 		
 		_this.surface.setBottomRadius(_this.lowerRadiusBox.value);
+		_this.cutIndicator.updateGeometry();
 	}
 	
 	
@@ -161,6 +170,7 @@ function Controls(surface, projectionCenter)
 		_this.geometryOffsetBox.oninput = geometryOffsetBoxChanged;
 		
 		_this.surface.setGeometryOffset(_this.geometryOffsetBox.value);
+		_this.cutIndicator.updateGeometry();
 	}
 	
 	function geometryOffsetBoxChanged(event) {
@@ -169,6 +179,7 @@ function Controls(surface, projectionCenter)
 		_this.geometryOffsetSlider.oninput = geometryOffsetSliderChanged; 
 		
 		_this.surface.setGeometryOffset(_this.geometryOffsetBox.value);
+		_this.cutIndicator.updateGeometry();
 	}
 	
 	function lightSourceOffsetSliderChanged(event) {
