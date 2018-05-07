@@ -92,15 +92,15 @@
 				  <table>
 				 <tr>
 				  <td>borders</td>
-				  <td><input type="checkbox" id="borders-checkbox" onchange="bordersChanged()"><br></td>
+				  <td><input type="checkbox" id="borders-checkbox" checked><br></td>
 				 </tr>
 				 <tr>
 				  <td>graticule</td>
-				  <td><input type="checkbox" id="graticule-checkbox" onchange="graticuleChanged()"><br></td>
+				  <td><input type="checkbox" id="graticule-checkbox" checked><br></td>
 				 </tr>
 				 <tr>
 				  <td>Tissots indicatrices</td>
-				  <td><input type="checkbox" id="tissot-checkbox" onchange="tissotChanged()"><br></td>
+				  <td><input type="checkbox" id="tissot-checkbox" checked><br></td>
 				 </tr>
 				  </table>
 				</fieldset>  
@@ -118,6 +118,7 @@
 		<script src="libs/TrackballControl.js"></script>
 		
 		<script src="glcanvas.js"></script>
+		<script src="earth.js"></script>
 		<script src="surface.js"></script>
 		<script src="projectionCenter.js"></script>
 		<script src="cutIndicator.js"></script>
@@ -128,11 +129,12 @@
 
 		var glcanvas = new GLCanvas("webgl_canvas");
 		
-		var surface = new Surface(glcanvas.scene);
+        var earth = new Earth(glcanvas.scene);
+		var surface = new Surface(glcanvas.scene, earth);
 		var projectionCenter = new ProjectionCenter(glcanvas.scene);
 		var cutIndicator = new CutIndicator(surface, glcanvas.scene);
 		
-		var controls = new Controls(surface, projectionCenter, cutIndicator);
+		var controls = new Controls(earth, surface, projectionCenter, cutIndicator);
 		controls.reset();
 			
 		var clock  = new THREE.Clock();

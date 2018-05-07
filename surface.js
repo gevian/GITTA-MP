@@ -22,7 +22,9 @@ var vertexShaderSource = `
 `;
 
 var fragmentShaderSource = `
-    uniform sampler2D texture1;
+    uniform sampler2D tCountries;
+    uniform sampler2D tGraticule;
+    uniform sampler2D tTissot;
 	
 	uniform vec3 projOrigin;
 	
@@ -31,7 +33,6 @@ var fragmentShaderSource = `
     varying vec4 globalPosition;
     varying vec4 globalPositionRolled;
 	
-	float SMALL_NUM = 0.00000001;
 	#define M_PI 3.1415926535897932384626433832795
 	float radius = 1.0;
 	
@@ -86,10 +87,20 @@ var fragmentShaderSource = `
 		float azimuthalNorm = (latlon[0]) / (2.0 * M_PI) + 0.5; 
 		float polarNorm = (latlon[1] / M_PI);
 		
-		gl_FragColor = texture2D(texture1, vec2(azimuthalNorm, polarNorm));
-		gl_FragColor[3] = opacity;
+        vec2 uv_comp = vec2(azimuthalNorm, polarNorm);
+                
+        vec4 color;
+        vec4 CCountries = texture2D(tCountries, uv_comp);
+        vec4 CGraticule = texture2D(tGraticule, uv_comp);
+        vec4 CTissot = texture2D(tTissot, uv_comp);
+        
+        color = CCountries;
+        color = vec4(color.rgb * color.a * (1.0 - CGraticule.a) + CGraticule.a * CGraticule.rgb, 1.0);
+        color = vec4(color.rgb * color.a * (1.0 - CTissot.a) + CTissot.a * CTissot.rgb, 1.0);
+        
+		gl_FragColor = vec4(color.rgb, opacity);
 		
-		//gl_FragColor = vec4(polarNorm, polarNorm, polarNorm, 1.0);
+		//gl_FragColor = vec4(azimuthalNorm, azimuthalNorm, azimuthalNorm, 1.0);
 	}
 `;
 
@@ -97,8 +108,9 @@ var fragmentShaderSource = `
 
 
 
-function Surface(scene) {
+function Surface(scene, earth) {
 	this.scene = scene;
+    this.earth = earth;
 	
 	this.state = "Initializing";
 	var preGeometry = new THREE.CylinderGeometry(1, 1, 4, 512, 1, true);
@@ -164,15 +176,20 @@ function Surface(scene) {
 	this.overallT = 0;
 	this.remainingQuadsFloat = 0;
 	
-	
-	
+    this.countriesTexture = new THREE.TextureLoader().load('images/Countries.png');
+    this.tissotTexture    = new THREE.TextureLoader().load('images/Tissot.png');
+    this.graticuleTexture = new THREE.TextureLoader().load('images/Graticule.png');
+    this.emptyTexture     = new THREE.TextureLoader().load('images/Empty.png');
+    
 	var uniforms = {
-		texture1: { type: "t", value: new THREE.TextureLoader().load('images/boundaries.png') },
+		tCountries: { type: "t", value: this.countriesTexture },
+		tGraticule: { type: "t", value: this.graticuleTexture },
+		tTissot:    { type: "t", value: this.tissotTexture },
 		projOrigin: { type: "v3", value: new THREE.Vector3(0.0, 0.0, 0.0) },
-		opacity: { type: "f", value: 1.0 },
+		opacity:    { type: "f", value: 1.0 },
 		keepVertices: { type: "i", value: 0 }
 	};
-	
+    
     this.scene = scene; 
 	
     this.frontMaterial = new THREE.ShaderMaterial( {
@@ -500,3 +517,38 @@ Surface.prototype.setFormsCallbacks = function(enableForms, disableForms)
 	this.enableForms = enableForms;
 	this.disableForms = disableForms;
 }
+
+Surface.prototype.enableBordersTexture = function()
+{
+    this.mesh.material.uniforms.tCountries.value = this.countriesTexture;
+}
+
+Surface.prototype.disableBordersTexture = function()
+{
+    this.mesh.material.uniforms.tCountries.value = this.emptyTexture;    
+}
+
+Surface.prototype.enableGraticuleTexture = function()
+{
+    this.mesh.material.uniforms.tGraticule.value = this.graticuleTexture;
+}
+
+Surface.prototype.disableGraticuleTexture = function()
+{
+    this.mesh.material.uniforms.tGraticule.value = this.emptyTexture;    
+}
+
+Surface.prototype.enableTissotTexture = function()
+{
+    this.mesh.material.uniforms.tTissot.value = this.tissotTexture;
+}
+
+Surface.prototype.disableTissotTexture = function()
+{
+    this.mesh.material.uniforms.tTissot.value = this.emptyTexture;    
+}
+
+
+
+
+

@@ -1,6 +1,7 @@
-function Controls(surface, projectionCenter, cutIndicator)
+function Controls(earth, surface, projectionCenter, cutIndicator)
 {
-	var _this = this;		
+	var _this = this;
+    this.earth = earth;	
 	this.surface = surface;
 	this.projectionCenter = projectionCenter;
 	this.cutIndicator = cutIndicator;
@@ -28,6 +29,11 @@ function Controls(surface, projectionCenter, cutIndicator)
 	this.lightSourceOffsetSlider = document.getElementById("lightsource_offset_slider");
 	this.lightSourceOffsetBox    = document.getElementById("lightsource_offset_box");
 	
+	this.bordersCheckbox   = document.getElementById("borders-checkbox");
+	this.graticuleCheckbox = document.getElementById("graticule-checkbox");
+	this.tissotCheckbox    = document.getElementById("tissot-checkbox");
+    
+    
 	this.latSlider.oninput = orientationSliderChanged;
 	this.lonSlider.oninput = orientationSliderChanged;
 	this.rotSlider.oninput = orientationSliderChanged;
@@ -49,6 +55,11 @@ function Controls(surface, projectionCenter, cutIndicator)
 	this.lightSourceOffsetSlider.oninput = lightSourceOffsetSliderChanged;
 	this.lightSourceOffsetBox.oninput    = lightSourceOffsetBoxChanged;
 	
+	this.bordersCheckbox.onclick   = bordersChanged;
+	this.graticuleCheckbox.onclick = graticuleChanged;
+	this.tissotCheckbox.onclick    = tissotChanged;
+    
+    
 	this.rollButton = document.getElementById("roll-button");
 	this.rollButton.onclick = rollClicked;
 	
@@ -199,7 +210,47 @@ function Controls(surface, projectionCenter, cutIndicator)
 		_this.projectionCenter.setOffset(_this.lightSourceOffsetBox.value);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
 	}
-	
+    
+    function bordersChanged(event) {        
+        if (_this.bordersCheckbox.checked)
+        {
+            _this.earth.enableBordersTexture();
+            _this.surface.enableBordersTexture();
+        }
+        else
+        {
+            _this.earth.disableBordersTexture();
+            _this.surface.disableBordersTexture();
+        }
+        
+    }
+    
+    function graticuleChanged(event) {
+        if (_this.graticuleCheckbox.checked)
+        {
+            _this.earth.enableGraticuleTexture();
+            _this.surface.enableGraticuleTexture();
+        }
+        else
+        {
+            _this.earth.disableGraticuleTexture();
+            _this.surface.disableGraticuleTexture();
+        }
+    }
+    
+    function tissotChanged(event) {
+        if (_this.tissotCheckbox.checked)
+        {
+            _this.earth.enableTissotTexture();
+            _this.surface.enableTissotTexture();
+        }
+        else
+        {
+            _this.earth.disableTissotTexture();
+            _this.surface.disableTissotTexture();
+        }
+    }
+
 }
 
 Controls.prototype.reset = function()

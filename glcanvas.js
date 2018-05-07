@@ -32,6 +32,7 @@ function GLCanvas(canvas_id)
 		_this.light.position.set(p.x, p.y + 1,p.z);
 	});
 
+    /*
 	this.earthMesh =  new THREE.Mesh(
 						new THREE.SphereGeometry(1.0, 128, 128),
 						new THREE.MeshPhongMaterial({
@@ -43,7 +44,7 @@ function GLCanvas(canvas_id)
 				  );
 
 	this.scene.add(this.earthMesh);
-
+    */
 
 	//var axisHelper = new THREE.AxisHelper( 2 );
 	//scene.add( axisHelper );
