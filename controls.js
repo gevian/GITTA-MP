@@ -268,6 +268,11 @@ Controls.prototype.enableForms = function()
 	for(var i = 0; i < fieldsets.length; i++) {
 		fieldsets[i].disabled = false;
 	}
+	
+	var rollButton = document.getElementById("roll-button");
+	
+	rollButton.innerHTML = "unroll";
+	
 }
 
 Controls.prototype.disableForms = function()
@@ -277,4 +282,74 @@ Controls.prototype.disableForms = function()
 	for(var i = 0; i < fieldsets.length; i++) {
 		fieldsets[i].disabled = true;
 	}
+	
+	var rollButton = document.getElementById("roll-button");
+	
+	rollButton.innerHTML = "roll";
+	
 }
+
+
+Controls.prototype.setProjection = function(name)
+{
+	if (name == "gnomonic")
+	{
+		this.axisSlider.value = 0;
+		this.axisSlider.oninput();
+		this.upperRadiusSlider.value = 0.01;
+		this.upperRadiusSlider.oninput();
+		this.lowerRadiusSlider.value = 4;
+		this.lowerRadiusSlider.oninput();
+		this.geometryOffsetSlider.value = 1;
+		this.geometryOffsetSlider.oninput();
+		this.lightSourceOffsetSlider.value = 0;
+		this.lightSourceOffsetSlider.oninput();
+	}
+	
+}
+
+Controls.prototype.resetControls = function()
+{
+	this.setProjection("gnomonic");
+	
+	this.latSlider.value = 90;
+	this.latSlider.oninput();
+	this.lonSlider.value = 0;
+	this.lonSlider.oninput();
+	this.rotSlider.value = 0;
+	this.rotSlider.oninput();
+	
+	this.bordersCheckbox.checked = true;
+	this.bordersCheckbox.onclick();
+	this.graticuleCheckbox.checked = true;
+	this.graticuleCheckbox.onclick();
+	this.tissotCheckbox.checked = false;
+	this.tissotCheckbox.onclick();
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

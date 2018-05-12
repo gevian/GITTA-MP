@@ -14,6 +14,49 @@
 				display: inline-block;
 				vertical-align: top;
 			}
+						
+			#explanation {
+				display: inline-block;
+				vertical-align: top;
+				width: 500px;
+			}
+						
+			 /* Style the tab */
+			.tab {
+				overflow: hidden;
+				border: 1px solid #ccc;
+				background-color: #f1f1f1;
+			}
+
+			/* Style the buttons that are used to open the tab content */
+			.tab button {
+				background-color: inherit;
+				float: left;
+				border: none;
+				outline: none;
+				cursor: pointer;
+				padding: 14px 16px;
+				transition: 0.3s;
+			}
+
+			/* Change background color of buttons on hover */
+			.tab button:hover {
+				background-color: #ddd;
+			}
+
+			/* Create an active/current tablink class */
+			.tab button.active {
+				background-color: #ccc;
+			}
+
+			/* Style the tab content */
+			.tabcontent {
+				display: none;
+				padding: 6px 12px;
+				border: 1px solid #ccc;
+				border-top: none;
+			} 
+			
 		</style>
 	</head>
 	<body>
@@ -35,8 +78,8 @@
 				 </tr>
 				 <tr>
 				  <td>lower radius</td>
-				  <td><input id="lower_radius_slider" class="slider" type="range"  min="0.01" max="4" step="0.01" value="1"/></td>
-				  <td><input id="lower_radius_box"    class="box"    type="number" min="0.01" max="4" step="0.01" value="1"/></td>
+				  <td><input id="lower_radius_slider" class="slider" type="range"  min="0.01" max="8" step="0.01" value="1"/></td>
+				  <td><input id="lower_radius_box"    class="box"    type="number" min="0.01" max="8" step="0.01" value="1"/></td>
 				 </tr>
 				 <tr>
 				  <td>offset</td>
@@ -55,7 +98,7 @@
 				  <tr>
 					<td>lat&nbsp;[°]</td>
 					<td><input id="lat_slider" class="slider" type="range" min="-90" max="90" step="1" value="90"/></td>
-					<td><input id="lat_box"    class="box" type="number" min="-90" max="90" step="1" value="0"/><br></td>
+					<td><input id="lat_box"    class="box" type="number" min="-90" max="90" step="1" value="90"/><br></td>
 				  </tr>
 				  <tr>
 					<td>lon&nbsp;[°]</td>
@@ -78,8 +121,8 @@
 				  <table>
 				 <tr>
 				  <td>offset</td>
-				  <td><input id="lightsource_offset_slider" class="slider" type="range"  min="-2" max="2" step="0.01" value="0"/></td>
-				  <td><input id="lightsource_offset_box"    class="box"    type="number" min="-2" max="2" step="0.01" value="0"/></td>
+				  <td><input id="lightsource_offset_slider" class="slider" type="range"  min="-2000" max="2000" step="0.01" value="0"/></td>
+				  <td><input id="lightsource_offset_box"    class="box"    type="number" min="-2000" max="2000" step="0.01" value="0"/></td>
 				 </tr>
 				  </table>
 				</fieldset>
@@ -92,15 +135,15 @@
 				  <table>
 				 <tr>
 				  <td>borders</td>
-				  <td><input type="checkbox" id="borders-checkbox" checked><br></td>
+				  <td><input type="checkbox" id="borders-checkbox" checked=""><br></td>
 				 </tr>
 				 <tr>
 				  <td>graticule</td>
-				  <td><input type="checkbox" id="graticule-checkbox" checked><br></td>
+				  <td><input type="checkbox" id="graticule-checkbox" checked=""><br></td>
 				 </tr>
 				 <tr>
 				  <td>Tissots indicatrices</td>
-				  <td><input type="checkbox" id="tissot-checkbox" checked><br></td>
+				  <td><input type="checkbox" id="tissot-checkbox" checked=""><br></td>
 				 </tr>
 				  </table>
 				</fieldset>  
@@ -112,7 +155,95 @@
 				</table>
 		</div>
 		<div id="webgl_canvas"></div>
-		
+		<div id="explanation">
+			 <!-- Tab links -->
+			<div class="tab">
+			  <button id="defaultTabButton" class="tablinks" onclick="openTab(event, 'General')">Map Construction</button>
+			  <button class="tablinks" onclick="openTab(event, 'Tutorial_I')">Projection Surfaces</button>
+			  <button class="tablinks" onclick="openTab(event, 'Tutorial_II')">Properties of Map Projections</button>
+			</div>
+
+			<!-- Tab content -->
+			<div id="General" class="tabcontent">
+			The intention of this web application is to demonstrate the construction of map projections and to showcase their properties. On the left side of the application, you find the controls panel to adjust the parameters of the different objects present in the 3D-scene in the center of this application. To navigate within the 3D-scene, use the left mouse button to rotate, the right mouse button to pan and the middle mouse button to zoom.
+			 <font color="red">If you want to resort to the default settings, use the reset-button in the control panel.</font>
+			
+			<br> A common approach to construct map projections this makes use of three geometric objects:
+			
+			 <ul>
+			  <li> A simplified representation of the earth, typically in the shape of a sphere or a spheroid.</li>
+			  <li> A projection center, typically represented as a point.</li>
+			  <li> A projection surface, typically in the shape of a plane, cylinder or cone.</li>
+			 </ul>
+			
+			In the simplest case, the map surface is directly represented as a flat plane as shown by default when opening this web application. If the settings were changed, you can click the button below to reset them.
+			
+			  <br><button onclick="controls.resetControls()">Reset</button><br>
+			
+			As you can see, the projection surface is currently a flat disk, touching the earth at the North Pole. The projection center is located at the center of the earth, represented as a yellow sphere. The earth can be imagined as a sphere of painted glass, effectively coloring each ray according to the color of the glass where the ray intersects it. The rays then paint the projection surface according to their color.
+			<br>
+			 <font color="red">
+			  Left-click on the earth to visualize the ray originating from the projection center and passing the clicked location. Note how some rays hit the surface while some do not.  
+			 </font>
+			<br>
+			Alternatively, click the following button to move the camera to the position of the projection center. Note how the borders of the sphere and the borders painted on the projection surface start to coincide. Move the camera slightly to emphasize this effect.
+			
+			  <br><button onclick="controls.moveCameraToProjectionCenter()">Move Camera to Projection Center</button><br>
+			  
+			<br>
+			The position of the projection center is an important aspect when constructing map projections. This can be adjusted by changing the "offset" value in the "light source" section of the controls panel. Observe how different positions of the projection center change the resulting projection and the geometry of the rays.
+			<br>
+			
+			Now that you learned the basics of how map projections are constructed, move on to the next section by clicking on the tab "Projection Surfaces" at the top of this panel or click the button below.
+			
+			  <br><button onclick="controls.moveCameraToProjectionCenter()">Projection Surfaces</button><br>
+			  
+			</div>
+
+			<div id="Tutorial_I" class="tabcontent">
+				
+				Typically, three different projection surfaces are used: The plane, the cylinder and the cone. A projection based on the plane is shown by default when starting this web application. If the settings have been modified, you can use the following button to enable the default settings.
+				
+					<br><button onclick="controls.resetControls()">Reset</button><br>
+				
+				Adjust the "lat" and "lon" values under the "orientation" section of the controls panel to investigate how different positions of the plane affect the resulting projection. Use the buttons below to construct a cylinder and a cone, respectively.
+				
+					<br>
+					<button onclick="controls.resetControls()">Cylinder</button>
+					<button onclick="controls.resetControls()">Cone</button>
+					<br>
+				
+				While the plane is flat by default and hence can be used as a map out-of-the-box once the projection has been calculated, the cylinder and the cone need to be unrolled first to obtain their flat, two-dimensional form. To construct the flat representation based on the current orientation, use the "unroll" button in the controls panel to flatten the surface. Once flattend, use the same button (not labeled "roll") to obtain the original three-dimensional form. The location where these cylinders are "cut" can be adjusted with the "rot" value in the "orientation" section of the controls panel. The cut location is indicated by a red sphere.<br>
+				
+				It is interesting to know that these three projection surfaces, the plane, the  cylinder and the plane can be interpreted as special cases of the conical frustum. Use the following button to construct an open conical frustum (i.e., a conical frustum without caps on top and bottom). 
+				
+					<br><button onclick="controls.resetControls()">Frustum</button><br>
+
+				Based on this surface, you can use the following ways to adjust the parameters in the control panel to construct the three common projection surfaces.
+					
+				 <ul>
+				  <li> To construct a plane, set the "axis length" to 0, the "upper radius" to 0.01 and the "lower radius" to a value greater 0.01 such as 4 and the offset to 1.</li>
+				  <li> To construct a cone, set the "upper radius" to 0.01, the "lower radius" to a value greater 0.01 such as 4 and the axis length to a value greater 0 such as 4 and the offset to 1.</li>
+				  <li> To construct a cylinder, set the "upper radius" equal the "lower radius" with a value such as 1 and the "axis length" to a value greater 0 such as 4 and the offset to 0.</li>
+				 </ul>
+				
+				Make yourself familiar with these parameters and how they influence the geometry of the projectoin surface.
+				<br>
+				
+				Now that you learned about the three common projection surfaces and their connection, move on to the next section by clicking on the tab "Properties of Map Projections" at the top of this panel or click on the button below.
+					<br><button onclick="controls.resetControls()">Properties of Map Projections</button><br>				
+			</div>
+
+			<div id="Tutorial_II" class="tabcontent">
+				Each map projection distorts the surface of the earth. Although these distortions can be precisly mathematically quantified, a more intuitive approach to these distortions can be followed using Tissot's indicatrix. Tissot's indicatrix is a graphical means to analyze such distortions and can be enabled by ticking the box labeled "Tissots indicatrices" in the "texture" section of the controls panel.
+				
+				<br>
+				
+				Tissot's indicatrices can be interpreted as circles covering the earth's surface. On the earth, each circle covers the same extent and has the very same diameter in all directions. However, investigating the shape of the indicatrices on a projection surface, one can observe several ways in which they are being distorted.
+				
+				
+			</div> 
+		</div>
 		
 		<script src="libs/three.js"></script>
 		<script src="libs/TrackballControl.js"></script>
@@ -149,7 +280,35 @@
 		};
 
 		animate();
-			
+		
+
+
+		// tabs
+		
+		function openTab(evt, tabName) {
+			// Declare all variables
+			var i, tabcontent, tablinks;
+
+			// Get all elements with class="tabcontent" and hide them
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+
+			// Get all elements with class="tablinks" and remove the class "active"
+			tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", "");
+			}
+
+			// Show the current tab, and add an "active" class to the button that opened the tab
+			document.getElementById(tabName).style.display = "block";
+			evt.currentTarget.className += " active";
+		}
+		
+		document.getElementById("defaultTabButton").click();
+		
+		
 		</script>
 	</body>
 </html>
