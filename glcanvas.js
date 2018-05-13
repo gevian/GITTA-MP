@@ -1,12 +1,13 @@
 function GLCanvas(canvas_id)
 {
 	var _this = this;
-	
+
 	this.glContainer = document.getElementById(canvas_id);
 	this.width  = this.glContainer.offsetWidth;
 	this.height = this.glContainer.offsetHeight;
 
 	this.scene  = new THREE.Scene();
+	this.scene.background = new THREE.Color("#FFFAE2");
 	this.camera = new THREE.PerspectiveCamera( 75, this.width/this.height, 0.1, 1000 );
 
 	this.camera.position.y = 5;
