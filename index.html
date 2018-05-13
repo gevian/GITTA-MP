@@ -160,7 +160,7 @@
 			<div class="tab">
 			  <button id="defaultTabButton" class="tablinks" onclick="openTab(event, 'General')">Map Construction</button>
 			  <button class="tablinks" onclick="openTab(event, 'Tutorial_I')">Projection Surfaces</button>
-			  <button class="tablinks" onclick="openTab(event, 'Tutorial_II')">Properties of Map Projections</button>
+			  <button class="tablinks" onclick="openTab(event, 'Tutorial_II')">Distortions</button>
 			</div>
 
 			<!-- Tab content -->
@@ -239,10 +239,24 @@
 				
 				<br>
 				
-				Tissot's indicatrices can be interpreted as circles covering the earth's surface. On the earth, each circle covers the same extent and has the very same diameter in all directions. However, investigating the shape of the indicatrices on a projection surface, one can observe several ways in which they are being distorted.
+				Tissot's indicatrices can be interpreted as circles covering the earth's surface. On the earth, each circle covers the same extent and has the very same diameter in all directions. However, investigating the shape of the indicatrices on a projection surface, allows one to understand how the features on the earth's surface are distorted. Specifically, one may want to investigate the following properties of Tissots indicatrix:
+				<br>
+				Tissots indicatrix forms a perfect circle: In such a case, the map projection preserves the angles encountered on the earth's surface. This means that an angle measured on the map is identical to the angle measured on the respective location on the earth's surface. This property is particular of interest for navigation purposes. A map with this property is also called "conformal". Use the following button to construct the conformal "sterographic azimuthal" projection:
 				
+					<br><button onclick="controls.resetControls()">Stereographic Azimuthal Projection</button><br>		
 				
-			</div> 
+				<br>
+				The elongation along one axis of Tissots indicatrix is constant along specific lines (e.g., meridians or standard parallels): In this case, the map projection preserves distances along such lines. This means that measuring distances along one of these lines is directly proportional to the distance of the earth's surface along this line given a specific scale. A map with this property is also called "equidistant". Use the following button to construct the equidistant central cylindrical projection:
+				
+					<br><button onclick="controls.resetControls()">Central Cylindrical Projection</button><br>		
+				
+				<br>
+				Tissots indicatrices are shaped differently but show the same size: In such a case, the map projection preserves the areas of features of the earth's surface. Although the shape of countries, for example, are highly distorted, they cover the same area as in the real world (given a certain scaling factor). A map with such a property is also called "equal-area". Sadly, the tool currently does not support the construction of an equal-area map projection.
+				<br>
+				
+				 Apart from these main properties of map projections, specifically the term "compromising" can be found in the literature, denoting map projections which reduce the distortions mentioned above while not entirely eliminating any of them.
+				
+			</div>
 		</div>
 		
 		<script src="libs/three.js"></script>
