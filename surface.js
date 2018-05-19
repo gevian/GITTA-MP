@@ -82,25 +82,32 @@ var fragmentShaderSource = `
     void main() {
 		vec3 p = point_on_sphere(projOrigin, globalPositionRolled.xyz);
 		
-		vec2 latlon = xyz2latlon(p);
+		if (p.x < -999.0)
+		{
+			gl_FragColor = vec4(0.5, 0.5, 0.5, opacity);
+		}
+		else
+		{
+			vec2 latlon = xyz2latlon(p);
 
-		float azimuthalNorm = (latlon[0]) / (2.0 * M_PI) + 0.5; 
-		float polarNorm = (latlon[1] / M_PI);
-		
-        vec2 uv_comp = vec2(azimuthalNorm, polarNorm);
-                
-        vec4 color;
-        vec4 CCountries = texture2D(tCountries, uv_comp);
-        vec4 CGraticule = texture2D(tGraticule, uv_comp);
-        vec4 CTissot = texture2D(tTissot, uv_comp);
-        
-        color = CCountries;
-        color = vec4(color.rgb * color.a * (1.0 - CGraticule.a) + CGraticule.a * CGraticule.rgb, 1.0);
-        color = vec4(color.rgb * color.a * (1.0 - CTissot.a) + CTissot.a * CTissot.rgb, 1.0);
-        
-		gl_FragColor = vec4(color.rgb, opacity);
-		
-		//gl_FragColor = vec4(azimuthalNorm, azimuthalNorm, azimuthalNorm, 1.0);
+			float azimuthalNorm = (latlon[0]) / (2.0 * M_PI) + 0.5; 
+			float polarNorm = (latlon[1] / M_PI);
+			
+			vec2 uv_comp = vec2(azimuthalNorm, polarNorm);
+					
+			vec4 color;
+			vec4 CCountries = texture2D(tCountries, uv_comp);
+			vec4 CGraticule = texture2D(tGraticule, uv_comp);
+			vec4 CTissot = texture2D(tTissot, uv_comp);
+			
+			color = CCountries;
+			color = vec4(color.rgb * color.a * (1.0 - CGraticule.a) + CGraticule.a * CGraticule.rgb, 1.0);
+			color = vec4(color.rgb * color.a * (1.0 - CTissot.a) + CTissot.a * CTissot.rgb, 1.0);
+			
+			gl_FragColor = vec4(color.rgb, opacity);
+			
+			//gl_FragColor = vec4(azimuthalNorm, azimuthalNorm, azimuthalNorm, 1.0);
+		}
 	}
 `;
 
