@@ -26,12 +26,12 @@ function Controls(earth, surface, projectionCenter, cutIndicator)
 	this.lowerRadiusBox       = document.getElementById("lower_radius_box");
 	this.geometryOffsetBox    = document.getElementById("geometry_offset_box");
 	
-	this.lightSourceVerticalOffsetSlider = document.getElementById("lightsource_vertical_offset_slider");
-	this.lightSourceVerticalOffsetBox    = document.getElementById("lightsource_vertical_offset_box");
-	this.lightSourceHorizontalOffsetSlider = document.getElementById("lightsource_horizontal_offset_slider");
-	this.lightSourceHorizontalOffsetBox    = document.getElementById("lightsource_horizontal_offset_box");
-	this.lightSourceRotationSlider = document.getElementById("lightsource_rotation_slider");
-	this.lightSourceRotationBox    = document.getElementById("lightsource_rotation_box");
+	this.lightSourceLatitudeSlider  = document.getElementById("lightsource_latitude_slider");
+	this.lightSourceLatitudeBox     = document.getElementById("lightsource_latitude_box");
+	this.lightSourceLongitudeSlider = document.getElementById("lightsource_longitude_slider");
+	this.lightSourceLongitudeBox    = document.getElementById("lightsource_longitude_box");
+	this.lightSourceOffsetSlider    = document.getElementById("lightsource_offset_slider");
+	this.lightSourceOffsetBox       = document.getElementById("lightsource_offset_box");
 	
 	this.bordersCheckbox   = document.getElementById("borders-checkbox");
 	this.graticuleCheckbox = document.getElementById("graticule-checkbox");
@@ -56,14 +56,14 @@ function Controls(earth, surface, projectionCenter, cutIndicator)
 	this.lowerRadiusBox.oninput = lowerRadiusBoxChanged;
 	this.geometryOffsetBox.oninput = geometryOffsetBoxChanged;
 	
-	this.lightSourceVerticalOffsetSlider.oninput = lightSourceVerticalOffsetSliderChanged;
-	this.lightSourceVerticalOffsetBox.oninput    = lightSourceVerticalOffsetBoxChanged;
+	this.lightSourceLatitudeSlider.oninput = lightSourceLatitudeSliderChanged;
+	this.lightSourceLatitudeBox.oninput    = lightSourceLatitudeBoxChanged;
 
-	this.lightSourceHorizontalOffsetSlider.oninput = lightSourceHorizontalOffsetSliderChanged;
-	this.lightSourceHorizontalOffsetBox.oninput    = lightSourceHorizontalOffsetBoxChanged;
+	this.lightSourceLongitudeSlider.oninput = lightSourceLongitudeSliderChanged;
+	this.lightSourceLongitudeBox.oninput    = lightSourceLongitudeBoxChanged;
 	
-	this.lightSourceRotationSlider.oninput = lightSourceRotationSliderChanged;
-	this.lightSourceRotationBox.oninput    = lightSourceRotationBoxChanged;
+	this.lightSourceOffsetSlider.oninput = lightSourceOffsetSliderChanged;
+	this.lightSourceOffsetBox.oninput    = lightSourceOffsetBoxChanged;
 	
 	
 	this.bordersCheckbox.onclick   = bordersChanged;
@@ -204,64 +204,68 @@ function Controls(earth, surface, projectionCenter, cutIndicator)
 		_this.cutIndicator.updateGeometry();
 	}
 	
-	function lightSourceVerticalOffsetSliderChanged(event) {
-		_this.lightSourceVerticalOffsetBox.oninput = null;
-		_this.lightSourceVerticalOffsetBox.value   = _this.lightSourceVerticalOffsetSlider.value;
-		_this.lightSourceVerticalOffsetBox.oninput = lightSourceVerticalOffsetBoxChanged;
+	function lightSourceOffsetSliderChanged(event) {
+		_this.lightSourceOffsetBox.oninput = null;
+		_this.lightSourceOffsetBox.value   = _this.lightSourceOffsetSlider.value;
+		_this.lightSourceOffsetBox.oninput = lightSourceOffsetBoxChanged;
 		
-		_this.projectionCenter.setVerticalOffset(_this.lightSourceVerticalOffsetBox.value);
+		_this.projectionCenter.setOffset(_this.lightSourceOffsetBox.value);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
 	}
 	
-	function lightSourceVerticalOffsetBoxChanged(event) {
-		_this.lightSourceVerticalOffsetSlider.oninput = null;
-		_this.lightSourceVerticalOffsetSlider.value   = _this.lightSourceVerticalOffsetBox.value;
-		_this.lightSourceVerticalOffsetSlider.oninput = lightSourceVerticalOffsetSliderChanged; 
+	function lightSourceOffsetBoxChanged(event) {
+		_this.lightSourceOffsetSlider.oninput = null;
+		_this.lightSourceOffsetSlider.value   = _this.lightSourceOffsetBox.value;
+		_this.lightSourceOffsetSlider.oninput = lightSourceOffsetSliderChanged; 
 		
-		_this.projectionCenter.setVerticalOffset(_this.lightSourceVerticalOffsetBox.value);
+		_this.projectionCenter.setOffset(_this.lightSourceOffsetBox.value);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
 	}
     
-	function lightSourceHorizontalOffsetSliderChanged(event) {
-		_this.lightSourceHorizontalOffsetBox.oninput = null;
-		_this.lightSourceHorizontalOffsetBox.value   = _this.lightSourceHorizontalOffsetSlider.value;
-		_this.lightSourceHorizontalOffsetBox.oninput = lightSourceHorizontalOffsetBoxChanged;
+	
+	function lightSourceLatitudeSliderChanged(event) {
+		_this.lightSourceLatitudeBox.oninput = null;
+		_this.lightSourceLatitudeBox.value   = _this.lightSourceLatitudeSlider.value;
+		_this.lightSourceLatitudeBox.oninput = lightSourceLatitudeBoxChanged;
 		
-		_this.projectionCenter.setHorizontalOffset(_this.lightSourceHorizontalOffsetBox.value);
+		var rot = ((_this.lightSourceLatitudeBox.value / 360) * 2 * Math.PI);
+		
+		_this.projectionCenter.setLatitude(rot);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
 	}
 	
-	function lightSourceHorizontalOffsetBoxChanged(event) {
-		_this.lightSourceHorizontalOffsetSlider.oninput = null;
-		_this.lightSourceHorizontalOffsetSlider.value   = _this.lightSourceHorizontalOffsetBox.value;
-		_this.lightSourceHorizontalOffsetSlider.oninput = lightSourceHorizontalOffsetSliderChanged; 
+	function lightSourceLatitudeBoxChanged(event) {
+		_this.lightSourceLatitudeSlider.oninput = null;
+		_this.lightSourceLatitudeSlider.value   = _this.lightSourceLatitudeBox.value;
+		_this.lightSourceLatitudeSlider.oninput = lightSourceLatitudeSliderChanged; 
 		
-		_this.projectionCenter.setHorizontalOffset(_this.lightSourceHorizontalOffsetBox.value);
+		var rot = ((_this.lightSourceLatitudeBox.value / 360) * 2 * Math.PI);
+		
+		_this.projectionCenter.setLatitude(rot);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
 	}
 	
-	function lightSourceRotationSliderChanged(event) {
-		_this.lightSourceRotationBox.oninput = null;
-		_this.lightSourceRotationBox.value   = _this.lightSourceRotationSlider.value;
-		_this.lightSourceRotationBox.oninput = lightSourceRotationBoxChanged;
+	function lightSourceLongitudeSliderChanged(event) {
+		_this.lightSourceLongitudeBox.oninput = null;
+		_this.lightSourceLongitudeBox.value   = _this.lightSourceLongitudeSlider.value;
+		_this.lightSourceLongitudeBox.oninput = lightSourceLongitudeBoxChanged;
 		
-		var rot = ((_this.lightSourceRotationBox.value / 360) * 2 * Math.PI);
+		var rot = ((_this.lightSourceLongitudeBox.value / 360) * 2 * Math.PI);
 		
-		_this.projectionCenter.setRotation(rot);
+		_this.projectionCenter.setLongitude(rot);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
 	}
 	
-	function lightSourceRotationBoxChanged(event) {
-		_this.lightSourceRotationSlider.oninput = null;
-		_this.lightSourceRotationSlider.value   = _this.lightSourceRotationBox.value;
-		_this.lightSourceRotationSlider.oninput = lightSourceRotationSliderChanged; 
+	function lightSourceLongitudeBoxChanged(event) {
+		_this.lightSourceLongitudeSlider.oninput = null;
+		_this.lightSourceLongitudeSlider.value   = _this.lightSourceRotationBox.value;
+		_this.lightSourceLongitudeSlider.oninput = lightSourceLongitudeSliderChanged; 
 		
-		var rot = ((_this.lightSourceRotationBox.value / 360) * 2 * Math.PI);
+		var rot = ((_this.lightSourceLongitudeBox.value / 360) * 2 * Math.PI);
 		
-		_this.projectionCenter.setRotation(rot);
+		_this.projectionCenter.setLongitude(rot);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
 	}
-	
 	
 	
     function bordersChanged(event) {        

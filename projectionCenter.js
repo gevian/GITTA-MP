@@ -21,18 +21,17 @@ ProjectionCenter.prototype.setOrientation = function(lat, lon)
 	this.earthCenter.rotation.y = lon;
 }
 
-ProjectionCenter.prototype.setVerticalOffset = function(offset)
+ProjectionCenter.prototype.setOffset = function(offset)
 {
 	this.sphere.position.y = offset;
 }
 
-
-ProjectionCenter.prototype.setHorizontalOffset = function(offset)
+ProjectionCenter.prototype.setLatitude = function(rotation)
 {
-	this.sphere.position.x = offset;
+	this.lightCenter.rotation.z = rotation;
 }
 
-ProjectionCenter.prototype.setRotation = function(rotation)
+ProjectionCenter.prototype.setLongitude = function(rotation)
 {
 	this.lightCenter.rotation.y = rotation;
 }
