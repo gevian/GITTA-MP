@@ -121,12 +121,12 @@
 				  <table>
 				 <tr>
 				  <td>relative latitude</td>
-				  <td><input id="lightsource_latitude_slider" class="slider" type="range"  min="-180" max="180" step="1" value="0"/></td>
+				  <td><input id="lightsource_latitude_slider" class="slider" type="range"  min="-180" max="180"  step="1" value="0"/></td>
 				  <td><input id="lightsource_latitude_box"    class="box"    type="number"  min="-180" max="180" step="1" value="0"/></td>
 				 </tr>
 				 <tr>
 				  <td>relative longitude</td>
-				  <td><input id="lightsource_longitude_slider" class="slider" type="range"  min="-180" max="180" step="1" value="0"/></td>
+				  <td><input id="lightsource_longitude_slider" class="slider" type="range"  min="-180" max="180"  step="1" value="0"/></td>
 				  <td><input id="lightsource_longitude_box"    class="box"    type="number"  min="-180" max="180" step="1" value="0"/></td>
 				 </tr>
 				 <tr>
@@ -171,6 +171,7 @@
 			  <button id="defaultTabButton" class="tablinks" onclick="openTab(event, 'General')">Map Construction</button>
 			  <button class="tablinks" onclick="openTab(event, 'Tutorial_I')">Projection Surfaces</button>
 			  <button class="tablinks" onclick="openTab(event, 'Tutorial_II')">Distortions</button>
+			  <button class="tablinks" onclick="openTab(event, 'Tutorial_III')">Common Projections</button>
 			</div>
 
 			<!-- Tab content -->
@@ -266,6 +267,17 @@
 				
 				 Apart from these main properties of map projections, specifically the term "compromising" can be found in the literature, denoting map projections which reduce the distortions mentioned above while not entirely eliminating any of them.
 				
+			</div>
+			<div id="Tutorial_III" class="tabcontent">
+				<br><button onclick="controls.resetControls()">Orthographic Azimuthal</button><br>				
+				<br><button onclick="controls.resetControls()">Stereographic Azimuthal</button><br>		
+				<br><button onclick="controls.resetControls()">Gnomonic Azimuthal</button><br>
+				<br><button onclick="controls.resetControls()">Vertical perspective Azimuthal, near-side</button><br>
+				<br><button onclick="controls.resetControls()">Vertical perspective Azimuthal, far-side</button><br>
+				<br><button onclick="controls.resetControls()">Oblique perspective non-Azimuthal</button><br>
+				<br><button onclick="controls.resetControls()">Central Cylindrical</button><br>
+				<br><button onclick="controls.resetControls()">Centrographic Conic</button><br>
+				<br><button onclick="controls.resetControls()">Braun's Stereographic</button><br>
 			</div>
 		</div>
 		

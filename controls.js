@@ -258,7 +258,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator)
 	
 	function lightSourceLongitudeBoxChanged(event) {
 		_this.lightSourceLongitudeSlider.oninput = null;
-		_this.lightSourceLongitudeSlider.value   = _this.lightSourceRotationBox.value;
+		_this.lightSourceLongitudeSlider.value   = _this.lightSourceLongitudeBox.value;
 		_this.lightSourceLongitudeSlider.oninput = lightSourceLongitudeSliderChanged; 
 		
 		var rot = ((_this.lightSourceLongitudeBox.value / 360) * 2 * Math.PI);
