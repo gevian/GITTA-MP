@@ -17,7 +17,7 @@ function GLCanvas(canvas_id)
 	this.renderer = new THREE.WebGLRenderer();
 	this.renderer.setSize( this.width, this.height );
 
-	this.glContainer.appendChild( this.renderer.domElement );
+	this.glContainer.append( this.renderer.domElement );
 	this.gl = this.renderer.getContext();
 
 	this.trackballControls = new THREE.TrackballControls(this.camera, this.renderer.domElement);

@@ -193,22 +193,22 @@ function Surface(scene, earth) {
 		tGraticule: { type: "t", value: this.graticuleTexture },
 		tTissot:    { type: "t", value: this.tissotTexture },
 		projOrigin: { type: "v3", value: new THREE.Vector3(0.0, 0.0, 0.0) },
-		opacity:    { type: "f", value: 1.0 },
+		opacity:    { type: "f", value: 1.0 }, // Note: if not 1.0, set transparent of material to true
 		keepVertices: { type: "i", value: 0 }
 	};
     
     this.scene = scene; 
 	
-    this.frontMaterial = new THREE.ShaderMaterial( {
+    this.material = new THREE.ShaderMaterial( {
 													uniforms: uniforms,
 													vertexShader: vertexShaderSource,
 													fragmentShader: fragmentShaderSource,
                                                     side: THREE.DoubleSide,
 													vertexColors: THREE.VertexColors,
-                                                    transparent: true
+                                                    transparent: false
                                                 } );
 
-	this.mesh = new THREE.Mesh( this.geometry, this.frontMaterial );	
+	this.mesh = new THREE.Mesh( this.geometry, this.material );	
 	
     this.earthCenter = new THREE.Object3D();
 	
