@@ -302,7 +302,7 @@
 		var cutIndicator = new CutIndicator(surface, glcanvas.scene);
 		var projectionLine = new ProjectionLine(glcanvas, surface, projectionCenter);
 		
-		var controls = new Controls(earth, surface, projectionCenter, cutIndicator);
+		var controls = new Controls(earth, surface, projectionCenter, cutIndicator, projectionLine);
 		controls.reset();
 			
 		var clock  = new THREE.Clock();

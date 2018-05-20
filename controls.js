@@ -1,10 +1,11 @@
-function Controls(earth, surface, projectionCenter, cutIndicator)
+function Controls(earth, surface, projectionCenter, cutIndicator, projectionLine)
 {
 	var _this = this;
     this.earth = earth;	
 	this.surface = surface;
 	this.projectionCenter = projectionCenter;
 	this.cutIndicator = cutIndicator;
+	this.projectionLine = projectionLine;
 	
 	this.surface.setFormsCallbacks(this.enableForms, this.disableForms);
 	
@@ -76,6 +77,8 @@ function Controls(earth, surface, projectionCenter, cutIndicator)
 	
 	function rollClicked() {
 		_this.surface.toggleRoll();
+
+		_this.projectionLine.reset();
 	}
 			
 	function orientationSliderChanged(event) {

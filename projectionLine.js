@@ -35,12 +35,10 @@ function ProjectionLine(glcanvas, surface, projectionCenter) {
 		
 		_this.raycaster.setFromCamera( _this.mouse, _this.glcanvas.camera );
 		
-		// See if the ray from the camera into the world hits one of our meshes
 		var intersects = _this.raycaster.intersectObject( _this.surface.mesh );
 		
 		if ( intersects.length > 0 ) {
 			
-			//create a blue LineBasicMaterial
 			_this.lineGeometry.vertices[0] = intersects[0].point.clone();
 			_this.lineGeometry.vertices[1] = _this.projectionCenter.sphere.position.clone();
 			
@@ -49,4 +47,10 @@ function ProjectionLine(glcanvas, surface, projectionCenter) {
 	}
 }
 
-
+ProjectionLine.prototype.reset = function()
+{
+	this.lineGeometry.vertices[0] = new THREE.Vector3();
+	this.lineGeometry.vertices[1] = new THREE.Vector3();
+	
+	this.lineGeometry.verticesNeedUpdate = true;
+}
