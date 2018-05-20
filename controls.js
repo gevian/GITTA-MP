@@ -352,25 +352,201 @@ Controls.prototype.disableForms = function()
 
 Controls.prototype.setProjection = function(name)
 {
-	if (name == "gnomonic")
+	if (name == "gnomonic azimuthal")
 	{
-		this.axisSlider.value = 0;
-		this.axisSlider.oninput();
-		this.upperRadiusSlider.value = 0.01;
-		this.upperRadiusSlider.oninput();
-		this.lowerRadiusSlider.value = 4;
-		this.lowerRadiusSlider.oninput();
-		this.geometryOffsetSlider.value = 1;
-		this.geometryOffsetSlider.oninput();
-		this.lightSourceOffsetSlider.value = 0;
-		this.lightSourceOffsetSlider.oninput();
+		this.axisBox.value = 0;
+		this.axisBox.oninput();
+		this.upperRadiusBox.value = 0.01;
+		this.upperRadiusBox.oninput();
+		this.lowerRadiusBox.value = 4;
+		this.lowerRadiusBox.oninput();
+		this.geometryOffsetBox.value = 1;
+		this.geometryOffsetBox.oninput();
+		this.latBox.value = 90;
+		this.latBox.oninput();
+		this.lonBox.value = 0;
+		this.lonBox.oninput();
+		this.lightSourceOffsetBox.value = 0;
+		this.lightSourceOffsetBox.oninput();
+		this.lightSourceLatitudeBox.value = 0;
+		this.lightSourceLatitudeBox.oninput();
+		this.lightSourceLongitudeBox.value = 0;
+		this.lightSourceLongitudeBox.oninput();
+		
 	}
-	
+	else if (name == "orthographic azimuthal")
+	{
+		this.axisBox.value = 0;
+		this.axisBox.oninput();
+		this.upperRadiusBox.value = 0.01;
+		this.upperRadiusBox.oninput();
+		this.lowerRadiusBox.value = 4;
+		this.lowerRadiusBox.oninput();
+		this.geometryOffsetBox.value = 1;
+		this.geometryOffsetBox.oninput();
+		this.latBox.value = 90;
+		this.latBox.oninput();
+		this.lonBox.value = 0;
+		this.lonBox.oninput();
+		this.lightSourceOffsetBox.value = -100;
+		this.lightSourceOffsetBox.oninput();
+		this.lightSourceLatitudeBox.value = 0;
+		this.lightSourceLatitudeBox.oninput();
+		this.lightSourceLongitudeBox.value = 0;
+		this.lightSourceLongitudeBox.oninput();
+	}
+	else if (name == "stereographic azimuthal")
+	{
+		this.axisBox.value = 0;
+		this.axisBox.oninput();
+		this.upperRadiusBox.value = 0.01;
+		this.upperRadiusBox.oninput();
+		this.lowerRadiusBox.value = 4;
+		this.lowerRadiusBox.oninput();
+		this.geometryOffsetBox.value = 1;
+		this.geometryOffsetBox.oninput();
+		this.latBox.value = 90;
+		this.latBox.oninput();
+		this.lonBox.value = 0;
+		this.lonBox.oninput();
+		this.lightSourceOffsetBox.value = -1;
+		this.lightSourceOffsetBox.oninput();
+		this.lightSourceLatitudeBox.value = 0;
+		this.lightSourceLatitudeBox.oninput();
+		this.lightSourceLongitudeBox.value = 0;
+		this.lightSourceLongitudeBox.oninput();
+	}
+	else if (name == "vertical perspective azimuthal near side")
+	{
+		this.axisBox.value = 0;
+		this.axisBox.oninput();
+		this.upperRadiusBox.value = 0.01;
+		this.upperRadiusBox.oninput();
+		this.lowerRadiusBox.value = 4;
+		this.lowerRadiusBox.oninput();
+		this.geometryOffsetBox.value = 1;
+		this.geometryOffsetBox.oninput();
+		this.latBox.value = 90;
+		this.latBox.oninput();
+		this.lonBox.value = 0;
+		this.lonBox.oninput();
+		this.lightSourceOffsetBox.value = 2;
+		this.lightSourceOffsetBox.oninput();
+		this.lightSourceLatitudeBox.value = 0;
+		this.lightSourceLatitudeBox.oninput();
+		this.lightSourceLongitudeBox.value = 0;
+		this.lightSourceLongitudeBox.oninput();
+	}
+	else if (name == "vertical perspective azimuthal far side")
+	{
+		this.axisBox.value = 0;
+		this.axisBox.oninput();
+		this.upperRadiusBox.value = 0.01;
+		this.upperRadiusBox.oninput();
+		this.lowerRadiusBox.value = 4;
+		this.lowerRadiusBox.oninput();
+		this.geometryOffsetBox.value = 1;
+		this.geometryOffsetBox.oninput();
+		this.latBox.value = 90;
+		this.latBox.oninput();
+		this.lonBox.value = 0;
+		this.lonBox.oninput();
+		this.lightSourceOffsetBox.value = -2;
+		this.lightSourceOffsetBox.oninput();
+		this.lightSourceLatitudeBox.value = 0;
+		this.lightSourceLatitudeBox.oninput();
+		this.lightSourceLongitudeBox.value = 0;
+		this.lightSourceLongitudeBox.oninput();
+	}
+	else if (name == "oblique perspective non-azimuthal")
+	{
+		this.axisBox.value = 0;
+		this.axisBox.oninput();
+		this.upperRadiusBox.value = 0.01;
+		this.upperRadiusBox.oninput();
+		this.lowerRadiusBox.value = 4;
+		this.lowerRadiusBox.oninput();
+		this.geometryOffsetBox.value = 1;
+		this.geometryOffsetBox.oninput();
+		this.latBox.value = 66;
+		this.latBox.oninput();
+		this.lonBox.value = 0;
+		this.lonBox.oninput();
+		this.lightSourceOffsetBox.value = 2;
+		this.lightSourceOffsetBox.oninput();
+		this.lightSourceLatitudeBox.value = 24;
+		this.lightSourceLatitudeBox.oninput();
+		this.lightSourceLongitudeBox.value = 0;
+		this.lightSourceLongitudeBox.oninput();
+	}
+	else if (name == "central cylindrical")
+	{
+		this.axisBox.value = 4;
+		this.axisBox.oninput();
+		this.upperRadiusBox.value = 1;
+		this.upperRadiusBox.oninput();
+		this.lowerRadiusBox.value = 1;
+		this.lowerRadiusBox.oninput();
+		this.geometryOffsetBox.value = 0;
+		this.geometryOffsetBox.oninput();
+		this.latBox.value = 90;
+		this.latBox.oninput();
+		this.lonBox.value = 0;
+		this.lonBox.oninput();
+		this.lightSourceOffsetBox.value = 0;
+		this.lightSourceOffsetBox.oninput();
+		this.lightSourceLatitudeBox.value = 0;
+		this.lightSourceLatitudeBox.oninput();
+		this.lightSourceLongitudeBox.value = 0;
+		this.lightSourceLongitudeBox.oninput();
+	}
+	else if (name == "centrographic conic")
+	{
+		this.axisBox.value = 4;
+		this.axisBox.oninput();
+		this.upperRadiusBox.value = 0.01;
+		this.upperRadiusBox.oninput();
+		this.lowerRadiusBox.value = 2.4;
+		this.lowerRadiusBox.oninput();
+		this.geometryOffsetBox.value = 0;
+		this.geometryOffsetBox.oninput();
+		this.latBox.value = 90;
+		this.latBox.oninput();
+		this.lonBox.value = 0;
+		this.lonBox.oninput();
+		this.lightSourceOffsetBox.value = 0;
+		this.lightSourceOffsetBox.oninput();
+		this.lightSourceLatitudeBox.value = 0;
+		this.lightSourceLatitudeBox.oninput();
+		this.lightSourceLongitudeBox.value = 0;
+		this.lightSourceLongitudeBox.oninput();
+	}
+	else if (name == "brauns stereographic conic")
+	{
+		this.axisBox.value = 4;
+		this.axisBox.oninput();
+		this.upperRadiusBox.value = 0.01;
+		this.upperRadiusBox.oninput();
+		this.lowerRadiusBox.value = 2.4;
+		this.lowerRadiusBox.oninput();
+		this.geometryOffsetBox.value = 0;
+		this.geometryOffsetBox.oninput();
+		this.latBox.value = 90;
+		this.latBox.oninput();
+		this.lonBox.value = 0;
+		this.lonBox.oninput();
+		this.lightSourceOffsetBox.value = -1;
+		this.lightSourceOffsetBox.oninput();
+		this.lightSourceLatitudeBox.value = 0;
+		this.lightSourceLatitudeBox.oninput();
+		this.lightSourceLongitudeBox.value = 0;
+		this.lightSourceLongitudeBox.oninput();
+	}
 }
 
 Controls.prototype.resetControls = function()
 {
-	this.setProjection("gnomonic");
+	this.setProjection("azimuthal gnomonic");
 	
 	this.latSlider.value = 90;
 	this.latSlider.oninput();

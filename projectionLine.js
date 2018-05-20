@@ -1,7 +1,8 @@
-function ProjectionLine(glcanvas, surface, projectionCenter) {
+function ProjectionLine(glcanvas, surface, earth, projectionCenter) {
 	this.scene = glcanvas.scene;
 	this.glcanvas = glcanvas;
 	this.surface = surface;
+	this.earth = earth;
 	this.projectionCenter = projectionCenter;
 	
 	glcanvas.glContainer.addEventListener( 'mousedown', onMouseDown, true );
@@ -35,14 +36,25 @@ function ProjectionLine(glcanvas, surface, projectionCenter) {
 		
 		_this.raycaster.setFromCamera( _this.mouse, _this.glcanvas.camera );
 		
-		var intersects = _this.raycaster.intersectObject( _this.surface.mesh );
+		var intersectsSurface = _this.raycaster.intersectObject( _this.surface.mesh );
 		
-		if ( intersects.length > 0 ) {
+		if ( intersectsSurface.length > 0 ) {
 			
-			_this.lineGeometry.vertices[0] = intersects[0].point.clone();
+			_this.lineGeometry.vertices[0] = intersectsSurface[0].point.clone();
 			_this.lineGeometry.vertices[1] = _this.projectionCenter.sphere.position.clone();
 			
 			_this.lineGeometry.verticesNeedUpdate = true;
+		} else {
+			/*
+			var intersectsEarth = _this.raycaster.intersectObject( _this.earth.earthMesh );
+			if ( intersectsEarth.length > 0 ) {
+			
+				_this.lineGeometry.vertices[0] = intersectsEarth[0].point.clone();
+				_this.lineGeometry.vertices[1] = _this.projectionCenter.sphere.position.clone();
+				
+				_this.lineGeometry.verticesNeedUpdate = true;
+			}
+			*/
 		}
 	}
 }

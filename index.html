@@ -269,15 +269,15 @@
 				
 			</div>
 			<div id="Tutorial_III" class="tabcontent">
-				<br><button onclick="controls.resetControls()">Orthographic Azimuthal</button><br>				
-				<br><button onclick="controls.resetControls()">Stereographic Azimuthal</button><br>		
-				<br><button onclick="controls.resetControls()">Gnomonic Azimuthal</button><br>
-				<br><button onclick="controls.resetControls()">Vertical perspective Azimuthal, near-side</button><br>
-				<br><button onclick="controls.resetControls()">Vertical perspective Azimuthal, far-side</button><br>
-				<br><button onclick="controls.resetControls()">Oblique perspective non-Azimuthal</button><br>
-				<br><button onclick="controls.resetControls()">Central Cylindrical</button><br>
-				<br><button onclick="controls.resetControls()">Centrographic Conic</button><br>
-				<br><button onclick="controls.resetControls()">Braun's Stereographic</button><br>
+				<br><button onclick="controls.setProjection('orthographic azimuthal')">Orthographic Azimuthal</button><br>				
+				<br><button onclick="controls.setProjection('stereographic azimuthal')">Stereographic Azimuthal</button><br>		
+				<br><button onclick="controls.setProjection('gnomonic azimuthal')">Gnomonic Azimuthal</button><br>
+				<br><button onclick="controls.setProjection('vertical perspective azimuthal near side')">Vertical perspective Azimuthal, near-side</button><br>
+				<br><button onclick="controls.setProjection('vertical perspective azimuthal far side')">Vertical perspective Azimuthal, far-side</button><br>
+				<br><button onclick="controls.setProjection('oblique perspective non-azimuthal')">Oblique perspective non-Azimuthal</button><br>
+				<br><button onclick="controls.setProjection('central cylindrical')">Central Cylindrical</button><br>
+				<br><button onclick="controls.setProjection('centrographic conic')">Centrographic Conic</button><br>
+				<br><button onclick="controls.setProjection('brauns stereographic conic')">Braun's Stereographic Conic</button><br>
 			</div>
 		</div>
 		<script src="libs/three.js"></script>
@@ -300,7 +300,7 @@
 		var surface = new Surface(glcanvas.scene, earth);
 		var projectionCenter = new ProjectionCenter(glcanvas.scene);
 		var cutIndicator = new CutIndicator(surface, glcanvas.scene);
-		var projectionLine = new ProjectionLine(glcanvas, surface, projectionCenter);
+		var projectionLine = new ProjectionLine(glcanvas, surface, earth, projectionCenter);
 		
 		var controls = new Controls(earth, surface, projectionCenter, cutIndicator, projectionLine);
 		controls.reset();
