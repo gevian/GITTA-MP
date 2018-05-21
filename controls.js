@@ -78,7 +78,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 	function rollClicked() {
 		_this.surface.toggleRoll();
 
-		_this.LineProjector.reset();
+		_this.LineProjector.disableLines();
 	}
 			
 	function orientationSliderChanged(event) {
@@ -103,6 +103,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 	   
 	   _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
 	   _this.cutIndicator.updateGeometry();
+		_this.LineProjector.updateLines();
 	}
 	
 	function orientationBoxChanged(event) {
@@ -127,6 +128,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 	   
 	   _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
 	   _this.cutIndicator.updateGeometry();
+	   _this.LineProjector.updateLines();
 	}
 			
 
@@ -137,6 +139,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.surface.setAxisLength(_this.axisBox.value);
 		_this.cutIndicator.updateGeometry();
+		_this.LineProjector.updateLines();
 	}
 	
 	
@@ -147,6 +150,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.surface.setAxisLength(_this.axisBox.value);
 		_this.cutIndicator.updateGeometry();
+		_this.LineProjector.updateLines();
 	}
 	
 	
@@ -157,6 +161,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.surface.setTopRadius(_this.upperRadiusBox.value);
 		_this.cutIndicator.updateGeometry();
+		_this.LineProjector.updateLines();
 	}
 	
 	
@@ -167,6 +172,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.surface.setTopRadius(_this.upperRadiusBox.value);
 		_this.cutIndicator.updateGeometry();
+		_this.LineProjector.updateLines();
 	}
 	
 	function lowerRadiusSliderChanged(event) {
@@ -176,6 +182,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.surface.setBottomRadius(_this.lowerRadiusBox.value);
 		_this.cutIndicator.updateGeometry();
+		_this.LineProjector.updateLines();
 	}
 	
 	
@@ -186,6 +193,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.surface.setBottomRadius(_this.lowerRadiusBox.value);
 		_this.cutIndicator.updateGeometry();
+		_this.LineProjector.updateLines();
 	}
 	
 	
@@ -196,6 +204,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.surface.setGeometryOffset(_this.geometryOffsetBox.value);
 		_this.cutIndicator.updateGeometry();
+		_this.LineProjector.updateLines();
 	}
 	
 	function geometryOffsetBoxChanged(event) {
@@ -205,6 +214,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.surface.setGeometryOffset(_this.geometryOffsetBox.value);
 		_this.cutIndicator.updateGeometry();
+		_this.LineProjector.updateLines();
 	}
 	
 	function lightSourceOffsetSliderChanged(event) {
@@ -214,7 +224,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.projectionCenter.setOffset(_this.lightSourceOffsetBox.value);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
-		_this.LineProjector.updateLine();
+		_this.LineProjector.updateLines();
 	}
 	
 	function lightSourceOffsetBoxChanged(event) {
@@ -224,7 +234,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.projectionCenter.setOffset(_this.lightSourceOffsetBox.value);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
-		_this.LineProjector.updateLine();
+		_this.LineProjector.updateLines();
 	}
     
 	
@@ -237,7 +247,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.projectionCenter.setLatitude(rot);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
-		_this.LineProjector.updateLine();
+		_this.LineProjector.updateLines();
 	}
 	
 	function lightSourceLatitudeBoxChanged(event) {
@@ -249,7 +259,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.projectionCenter.setLatitude(rot);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
-		_this.LineProjector.updateLine();
+		_this.LineProjector.updateLines();
 	}
 	
 	function lightSourceLongitudeSliderChanged(event) {
@@ -261,7 +271,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.projectionCenter.setLongitude(rot);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
-		_this.LineProjector.updateLine();
+		_this.LineProjector.updateLines();
 	}
 	
 	function lightSourceLongitudeBoxChanged(event) {
@@ -273,7 +283,7 @@ function Controls(earth, surface, projectionCenter, cutIndicator, LineProjector)
 		
 		_this.projectionCenter.setLongitude(rot);
 	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
-		_this.LineProjector.updateLine();
+		_this.LineProjector.updateLines();
 	}
 	
 	

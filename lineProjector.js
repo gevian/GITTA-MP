@@ -5,37 +5,19 @@ function LineProjector(glcanvas, surface, earth, projectionCenter) {
 	this.earth = earth;
 	this.projectionCenter = projectionCenter;
 		
-	glcanvas.glContainer.addEventListener( 'mousedown', this.setEarthIntersection.bind(this), true );
+	glcanvas.glContainer.addEventListener( 'mousedown', this.setManualProjectionLine.bind(this), true );
 	
-	this.lineMaterial = new THREE.LineBasicMaterial( { color: 0xff0000 } );
-
-	this.lineGeometry = new THREE.Geometry();
-	this.reset();
-
-	this.line = new THREE.Line( this.lineGeometry, this.lineMaterial );
-	this.line.frustumCulled = false;
+	this.manualLine = new ProjectionLine(new THREE.Vector3(1,0,0) , this.projectionCenter, this.surface, this.scene, 0xff0000);
+	this.manualLine.disable();
 	
-	var _this = this;
+	this.constructionLines = [];
 	
-	this.earthIntersection = new THREE.Vector3();
-
-	
-	this.disable();
+	this.constructLines(15, 180);
+	this.enableConstructionLines();
 }
 
 
-LineProjector.prototype.reset = function()
-{
-	this.lineGeometry.vertices[0] = new THREE.Vector3();
-	this.lineGeometry.vertices[1] = new THREE.Vector3();
-	
-	this.lineGeometry.verticesNeedUpdate = true;
-	
-	this.disable();
-}
-
-
-LineProjector.prototype.setEarthIntersection = function(event)
+LineProjector.prototype.setManualProjectionLine = function(event)
 {
 	event.preventDefault();
 	
@@ -58,22 +40,109 @@ LineProjector.prototype.setEarthIntersection = function(event)
 	var intersectsSurface = raycaster.intersectObject( this.earth.earthMesh );
 	if ( intersectsSurface.length > 0 ) {
 		
-		this.earthIntersection = intersectsSurface[0].point.clone();
-		this.enable();
-		this.updateLine();
+		var earthIntersection = intersectsSurface[0].point.clone();
+
+		this.manualLine.disable();
 		
+		this.manualLine = new ProjectionLine(earthIntersection, this.projectionCenter, this.surface, this.scene, 0xff0000);
+		this.manualLine.enable();
 	}
 }
 
 
-LineProjector.prototype.updateLine = function()
+LineProjector.prototype.constructLines = function(offsetLat, offsetLon)
+{
+	for (var lat = -90; lat <= 90; lat += offsetLat)
+	{
+		for (var lon = -180; lon <= 180; lon += offsetLon)
+		{
+		   var latRadian = (((lat) / 180) * 2 * Math.PI);
+		   var lonRadian = (((lon) / 360) * 2 * Math.PI);
+			
+		   var x = Math.cos(latRadian) * Math.cos(lonRadian);
+		   var y = Math.cos(latRadian) * Math.sin(lonRadian);
+		   var z = Math.sin(latRadian);
+		   
+		   var target = new THREE.Vector3(x, y, z);
+		   
+		   var pl = new ProjectionLine(target, this.projectionCenter, this.surface, this.scene, 0x00ff00);
+			
+		   this.constructionLines.push(pl);
+		}
+	}
+}
+
+
+
+LineProjector.prototype.enableLines = function()
+{
+	this.manualLine.enable();
+	
+	this.enableConstructionLines();
+}
+
+LineProjector.prototype.disableLines = function()
+{
+	this.manualLine.disable();
+	
+	this.disableConstructionLines();
+}
+
+LineProjector.prototype.enableConstructionLines = function()
+{
+	for (var i = 0; i < this.constructionLines.length; i++)
+	{
+		this.constructionLines[i].enable();
+	}
+}
+
+LineProjector.prototype.disableConstructionLines = function()
+{
+	for (var i = 0; i < this.constructionLines.length; i++)
+	{
+		this.constructionLines[i].disable();
+	}
+}
+
+LineProjector.prototype.updateLines = function()
+{
+	this.manualLine.update();
+	
+	for (var i = 0; i < this.constructionLines.length; i++)
+	{
+		this.constructionLines[i].update();
+	}
+}
+
+
+
+function ProjectionLine(target, projectionCenter, surface, scene, color) {
+	this.target = target;
+	this.projectionCenter = projectionCenter;
+	this.surface = surface;
+	this.color = color;
+	this.scene = scene;
+	
+	this.lineMaterial = new THREE.LineBasicMaterial( { color: this.color } );
+
+	this.lineGeometry = new THREE.Geometry();
+	
+	this.line = new THREE.Line( this.lineGeometry, this.lineMaterial );
+	this.line.frustumCulled = false;
+	
+	this.state = "Enabled";
+	
+	this.update();
+}
+
+
+ProjectionLine.prototype.update = function()
 {
 	if (this.state == "Disabled")
 		return
 	
-
 	var projectionWorldPosition = this.projectionCenter.sphere.getWorldPosition();
-	var directionVector = this.earthIntersection.clone().sub(projectionWorldPosition).normalize();
+	var directionVector = this.target.clone().sub(projectionWorldPosition).normalize();
 	
 	var auxiliaryRaycaster = new THREE.Raycaster(projectionWorldPosition, directionVector.clone());
 	
@@ -97,18 +166,29 @@ LineProjector.prototype.updateLine = function()
 }
 
 
-
-LineProjector.prototype.enable = function()
+ProjectionLine.prototype.enable = function()
 {
 	this.scene.add(this.line);
 	this.state = "Enabled";
 }
 
-LineProjector.prototype.disable = function()
+
+ProjectionLine.prototype.disable = function()
 {
 	this.scene.remove(this.line);
 	this.state = "Disabled";
 }
+
+ProjectionLine.prototype.reset = function()
+{
+	this.lineGeometry.vertices[0] = new THREE.Vector3();
+	this.lineGeometry.vertices[1] = new THREE.Vector3();
+	
+	this.lineGeometry.verticesNeedUpdate = true;
+	
+	this.disable();
+}
+
 
 
 
