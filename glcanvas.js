@@ -48,7 +48,7 @@ function GLCanvas(canvas_id)
     */
 
 	//var axisHelper = new THREE.AxisHelper( 2 );
-	//scene.add( axisHelper );
+	//this.scene.add( axisHelper );
 }
 
 GLCanvas.prototype.update = function(delta)

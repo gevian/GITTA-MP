@@ -287,7 +287,7 @@
 		<script src="earth.js"></script>
 		<script src="surface.js"></script>
 		<script src="projectionCenter.js"></script>
-		<script src="projectionLine.js"></script>
+		<script src="lineProjector.js"></script>
 		<script src="cutIndicator.js"></script>
 		
 		<script src="controls.js"></script>		
@@ -300,9 +300,9 @@
 		var surface = new Surface(glcanvas.scene, earth);
 		var projectionCenter = new ProjectionCenter(glcanvas.scene);
 		var cutIndicator = new CutIndicator(surface, glcanvas.scene);
-		var projectionLine = new ProjectionLine(glcanvas, surface, earth, projectionCenter);
+		var lineProjector = new LineProjector(glcanvas, surface, earth, projectionCenter);
 		
-		var controls = new Controls(earth, surface, projectionCenter, cutIndicator, projectionLine);
+		var controls = new Controls(earth, surface, projectionCenter, cutIndicator, lineProjector);
 		controls.reset();
 			
 		var clock  = new THREE.Clock();
