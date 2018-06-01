@@ -156,11 +156,13 @@
 				  <td><input type="checkbox" id="tissot-checkbox" checked=""><br></td>
 				 </tr>
 				  </table>
-				</fieldset>  
+				</fieldset>
 			  </form>
 				<table>
 				 <tr>
-				  <td><button type="button" id="roll-button" onclick="rollPressed()">unroll</button><br></td>
+				  <td><button type="button" id="reset-button" onclick="controls.resetControls()">reset</button><br></td>
+				  <td><button type="button" id="remove-line-button" onclick="lineProjector.disableLines()">remove line</button><br></td>
+                  <td><button type="button" id="roll-button" onclick="rollPressed()">unroll</button><br></td>
 				 </tr>
 				</table>
 		</div>
@@ -170,14 +172,14 @@
 			<div class="tab">
 			  <button id="defaultTabButton" class="tablinks" onclick="openTab(event, 'General')">Map Construction</button>
 			  <button class="tablinks" onclick="openTab(event, 'Tutorial_I')">Projection Surfaces</button>
-			  <button class="tablinks" onclick="openTab(event, 'Tutorial_II')">Distortions</button>
+			  <!--<button class="tablinks" onclick="openTab(event, 'Tutorial_II')">Distortions</button>-->
 			  <button class="tablinks" onclick="openTab(event, 'Tutorial_III')">Common Projections</button>
 			</div>
 
 			<!-- Tab content -->
 			<div id="General" class="tabcontent">
 			The intention of this web application is to demonstrate the construction of map projections and to showcase their properties. On the left side of the application, you find the controls panel to adjust the parameters of the different objects present in the 3D-scene in the center of this application. To navigate within the 3D-scene, use the left mouse button to rotate, the right mouse button to pan and the middle mouse button to zoom.
-			 <font color="red">If you want to resort to the default settings, use the reset-button in the control panel.</font>
+			If you want to resort to the default settings, use the reset-button in the control panel.
 			
 			<br> A common approach to construct map projections this makes use of three geometric objects:
 			
@@ -193,9 +195,7 @@
 			
 			As you can see, the projection surface is currently a flat disk, touching the earth at the North Pole. The projection center is located at the center of the earth, represented as a yellow sphere. The earth can be imagined as a sphere of painted glass, effectively coloring each ray according to the color of the glass where the ray intersects it. The rays then paint the projection surface according to their color.
 			<br>
-			 <font color="red">
-			  Left-click on the earth to visualize the ray originating from the projection center and passing the clicked location. Note how some rays hit the surface while some do not.  
-			 </font>
+			  Shift-click on the earth to visualize the ray originating from the projection center and passing the clicked location. Note how some rays hit the surface while some do not.  
 			<br>
 			Alternatively, click the following button to move the camera to the position of the projection center. Note how the borders of the sphere and the borders painted on the projection surface start to coincide. Move the camera slightly to emphasize this effect.
 			
@@ -245,6 +245,7 @@
 					<br><button onclick="controls.resetControls()">Properties of Map Projections</button><br>				
 			</div>
 
+            <!--
 			<div id="Tutorial_II" class="tabcontent">
 				Each map projection distorts the surface of the earth. Although these distortions can be precisly mathematically quantified, a more intuitive approach to these distortions can be followed using Tissot's indicatrix. Tissot's indicatrix is a graphical means to analyze such distortions and can be enabled by ticking the box labeled "Tissots indicatrices" in the "texture" section of the controls panel.
 				
@@ -268,6 +269,7 @@
 				 Apart from these main properties of map projections, specifically the term "compromising" can be found in the literature, denoting map projections which reduce the distortions mentioned above while not entirely eliminating any of them.
 				
 			</div>
+            -->
 			<div id="Tutorial_III" class="tabcontent">
 				<br><button onclick="controls.setProjection('orthographic azimuthal')">Orthographic Azimuthal</button><br>				
 				<br><button onclick="controls.setProjection('stereographic azimuthal')">Stereographic Azimuthal</button><br>		

@@ -7,13 +7,14 @@ function LineProjector(glcanvas, surface, earth, projectionCenter) {
 		
 	glcanvas.glContainer.addEventListener( 'mousedown', this.setManualProjectionLine.bind(this), true );
 	
-	this.manualLine = new ProjectionLine(new THREE.Vector3(1,0,0) , this.projectionCenter, this.surface, this.scene, 0xff0000);
+	this.manualLine = new ProjectionLine(new THREE.Vector3(1,0,0) , this.projectionCenter, this.surface, this.scene, this.earth, 0xff0000);
 	this.manualLine.disable();
 	
 	this.constructionLines = [];
 	
-	this.constructLines(15, 180);
-	this.enableConstructionLines();
+    // TODO: Enable when fixed
+	//this.constructLines(15, 180);
+	//this.enableConstructionLines();
 }
 
 
@@ -44,12 +45,12 @@ LineProjector.prototype.setManualProjectionLine = function(event)
 
 		this.manualLine.disable();
 		
-		this.manualLine = new ProjectionLine(earthIntersection, this.projectionCenter, this.surface, this.scene, 0xff0000);
+		this.manualLine = new ProjectionLine(earthIntersection, this.projectionCenter, this.surface, this.scene, this.earth, 0xff0000);
 		this.manualLine.enable();
 	}
 }
 
-
+// TODO: Improve
 LineProjector.prototype.constructLines = function(offsetLat, offsetLon)
 {
 	for (var lat = -90; lat <= 90; lat += offsetLat)
@@ -65,7 +66,7 @@ LineProjector.prototype.constructLines = function(offsetLat, offsetLon)
 		   
 		   var target = new THREE.Vector3(x, y, z);
 		   
-		   var pl = new ProjectionLine(target, this.projectionCenter, this.surface, this.scene, 0x00ff00);
+		   var pl = new ProjectionLine(target, this.projectionCenter, this.surface, this.scene, this.earth, 0x00ff00);
 			
 		   this.constructionLines.push(pl);
 		}
@@ -116,13 +117,13 @@ LineProjector.prototype.updateLines = function()
 
 
 
-function ProjectionLine(target, projectionCenter, surface, scene, color) {
+function ProjectionLine(target, projectionCenter, surface, scene, earth, color) {
 	this.target = target;
 	this.projectionCenter = projectionCenter;
 	this.surface = surface;
 	this.color = color;
 	this.scene = scene;
-	
+    this.earth = earth;
 	this.lineMaterial = new THREE.LineBasicMaterial( { color: this.color } );
 
 	this.lineGeometry = new THREE.Geometry();
@@ -147,22 +148,27 @@ ProjectionLine.prototype.update = function()
 	var auxiliaryRaycaster = new THREE.Raycaster(projectionWorldPosition, directionVector.clone());
 	
 	var auxiliaryIntersectsSurface = auxiliaryRaycaster.intersectObject( this.surface.mesh );
+    var auxiliaryIntersectsEarth   = auxiliaryRaycaster.intersectObject( this.earth.earthMesh );
 	
-	if ( auxiliaryIntersectsSurface.length > 0 ) {
-
-		this.lineGeometry.vertices[0] = auxiliaryIntersectsSurface[0].point.clone();
-		this.lineGeometry.vertices[1] = projectionWorldPosition;
-		
-		this.lineGeometry.verticesNeedUpdate = true;
-	}
-	else // no intersection with surface (ray has theoretically infinite length)
-	{
-
+    // neither intersection with globe nor with surface
+    if (auxiliaryIntersectsEarth.length > 0 && auxiliaryIntersectsSurface.length == 0)
+    {
 		this.lineGeometry.vertices[0] = projectionWorldPosition.clone().add(directionVector.clone().multiplyScalar(1000));
-		this.lineGeometry.vertices[1] = projectionWorldPosition;
-		
-		this.lineGeometry.verticesNeedUpdate = true;
-	}
+    }
+    else
+    {
+        if (auxiliaryIntersectsEarth[0].distance > auxiliaryIntersectsSurface[0].distance)
+        {
+            this.lineGeometry.vertices[0] = auxiliaryIntersectsEarth[0].point.clone();
+        }
+        else
+        {
+            this.lineGeometry.vertices[0] = auxiliaryIntersectsSurface[0].point.clone();
+        }
+    }
+    
+    this.lineGeometry.vertices[1] = projectionWorldPosition;
+    this.lineGeometry.verticesNeedUpdate = true;
 }
 
 
