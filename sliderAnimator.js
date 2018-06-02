@@ -11,7 +11,7 @@ function SliderAnimator(controls)
 
 SliderAnimator.prototype.startAnimations = function(instructions, duration)
 {
-	this.controls.disableForms();
+	this.controls.disableForms(false);
 	this.instructions = instructions;
 	this.duration = duration;
 	
@@ -26,7 +26,7 @@ SliderAnimator.prototype.startAnimations = function(instructions, duration)
 }
 
 
-
+// TODO: Improve increment for large step values; currently it breaks the target animation time
 SliderAnimator.prototype.update = function(delta)
 {
 	var allFinished = true;
@@ -39,14 +39,22 @@ SliderAnimator.prototype.update = function(delta)
 			if (instruction.finished)
 				continue
 			
-			console.log(instruction.slider.id);
-			
 			var allFinished = false;
 			
 			var deltaValue = delta * instruction.changePerSecond;
-			var increment = Number(instruction.slider.value) + deltaValue;
-			instruction.slider.value = Math.round(increment / instruction.slider.step) * instruction.slider.step;
+			var increment =  Math.round(deltaValue / Number(instruction.slider.step)) * instruction.slider.step;
+
+			if (increment == 0)
+			{
+				if (instruction.changePerSecond > 0)
+					increment = Number(instruction.slider.step);
+				else
+					increment = -Number(instruction.slider.step);
+			}
 			
+			instruction.slider.value = Number(instruction.slider.value) + increment;
+
+
 			if (instruction.changePerSecond >= 0 && instruction.slider.value >= instruction.target)
 			{
 				instruction.slider.value = instruction.target;
@@ -61,10 +69,10 @@ SliderAnimator.prototype.update = function(delta)
 			instruction.slider.oninput();
 		}
 	}
-	
+
 	if (allFinished)
 	{
 		this.state = "Waiting";
-		this.controls.enableForms();
+		this.controls.enableForms(false);
 	}
 }

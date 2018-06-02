@@ -330,7 +330,7 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 
 }
 
-Controls.prototype.enableForms = function()
+Controls.prototype.enableForms = function(roll)
 {
 	var fieldsets = document.getElementsByTagName('fieldset');
 
@@ -338,13 +338,26 @@ Controls.prototype.enableForms = function()
 		fieldsets[i].disabled = false;
 	}
 	
+	var tutButtons = document.querySelectorAll(".tut-button button");
+	
+	for(var i = 0; i < tutButtons.length; i++) {
+		tutButtons[i].removeAttribute("disabled");
+	}
+	
+	document.getElementById("reset-button").removeAttribute("disabled");
+	document.getElementById("remove-line-button").removeAttribute("disabled");
 	var rollButton = document.getElementById("roll-button");
-	
-	rollButton.innerHTML = "unroll";
-	
+	if (roll)
+	{
+		rollButton.innerHTML = "unroll";
+	}
+	else
+	{
+		rollButton.removeAttribute("disabled");
+	}
 }
 
-Controls.prototype.disableForms = function()
+Controls.prototype.disableForms = function(roll)
 {
 	var fieldsets = document.getElementsByTagName('fieldset');
 
@@ -352,10 +365,23 @@ Controls.prototype.disableForms = function()
 		fieldsets[i].disabled = true;
 	}
 	
+	var tutButtons = document.querySelectorAll(".tut-button button");
+	
+	for(var i = 0; i < tutButtons.length; i++) {
+		tutButtons[i].setAttribute("disabled", "disabled");
+	}
+
+	document.getElementById("reset-button").setAttribute("disabled", "disabled");
+	document.getElementById("remove-line-button").setAttribute("disabled", "disabled");
 	var rollButton = document.getElementById("roll-button");
-	
-	rollButton.innerHTML = "roll";
-	
+	if (roll)
+	{
+		rollButton.innerHTML = "roll";
+	}
+	else
+	{
+		rollButton.setAttribute("disabled", "disabled");
+	}
 }
 
 

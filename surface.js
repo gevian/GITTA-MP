@@ -454,7 +454,7 @@ Surface.prototype.update = function(delta)
 		{
 			this.mesh.material.uniforms.keepVertices.value = 0;
 			this.state = "Waiting";
-			this.enableForms();
+			this.enableForms(true);
 		}			
 	}
 }
@@ -503,7 +503,7 @@ Surface.prototype.toggleRoll = function()
 	}
 	else if (this.state == "Waiting")
 	{
-		this.disableForms();
+		this.disableForms(true);
 		this.roll();
 	}
 	else if (this.state == "Rolled")
