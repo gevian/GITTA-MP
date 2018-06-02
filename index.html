@@ -57,6 +57,10 @@
 				border-top: none;
 			} 
 			
+			.tut-button {
+				text-align: center;
+			} 
+			
 		</style>
 	</head>
 	<body>
@@ -160,7 +164,7 @@
 			  </form>
 				<table>
 				 <tr>
-				  <td><button type="button" id="reset-button" onclick="controls.resetControls()">reset</button><br></td>
+				  <td><button type="button" id="reset-button" onclick="tutorialControls.resetControls()">reset</button><br></td>
 				  <td><button type="button" id="remove-line-button" onclick="lineProjector.disableLines()">remove line</button><br></td>
                   <td><button type="button" id="roll-button" onclick="rollPressed()">unroll</button><br></td>
 				 </tr>
@@ -170,18 +174,17 @@
 		<div id="explanation">
 			 <!-- Tab links -->
 			<div class="tab">
-			  <button id="defaultTabButton" class="tablinks" onclick="openTab(event, 'General')">Map Construction</button>
-			  <button class="tablinks" onclick="openTab(event, 'Tutorial_I')">Projection Surfaces</button>
-			  <!--<button class="tablinks" onclick="openTab(event, 'Tutorial_II')">Distortions</button>-->
-			  <button class="tablinks" onclick="openTab(event, 'Tutorial_III')">Common Projections</button>
+			  <button id="tut1-button" class="tablinks" onclick="openTab('tut1-button', 'tut1')">Map Construction</button>
+			  <button id="tut2-button" class="tablinks" onclick="openTab('tut2-button', 'tut2')">Projection Surfaces</button>
+			  <button id="tut3-button" class="tablinks" onclick="openTab('tut3-button', 'tut3')">Common Projections</button>
 			</div>
 
 			<!-- Tab content -->
-			<div id="General" class="tabcontent">
-			The intention of this web application is to demonstrate the construction of map projections and to showcase their properties. On the left side of the application, you find the controls panel to adjust the parameters of the different objects present in the 3D-scene in the center of this application. To navigate within the 3D-scene, use the left mouse button to rotate, the right mouse button to pan and the middle mouse button to zoom.
-			If you want to resort to the default settings, use the reset-button in the control panel.
+			<div id="tut1" class="tabcontent">
+			The intention of this web application is to demonstrate the construction of map projections. On the left side of the application, you find the controls panel to adjust the parameters of the different objects present in the 3D-scene in the center of this application. To navigate within the 3D-scene, use the left mouse button to rotate, the right mouse button to pan and the middle mouse button to zoom.
+			If you want to restore the default settings, use the reset-button in the control panel.
 			
-			<br> A common approach to construct map projections this makes use of three geometric objects:
+			<br> A common approach to construct map projections makes use of three geometric objects:
 			
 			 <ul>
 			  <li> A simplified representation of the earth, typically in the shape of a sphere or a spheroid.</li>
@@ -190,46 +193,45 @@
 			 </ul>
 			
 			In the simplest case, the map surface is directly represented as a flat plane as shown by default when opening this web application. If the settings were changed, you can click the button below to reset them.
-			
-			  <br><button onclick="controls.resetControls()">Reset</button><br>
-			
-			As you can see, the projection surface is currently a flat disk, touching the earth at the North Pole. The projection center is located at the center of the earth, represented as a yellow sphere. The earth can be imagined as a sphere of painted glass, effectively coloring each ray according to the color of the glass where the ray intersects it. The rays then paint the projection surface according to their color.
+			  <div class="tut-button">
+				<button onclick="tutorialControls.resetControls()">Reset</button>
+			  </div>
+			As you can see, the projection surface is currently a flat disk, touching the earth at the North Pole. The projection center is located at the center of the earth, represented as a yellow sphere. The earth can be imagined as a sphere of coloured glass, effectively coloring each ray that passes through its surface. The rays then paint the projection surface according to their color.
 			<br>
 			  Shift-click on the earth to visualize the ray originating from the projection center and passing the clicked location. Note how some rays hit the surface while some do not.  
 			<br>
 			Alternatively, click the following button to move the camera to the position of the projection center. Note how the borders of the sphere and the borders painted on the projection surface start to coincide. Move the camera slightly to emphasize this effect.
-			
-			  <br><button onclick="controls.moveCameraToProjectionCenter()">Move Camera to Projection Center</button><br>
-			  
-			<br>
+			  <div class="tut-button">
+			  <button onclick="tutorialControls.moveCameraToProjectionCenter()">Move Camera to Projection Center</button>
+			  </div>
 			The position of the projection center is an important aspect when constructing map projections. This can be adjusted by changing the "offset" value in the "light source" section of the controls panel. Observe how different positions of the projection center change the resulting projection and the geometry of the rays.
 			<br>
 			
 			Now that you learned the basics of how map projections are constructed, move on to the next section by clicking on the tab "Projection Surfaces" at the top of this panel or click the button below.
-			
-			  <br><button onclick="controls.moveCameraToProjectionCenter()">Projection Surfaces</button><br>
-			  
+			<div class="tut-button">
+			  <button onclick="openTab('tut2-button', 'tut2')">Projection Surfaces</button>
+			</div>  
 			</div>
 
-			<div id="Tutorial_I" class="tabcontent">
+			<div id="tut2" class="tabcontent">
 				
-				Typically, three different projection surfaces are used: The plane, the cylinder and the cone. A projection based on the plane is shown by default when starting this web application. If the settings have been modified, you can use the following button to enable the default settings.
+				Typically, three different projection surfaces are used: The plane, the cone and the cylinder. A projection based on the plane is shown by default when starting this web application. If the settings have been modified, you can use the following button to enable the default settings.
+					<div class="tut-button">
+					<button class="tut-button" onclick="tutorialControls.resetControls()">Reset</button>
+					</div>
+				Adjust the "lat" and "lon" values under the "orientation" section of the controls panel to investigate how different positions of the plane affect the resulting projection. Use the buttons below to construct a cone and a cylinder, respectively.
 				
-					<br><button onclick="controls.resetControls()">Reset</button><br>
+					<div class="tut-button">
+					<button onclick="tutorialControls.constructCone()">Cone</button>
+					<button onclick="tutorialControls.constructCylinder()">Cylinder</button>
+					</div>
 				
-				Adjust the "lat" and "lon" values under the "orientation" section of the controls panel to investigate how different positions of the plane affect the resulting projection. Use the buttons below to construct a cylinder and a cone, respectively.
-				
-					<br>
-					<button onclick="controls.resetControls()">Cylinder</button>
-					<button onclick="controls.resetControls()">Cone</button>
-					<br>
-				
-				While the plane is flat by default and hence can be used as a map out-of-the-box once the projection has been calculated, the cylinder and the cone need to be unrolled first to obtain their flat, two-dimensional form. To construct the flat representation based on the current orientation, use the "unroll" button in the controls panel to flatten the surface. Once flattend, use the same button (not labeled "roll") to obtain the original three-dimensional form. The location where these cylinders are "cut" can be adjusted with the "rot" value in the "orientation" section of the controls panel. The cut location is indicated by a red sphere.<br>
+				While the plane is flat by default and hence can be used as a map out-of-the-box once the projection has been calculated, the cylinder and the cone need to be unrolled first to obtain their flat, two-dimensional form. To construct the flat representation based on the current orientation, use the "unroll" button in the controls panel to flatten the surface. Once flattend, use the same button (now labeled "roll") to obtain the original three-dimensional form. The location where these cylinders are "cut" can be adjusted with the "rot" value in the "orientation" section of the controls panel. The cut location is indicated by a red sphere.<br>
 				
 				It is interesting to know that these three projection surfaces, the plane, the  cylinder and the plane can be interpreted as special cases of the conical frustum. Use the following button to construct an open conical frustum (i.e., a conical frustum without caps on top and bottom). 
-				
-					<br><button onclick="controls.resetControls()">Frustum</button><br>
-
+					<div class="tut-button">
+					<button class="tut-button" onclick="tutorialControls.constructFrustum()">Frustum</button>
+					</div>
 				Based on this surface, you can use the following ways to adjust the parameters in the control panel to construct the three common projection surfaces.
 					
 				 <ul>
@@ -238,11 +240,13 @@
 				  <li> To construct a cylinder, set the "upper radius" equal the "lower radius" with a value such as 1 and the "axis length" to a value greater 0 such as 4 and the offset to 0.</li>
 				 </ul>
 				
-				Make yourself familiar with these parameters and how they influence the geometry of the projectoin surface.
+				Make yourself familiar with these parameters and how they influence the geometry of the projection surface.
 				<br>
 				
-				Now that you learned about the three common projection surfaces and their connection, move on to the next section by clicking on the tab "Properties of Map Projections" at the top of this panel or click on the button below.
-					<br><button onclick="controls.resetControls()">Properties of Map Projections</button><br>				
+				Now that you learned about the three common projection surfaces and their connection, move on to the next section by clicking on the tab "Common Map Projections" at the top of this panel or click on the button below.
+					<div class="tut-button">
+					<button class="tut-button" onclick="openTab('tut3-button', 'tut3')">Common Map Projections</button>
+					</div>
 			</div>
 
             <!--
@@ -270,16 +274,58 @@
 				
 			</div>
             -->
-			<div id="Tutorial_III" class="tabcontent">
-				<br><button onclick="controls.setProjection('orthographic azimuthal')">Orthographic Azimuthal</button><br>				
-				<br><button onclick="controls.setProjection('stereographic azimuthal')">Stereographic Azimuthal</button><br>		
-				<br><button onclick="controls.setProjection('gnomonic azimuthal')">Gnomonic Azimuthal</button><br>
-				<br><button onclick="controls.setProjection('vertical perspective azimuthal near side')">Vertical perspective Azimuthal, near-side</button><br>
-				<br><button onclick="controls.setProjection('vertical perspective azimuthal far side')">Vertical perspective Azimuthal, far-side</button><br>
-				<br><button onclick="controls.setProjection('oblique perspective non-azimuthal')">Oblique perspective non-Azimuthal</button><br>
-				<br><button onclick="controls.setProjection('central cylindrical')">Central Cylindrical</button><br>
-				<br><button onclick="controls.setProjection('centrographic conic')">Centrographic Conic</button><br>
-				<br><button onclick="controls.setProjection('brauns stereographic conic')">Braun's Stereographic Conic</button><br>
+			<div id="tut3" class="tabcontent">
+				In this segment, we will briefly discuss some named map projections. These projections form the class of the so-called "true perspective projections" and are the only common projections that can be constructed using this web application.
+				
+				Maybe the most simple map projection one can imagine is the gnomonic azimuthal map projection, which is also the default setting in this web application. In this case, the projection surface is the plane touch the North Pole and the light source is located at the center of the earth. Use the following button to construct this map projection:
+			
+				<div class="tut-button">
+				<button onclick="tutorialControls.setProjection('gnomonic azimuthal')">Gnomonic Azimuthal</button>
+				</div>
+				
+				A slightly different map projection is the stereographic azimuthal map projection. In this case, the light source is located at the opposite pole of where the projection plane is touching the earth.
+				
+				<div class="tut-button">
+				<button onclick="tutorialControls.setProjection('stereographic azimuthal')">Stereographic Azimuthal</button>
+				</div>
+			
+				Another variant is the orthographic azimuthal projection. In this case, the projection center is located at an infinitely distant location perpendicular to the projection surface. Note how the projection rays form straight, parallel lines.
+			
+				<div class="tut-button">
+				<button onclick="tutorialControls.setProjection('orthographic azimuthal')">Orthographic Azimuthal</button>
+				</div>
+				
+				The vertical perspective azimuthal projections places the light source outside of the earth's surface. The near-side variant places the light source "above" the projection surface while the far-side variante places the light source "below" the projection surface.
+
+				<div class="tut-button">
+				<button onclick="tutorialControls.setProjection('vertical perspective azimuthal near side')">Vertical perspective Azimuthal, near-side</button>
+				<button onclick="tutorialControls.setProjection('vertical perspective azimuthal far side')">Vertical perspective Azimuthal, far-side</button>
+				</div>
+				
+				A rather special case of map projection is the so-called oblique perspective non-azimuthal perspective, in which case the surface orientation the vector between the light source and the earth's center is not perpendicular to the projection surface.
+				
+				<div class="tut-button">
+				<button onclick="tutorialControls.setProjection('oblique perspective non-azimuthal')">Oblique perspective non-Azimuthal</button>
+				</div>
+				
+				The only common cylindrical projection constructable with this tool is the central cylindrical projection. In this case, the light source is directly positioned in the center of the earth and the cylinder is touching the earth's surface along a great circle.
+				
+				<div class="tut-button">
+				<button onclick="tutorialControls.setProjection('central cylindrical')">Central Cylindrical</button>
+				</div>
+				
+				A common conical projection is the centrographic conic. Similarly to the gnomonic and the cylindrical projections, this projection places the light source in the center of the earth.
+				
+				<div class="tut-button">
+				<button onclick="tutorialControls.setProjection('centrographic conic')">Centrographic Conic</button>
+				</div>
+				
+				A slightly different construction scheme is followed in the case of Braun's stereographic conic projection. In this case, the light source is centered on the opposite pole of where the cone peak is located.
+				
+				<div class="tut-button">
+				<button onclick="tutorialControls.setProjection('brauns stereographic conic')">Braun's Stereographic Conic</button><br></div>
+				
+				You now learned the general concepts behind the construction of map projections as exemplified with the true perspective projections. In the future, it is aimed to extend this tool with other classes of projections such as the 
 			</div>
 		</div>
 		<script src="libs/three.js"></script>
@@ -292,6 +338,8 @@
 		<script src="lineProjector.js"></script>
 		<script src="cutIndicator.js"></script>
 		
+		<script src="sliderAnimator.js"></script>
+		<script src="tutorialControls.js"></script>
 		<script src="controls.js"></script>		
 
 		<script>
@@ -304,9 +352,13 @@
 		var cutIndicator = new CutIndicator(surface, glcanvas.scene);
 		var lineProjector = new LineProjector(glcanvas, surface, earth, projectionCenter);
 		
-		var controls = new Controls(earth, surface, projectionCenter, cutIndicator, lineProjector);
-		controls.reset();
-			
+		var controls = new Controls(glcanvas, earth, surface, projectionCenter, cutIndicator, lineProjector);
+
+		var sliderAnimator = new SliderAnimator(controls);
+		
+		var tutorialControls = new TutorialControls(controls, sliderAnimator, projectionCenter, glcanvas);
+		tutorialControls.resetControls();
+		
 		var clock  = new THREE.Clock();
 		
 		var animate = function () {
@@ -315,6 +367,7 @@
 
 			glcanvas.update(delta);
 			surface.update(delta);
+			sliderAnimator.update(delta);
 			cutIndicator.updateGeometry();
 		};
 
@@ -323,8 +376,7 @@
 
 
 		// tabs
-		
-		function openTab(evt, tabName) {
+		function openTab(buttonName, tabName) {
 			// Declare all variables
 			var i, tabcontent, tablinks;
 
@@ -342,10 +394,10 @@
 
 			// Show the current tab, and add an "active" class to the button that opened the tab
 			document.getElementById(tabName).style.display = "block";
-			evt.currentTarget.className += " active";
+			document.getElementById(buttonName).className += " active";
 		}
 
-		document.getElementById("defaultTabButton").click();
+		document.getElementById("tut1-button").click();
 		
 
 		</script>
