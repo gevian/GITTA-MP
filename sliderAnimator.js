@@ -68,11 +68,12 @@ SliderAnimator.prototype.update = function(delta)
 			
 			instruction.slider.oninput();
 		}
-	}
-
-	if (allFinished)
-	{
-		this.state = "Waiting";
-		this.controls.enableForms(false);
+		
+		if (allFinished)
+		{
+			this.state = "Waiting";
+			this.controls.enableForms(false);
+		}
+			
 	}
 }
