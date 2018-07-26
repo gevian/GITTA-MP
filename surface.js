@@ -1,7 +1,12 @@
 var vertexShaderSource = `
     varying vec4 globalPosition;
     varying vec4 globalPositionRolled;
+	varying vec4 globalPositionTorus;
+	
 	uniform int keepVertices;
+	
+	uniform float projTorusScale;
+	uniform mat4 projTorusMatrix;
 	
     void main() {
         gl_Position =   projectionMatrix * 
@@ -18,6 +23,8 @@ var vertexShaderSource = `
 		{
 			globalPositionRolled = globalPosition;
 		}
+		
+		globalPositionTorus = projTorusMatrix * vec4(normal * projTorusScale, 1.0);
     }
 `;
 
@@ -26,13 +33,12 @@ var fragmentShaderSource = `
     uniform sampler2D tGraticule;
     uniform sampler2D tTissot;
 	
-	uniform vec3 projOrigin;
-	
 	uniform float opacity;
 	
     varying vec4 globalPosition;
     varying vec4 globalPositionRolled;
-	
+	varying vec4 globalPositionTorus;
+		
 	#define M_PI 3.1415926535897932384626433832795
 	float radius = 1.0;
 	
@@ -80,7 +86,8 @@ var fragmentShaderSource = `
 	
 	
     void main() {
-		vec3 p = point_on_sphere(projOrigin, globalPositionRolled.xyz);
+		//vec3 p = point_on_sphere(projOrigin, globalPositionRolled.xyz);
+		vec3 p = point_on_sphere(globalPositionTorus.xyz, globalPositionRolled.xyz);
 		
 		if (p.x < -999.0)
 		{
@@ -105,7 +112,7 @@ var fragmentShaderSource = `
 			color = vec4(color.rgb * color.a * (1.0 - CTissot.a) + CTissot.a * CTissot.rgb, 1.0);
 			
 			gl_FragColor = vec4(color.rgb, opacity);
-			
+			//gl_FragColor = globalPositionTorus;
 			//gl_FragColor = vec4(azimuthalNorm, azimuthalNorm, azimuthalNorm, 1.0);
 		}
 	}
@@ -123,8 +130,10 @@ function Surface(scene, earth) {
 	var preGeometry = new THREE.CylinderGeometry(1, 1, 4, 512, 1, true);
 	
 	this.geometry = new THREE.Geometry(); 
-	this.geometry.computeVertexNormals();
+	//this.geometry.computeVertexNormals();
 
+	var torusVecs = [];
+	
 	this.quads = [];
 	
 	var pgFaces = preGeometry.faces;
@@ -152,6 +161,10 @@ function Surface(scene, earth) {
 
 		// we use the color channel as a substitute for another geometry
 		// custom attributes are not (easily?) supported by geometry classes and the geometrybuffer classes are somewhat cumbersome to use
+		
+		//console.log(a.x, a.y, a.z);
+		//console.log(b.x, b.y, b.z);
+
 		upperFace.vertexColors[0] = new THREE.Color(a.x, a.y, a.z);
 		upperFace.vertexColors[1] = new THREE.Color(b.x, b.y, b.z);
 		upperFace.vertexColors[2] = new THREE.Color(c.x, c.y, c.z);
@@ -159,6 +172,15 @@ function Surface(scene, earth) {
 		lowerFace.vertexColors[0] = new THREE.Color(b.x, b.y, b.z);
 		lowerFace.vertexColors[1] = new THREE.Color(d.x, d.y, d.z);
 		lowerFace.vertexColors[2] = new THREE.Color(c.x, c.y, c.z);
+		
+		// the same hack: we store the torus coordinates in the vertex normals
+		upperFace.vertexNormals[0] = new THREE.Vector3(-a.x, 0, -a.z);
+		upperFace.vertexNormals[1] = new THREE.Vector3(-b.x, 0, -b.z);
+		upperFace.vertexNormals[2] = new THREE.Vector3(-c.x, 0, -c.z);
+		
+		lowerFace.vertexNormals[0] = new THREE.Vector3(-b.x, 0, -b.z);
+		lowerFace.vertexNormals[1] = new THREE.Vector3(-d.x, 0, -d.z);
+		lowerFace.vertexNormals[2] = new THREE.Vector3(-c.x, 0, -c.z);
 		
 		this.geometry.faces.push( upperFace );
 		this.geometry.faces.push( lowerFace );
@@ -192,7 +214,8 @@ function Surface(scene, earth) {
 		tCountries: { type: "t", value: this.countriesTexture },
 		tGraticule: { type: "t", value: this.graticuleTexture },
 		tTissot:    { type: "t", value: this.tissotTexture },
-		projOrigin: { type: "v3", value: new THREE.Vector3(0.0, 0.0, 0.0) },
+		projTorusScale: { type: "f", value: 1.0 },
+		projTorusMatrix: { type: 'm4', value: new THREE.Matrix4()},
 		opacity:    { type: "f", value: 1.0 }, // Note: if not 1.0, set transparent of material to true
 		keepVertices: { type: "i", value: 0 }
 	};
@@ -227,7 +250,7 @@ function Surface(scene, earth) {
 Surface.prototype.updateGeometry = function()
 {	
 	this.geometry.computeFaceNormals();
-	this.geometry.computeVertexNormals();
+	//this.geometry.computeVertexNormals();
 	
 	var n1 = this.quads[0].uf.normal;
 	var n2 = this.quads[1].uf.normal;
@@ -513,11 +536,11 @@ Surface.prototype.toggleRoll = function()
 	
 }
 
-Surface.prototype.setProjectionCenter = function(center)
+Surface.prototype.setProjectionTorusParams = function(scale, transformMatrix)
 {
-    this.mesh.material.uniforms.projOrigin.value = center;
+    this.mesh.material.uniforms.projTorusScale.value = scale;
+    this.mesh.material.uniforms.projTorusMatrix.value = transformMatrix;
 }
-
 
 Surface.prototype.setFormsCallbacks = function(enableForms, disableForms)
 {

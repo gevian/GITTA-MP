@@ -34,6 +34,8 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 	this.lightSourceLongitudeBox    = document.getElementById("lightsource_longitude_box");
 	this.lightSourceOffsetSlider    = document.getElementById("lightsource_offset_slider");
 	this.lightSourceOffsetBox       = document.getElementById("lightsource_offset_box");
+	this.lightSourceScaleSlider     = document.getElementById("lightsource_scale_slider");
+	this.lightSourceScaleBox        = document.getElementById("lightsource_scale_box");
 	
 	this.bordersCheckbox   = document.getElementById("borders-checkbox");
 	this.graticuleCheckbox = document.getElementById("graticule-checkbox");
@@ -67,6 +69,8 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 	this.lightSourceOffsetSlider.oninput = lightSourceOffsetSliderChanged;
 	this.lightSourceOffsetBox.oninput    = lightSourceOffsetBoxChanged;
 	
+	this.lightSourceScaleSlider.oninput = lightSourceScaleSliderChanged;
+	this.lightSourceScaleBox.oninput    = lightSourceScaleBoxChanged;
 	
 	this.bordersCheckbox.onclick   = bordersChanged;
 	this.graticuleCheckbox.onclick = graticuleChanged;
@@ -102,7 +106,7 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 	   _this.surface.setOrientation(lat, lon, rot);
 	   _this.projectionCenter.setOrientation(lat, lon);
 	   
-	   _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
+	   _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
 	   _this.cutIndicator.updateGeometry();
 		_this.LineProjector.updateLines();
 	}
@@ -127,7 +131,7 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 	   _this.surface.setOrientation(lat, lon, rot);
 	   _this.projectionCenter.setOrientation(lat, lon);
 	   
-	   _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
+	   _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
 	   _this.cutIndicator.updateGeometry();
 	   _this.LineProjector.updateLines();
 	}
@@ -224,7 +228,7 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 		_this.lightSourceOffsetBox.oninput = lightSourceOffsetBoxChanged;
 		
 		_this.projectionCenter.setOffset(_this.lightSourceOffsetBox.value);
-	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
+	    _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
 		_this.LineProjector.updateLines();
 	}
 	
@@ -234,10 +238,29 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 		_this.lightSourceOffsetSlider.oninput = lightSourceOffsetSliderChanged; 
 		
 		_this.projectionCenter.setOffset(_this.lightSourceOffsetBox.value);
-	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
+	    _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
 		_this.LineProjector.updateLines();
 	}
-    
+
+	function lightSourceScaleSliderChanged(event) {
+		_this.lightSourceScaleBox.oninput = null;
+		_this.lightSourceScaleBox.value   = _this.lightSourceScaleSlider.value;
+		_this.lightSourceScaleBox.oninput = lightSourceScaleBoxChanged;
+		
+		_this.projectionCenter.setScale(_this.lightSourceScaleBox.value);
+	    _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
+		_this.LineProjector.updateLines();
+	}
+	
+	function lightSourceScaleBoxChanged(event) {
+		_this.lightSourceScaleSlider.oninput = null;
+		_this.lightSourceScaleSlider.value   = _this.lightSourceScaleBox.value;
+		_this.lightSourceScaleSlider.oninput = lightSourceScaleSliderChanged; 
+		
+		_this.projectionCenter.setScale(_this.lightSourceScaleBox.value);
+	    _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
+		_this.LineProjector.updateLines();
+	}
 	
 	function lightSourceLatitudeSliderChanged(event) {
 		_this.lightSourceLatitudeBox.oninput = null;
@@ -247,7 +270,7 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 		var rot = ((_this.lightSourceLatitudeBox.value / 360) * 2 * Math.PI);
 		
 		_this.projectionCenter.setLatitude(rot);
-	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
+	    _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
 		_this.LineProjector.updateLines();
 	}
 	
@@ -259,7 +282,7 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 		var rot = ((_this.lightSourceLatitudeBox.value / 360) * 2 * Math.PI);
 		
 		_this.projectionCenter.setLatitude(rot);
-	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
+	    _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
 		_this.LineProjector.updateLines();
 	}
 	
@@ -271,7 +294,7 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 		var rot = ((_this.lightSourceLongitudeBox.value / 360) * 2 * Math.PI);
 		
 		_this.projectionCenter.setLongitude(rot);
-	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
+	    _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
 		_this.LineProjector.updateLines();
 	}
 	
@@ -283,7 +306,7 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 		var rot = ((_this.lightSourceLongitudeBox.value / 360) * 2 * Math.PI);
 		
 		_this.projectionCenter.setLongitude(rot);
-	    _this.surface.setProjectionCenter(_this.projectionCenter.sphere.getWorldPosition());
+	    _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
 		_this.LineProjector.updateLines();
 	}
 	

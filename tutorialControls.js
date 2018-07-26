@@ -230,8 +230,9 @@ TutorialControls.prototype.resetControls = function()
 	var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 0};
 	var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
 	var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
-		
-	this.animator.startAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction], 1);
+	var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 1};
+	
+	this.animator.startAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], 1);
 }
 
 /*
