@@ -6,7 +6,7 @@ function CutIndicator(surface, scene) {
 
 	scene.add(this.sphere);
 	
-	this.referencePoint = this.surface.quads[0].ll;
+	this.referencePoint = this.surface.bufferQuads[0].getLL();
 	this.mesh = this.surface.mesh;
 	
 	this.updateGeometry();

@@ -8,6 +8,9 @@ var vertexShaderSource = `
 	uniform float projTorusScale;
 	uniform mat4 projTorusMatrix;
 	
+	attribute vec3 positionRolled;
+	attribute vec3 positionProjectionCenter;
+	
     void main() {
         gl_Position =   projectionMatrix * 
                         modelViewMatrix * 
@@ -17,14 +20,14 @@ var vertexShaderSource = `
 		
 		if (keepVertices == 1)
 		{
-			globalPositionRolled = modelMatrix * vec4(color, 1.0);
+			globalPositionRolled = modelMatrix * vec4(positionRolled, 1.0);
 		}
 		else
 		{
 			globalPositionRolled = globalPosition;
 		}
 		
-		globalPositionTorus = projTorusMatrix * vec4(normal * projTorusScale, 1.0);
+		globalPositionTorus = projTorusMatrix * vec4(positionProjectionCenter * projTorusScale, 1.0);
     }
 `;
 
@@ -112,12 +115,141 @@ var fragmentShaderSource = `
 			color = vec4(color.rgb * color.a * (1.0 - CTissot.a) + CTissot.a * CTissot.rgb, 1.0);
 			
 			gl_FragColor = vec4(color.rgb, opacity);
-			//gl_FragColor = globalPositionTorus;
+			//gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 			//gl_FragColor = vec4(azimuthalNorm, azimuthalNorm, azimuthalNorm, 1.0);
 		}
 	}
 `;
 
+
+
+function Quad(bufferGeometry, faceIdx0, faceIdx1) {
+	
+	this.bufferGeometry = bufferGeometry;
+	this.positionAttribute = this.bufferGeometry.attributes.position;
+	this.faceIdx0 = faceIdx0;
+	this.faceIdx1 = faceIdx1;
+		
+	this.f0idx0 = bufferGeometry.index.array[faceIdx0];
+	this.f0idx1 = bufferGeometry.index.array[faceIdx0 + 1];
+	this.f0idx2 = bufferGeometry.index.array[faceIdx0 + 2];
+	
+	this.f1idx0 = bufferGeometry.index.array[faceIdx1];
+	this.f1idx1 = bufferGeometry.index.array[faceIdx1 + 1];
+	this.f1idx2 = bufferGeometry.index.array[faceIdx1 + 2];
+
+}
+
+Quad.prototype.getUL = function()
+{
+	var ul = new THREE.Vector3();
+	ul.fromBufferAttribute( this.positionAttribute, this.f0idx0 );
+	return ul;
+}
+
+Quad.prototype.setUL_XYZ = function(x,y,z)
+{
+	this.positionAttribute.setXYZ(this.f0idx0, x, y, z);
+}
+
+Quad.prototype.setUL_XZ = function(x, z)
+{
+	this.positionAttribute.setX(this.f0idx0, x);
+	this.positionAttribute.setZ(this.f0idx0, z);
+}
+
+Quad.prototype.setUL_Y = function(y)
+{
+	this.positionAttribute.setY(this.f0idx0, y);
+}
+
+Quad.prototype.getLL = function()
+{
+	var ll = new THREE.Vector3();
+	ll.fromBufferAttribute( this.positionAttribute, this.f0idx1 );
+	return ll;
+}
+
+Quad.prototype.setLL_XYZ = function(x,y,z)
+{
+	this.positionAttribute.setXYZ(this.f0idx1, x, y, z);
+}
+
+Quad.prototype.setLL_XZ = function(x, z)
+{
+	this.positionAttribute.setX(this.f0idx1, x);
+	this.positionAttribute.setZ(this.f0idx1, z);
+}
+
+Quad.prototype.setLL_Y = function(y)
+{
+	this.positionAttribute.setY(this.f0idx1, y);
+}
+
+Quad.prototype.getUR = function()
+{
+	var ur = new THREE.Vector3();
+	ur.fromBufferAttribute( this.positionAttribute, this.f0idx2 );
+	return ur;
+}
+
+Quad.prototype.setUR_XYZ = function(x,y,z)
+{
+	this.positionAttribute.setXYZ(this.f0idx2, x, y, z);
+}
+
+Quad.prototype.setUR_XZ = function(x, z)
+{
+	this.positionAttribute.setX(this.f0idx2, x);
+	this.positionAttribute.setZ(this.f0idx2, z);
+}
+
+Quad.prototype.setUR_Y = function(y)
+{
+	this.positionAttribute.setY(this.f0idx2, y);
+}
+
+Quad.prototype.getLR = function()
+{
+	var lr = new THREE.Vector3();
+	lr.fromBufferAttribute( this.positionAttribute, this.f1idx1 );
+	return lr;
+}
+
+Quad.prototype.setLR_XYZ = function(x,y,z)
+{
+	this.positionAttribute.setXYZ(this.f1idx1, x, y, z);
+}
+
+Quad.prototype.setLR_XZ = function(x, z)
+{
+	this.positionAttribute.setX(this.f1idx1, x);
+	this.positionAttribute.setZ(this.f1idx1, z);
+}
+
+Quad.prototype.setLR_Y = function(y)
+{
+	this.positionAttribute.setY(this.f1idx1, y);
+}
+
+Quad.prototype.getNormal = function()
+{
+	var vA = new THREE.Vector3(), vB = new THREE.Vector3(), vC = new THREE.Vector3();
+	
+	var cb = new THREE.Vector3(), ab = new THREE.Vector3();
+	
+	vA.fromBufferAttribute( this.positionAttribute, this.f0idx0 );
+	vB.fromBufferAttribute( this.positionAttribute, this.f0idx1 );
+	vC.fromBufferAttribute( this.positionAttribute, this.f0idx2 );
+	
+	cb.subVectors( vC, vB );
+	ab.subVectors( vA, vB );
+	cb.cross( ab );
+
+	cb.normalize();
+	
+	return cb;
+}
 
 
 
@@ -129,74 +261,92 @@ function Surface(scene, earth) {
 	this.state = "Initializing";
 	var preGeometry = new THREE.CylinderGeometry(1, 1, 4, 512, 1, true);
 	
-	this.geometry = new THREE.Geometry(); 
+	this.geometry = new THREE.Geometry();
 	//this.geometry.computeVertexNormals();
-
-	var torusVecs = [];
 	
-	this.quads = [];
+	this.bufferGeometry = new THREE.CylinderBufferGeometry(1, 1, 4, 4, 1, true);
+	this.bufferGeometry.removeAttribute("uv");
 	
-	var pgFaces = preGeometry.faces;
-	var pgVertices = preGeometry.vertices;
-
-	for (var i = 0; i < pgFaces.length / 2.0; i++)
+	this.bufferGeometry.computeVertexNormals();
+	
+	var positionAttribute = this.bufferGeometry.attributes.position;
+	
+	var positionRolled     		 = new Float32Array( positionAttribute.array );
+	var positionProjectionCenter = new Float32Array( positionAttribute.array );
+	
+	// iterate over faces
+	for (var a = 0; a < this.bufferGeometry.index.array.length / 3; a++)
 	{
-		var f1 = pgFaces[i*2];
-		var f2 = pgFaces[i*2+1];
+		// indices of vectors
+		var idx0 = a * 3;
+		var idx1 = a * 3 + 1;
+		var idx2 = a * 3 + 2;
 		
-		var a = pgVertices[f1.a].clone();
-		var b = pgVertices[f1.b].clone();
-		var c = pgVertices[f1.c].clone();
-		var d = pgVertices[f2.b].clone();
+		// indices of single vector components
+		var idx0_0 = this.bufferGeometry.index.array[idx0] * 3;
+		var idx0_1 = idx0_0 + 1;
+		var idx0_2 = idx0_0 + 2;
 		
-		var cl = this.geometry.vertices.length;
+		var idx1_0 = this.bufferGeometry.index.array[idx1] * 3;
+		var idx1_1 = idx1_0 + 1;
+		var idx1_2 = idx1_0 + 2;
 		
-		this.geometry.vertices.push(a);
-		this.geometry.vertices.push(b);
-		this.geometry.vertices.push(c);
-		this.geometry.vertices.push(d);
-
-		var upperFace = new THREE.Face3( cl, cl+1, cl+2 );
-		var lowerFace = new THREE.Face3( cl+1, cl+3, cl+2 );
-
-		// we use the color channel as a substitute for another geometry
-		// custom attributes are not (easily?) supported by geometry classes and the geometrybuffer classes are somewhat cumbersome to use
+		var idx2_0 = this.bufferGeometry.index.array[idx2] * 3;
+		var idx2_1 = idx2_0 + 1;
+		var idx2_2 = idx2_0 + 2;
 		
-		//console.log(a.x, a.y, a.z);
-		//console.log(b.x, b.y, b.z);
-
-		upperFace.vertexColors[0] = new THREE.Color(a.x, a.y, a.z);
-		upperFace.vertexColors[1] = new THREE.Color(b.x, b.y, b.z);
-		upperFace.vertexColors[2] = new THREE.Color(c.x, c.y, c.z);
 		
-		lowerFace.vertexColors[0] = new THREE.Color(b.x, b.y, b.z);
-		lowerFace.vertexColors[1] = new THREE.Color(d.x, d.y, d.z);
-		lowerFace.vertexColors[2] = new THREE.Color(c.x, c.y, c.z);
+		// calculate projection center
+		positionProjectionCenter[idx0_0] = -positionProjectionCenter[idx0_0];
+		positionProjectionCenter[idx0_1] = 0.0;
+		positionProjectionCenter[idx0_2] = -positionProjectionCenter[idx0_2];
 		
-		// the same hack: we store the torus coordinates in the vertex normals
-		upperFace.vertexNormals[0] = new THREE.Vector3(-a.x, 0, -a.z);
-		upperFace.vertexNormals[1] = new THREE.Vector3(-b.x, 0, -b.z);
-		upperFace.vertexNormals[2] = new THREE.Vector3(-c.x, 0, -c.z);
+		positionProjectionCenter[idx1_0] = -positionProjectionCenter[idx1_0];
+		positionProjectionCenter[idx1_1] = 0.0;
+		positionProjectionCenter[idx1_2] = -positionProjectionCenter[idx1_2];
 		
-		lowerFace.vertexNormals[0] = new THREE.Vector3(-b.x, 0, -b.z);
-		lowerFace.vertexNormals[1] = new THREE.Vector3(-d.x, 0, -d.z);
-		lowerFace.vertexNormals[2] = new THREE.Vector3(-c.x, 0, -c.z);
-		
-		this.geometry.faces.push( upperFace );
-		this.geometry.faces.push( lowerFace );
-							
-		this.quads.push({"ul": a, "ll": b, "ur": c, "lr": d, "uf": upperFace, "lf": lowerFace});
+		positionProjectionCenter[idx2_0] = -positionProjectionCenter[idx2_0];
+		positionProjectionCenter[idx2_1] = 0.0;
+		positionProjectionCenter[idx2_2] = -positionProjectionCenter[idx2_2];
 	}
+	
+	this.bufferGeometry.addAttribute( 'positionRolled', new THREE.Float32BufferAttribute( positionRolled, 3 ));
+	this.bufferGeometry.addAttribute( 'positionProjectionCenter', new THREE.Float32BufferAttribute( positionProjectionCenter, 3 ));
+	
+	
+	
+	this.bufferQuads = [];
+	
+	for (var a = 0; a < this.bufferGeometry.index.array.length / 6; a++)
+	{
+		var faceIdx0 = a * 6;
+		var faceIdx1 = a * 6 + 3;
 		
+		var quad = new Quad(this.bufferGeometry, faceIdx0, faceIdx1);
+		this.bufferQuads.push(quad);
+	}
+	
+	
+	for (var m = 0; m < this.bufferQuads.length; m++)
+	{
+		console.log("---");
+		console.log("LL", this.bufferQuads[m].getLL());
+		console.log("UL", this.bufferQuads[m].getUL());
+		console.log("UR", this.bufferQuads[m].getUR());
+		console.log("LR", this.bufferQuads[m].getLR());
+	}
+	
+	
+	
 	this.startTime = new Date();
-	this.maxTime = 2;
+	this.maxTime = 5;
 
 	this.fractionPerSecond = 1 / this.maxTime;
-	this.quadsPerSecond = this.fractionPerSecond * this.quads.length;
+	this.quadsPerSecond = this.fractionPerSecond * this.bufferQuads.length;
 
-	this.secondsPerQuad = this.quads.length / this.maxTime;
+	this.secondsPerQuad = this.bufferQuads.length / this.maxTime;
 	
-	this.lastQuadInverse = this.quads.length - 1;
+	this.lastQuadInverse = this.bufferQuads.length - 1;
 	this.overallTInverse = 0;
 	this.remainingQuadsFloatInverse = 0;
 	
@@ -223,15 +373,14 @@ function Surface(scene, earth) {
     this.scene = scene; 
 	
     this.material = new THREE.ShaderMaterial( {
-													uniforms: uniforms,
-													vertexShader: vertexShaderSource,
-													fragmentShader: fragmentShaderSource,
-                                                    side: THREE.DoubleSide,
-													vertexColors: THREE.VertexColors,
-                                                    transparent: false
-                                                } );
-
-	this.mesh = new THREE.Mesh( this.geometry, this.material );	
+												uniforms: uniforms,
+												vertexShader: vertexShaderSource,
+												fragmentShader: fragmentShaderSource,
+												side: THREE.DoubleSide,
+												transparent: false
+											} );
+	console.log(this.bufferGeometry);
+	this.mesh = new THREE.Mesh( this.bufferGeometry, this.material );	
 	
     this.earthCenter = new THREE.Object3D();
 	
@@ -244,29 +393,110 @@ function Surface(scene, earth) {
 	this.disableForms = function(){};
 		
 	this.state = "Waiting";
+	
+	
+	
+	//var bufferMaterial = new THREE.MeshPhongMaterial({color: 0x000044});
+	//var cube = new THREE.Mesh(bufferGeometry, bufferMaterial);
+	//scene.add(cube);
 }
 
+/*
+Surface.prototype.calculateFaceNormals = function(bufferGeometry)
+{	
+	bufferGeometry.faceNormals = [];
+	console.log(bufferGeometry.index.array.length);
+	
+	for (var a = 0; a < bufferGeometry.index.array.length / 3; a++)
+	{
+		console.log(a);
+		// indices of attributes
+		var idx0 = bufferGeometry.index.array[a * 3];
+		var idx1 = bufferGeometry.index.array[a * 3 + 1];
+		var idx2 = bufferGeometry.index.array[a * 3 + 2];
+		
+		var vA = new THREE.Vector3(), vB = new THREE.Vector3(), vC = new THREE.Vector3();
+		
+		var cb = new THREE.Vector3(), ab = new THREE.Vector3();
+		
+		vA.fromBufferAttribute( bufferGeometry.attributes.position, idx0 );
+		vB.fromBufferAttribute( bufferGeometry.attributes.position, idx1 );
+		vC.fromBufferAttribute( bufferGeometry.attributes.position, idx2 );
+		
+		cb.subVectors( vC, vB );
+		ab.subVectors( vA, vB );
+		cb.cross( ab );
+
+		cb.normalize();
+		
+		bufferGeometry.faceNormals.push(cb);
+	}
+}
+*/
 
 Surface.prototype.updateGeometry = function()
-{	
-	this.geometry.computeFaceNormals();
-	//this.geometry.computeVertexNormals();
-	
-	var n1 = this.quads[0].uf.normal;
-	var n2 = this.quads[1].uf.normal;
+{		
+	var n1 = this.bufferQuads[0].getNormal();
+	var n2 = this.bufferQuads[1].getNormal();
 	
 	this.angle = -n2.angleTo(n1);
+	console.log(n1, n2, this.angle);
 }
 
 
-Surface.prototype.rotateVertex = function(vertex, angle, loc, axis)
+Surface.prototype.rotateQuad = function(index, angle, loc, axis)
 {	
-	vertex.sub(loc).applyAxisAngle(axis, angle).add(loc);
+	console.log("---");
+	console.log(index, angle, loc, axis);
+	var ll = this.bufferQuads[index].getLL();
+	ll.sub(loc).applyAxisAngle(axis, angle).add(loc);
+	this.bufferQuads[index].setLL_XYZ(ll.x, ll.y, ll.z);
+	
+	var ul = this.bufferQuads[index].getUL();
+	ul.sub(loc).applyAxisAngle(axis, angle).add(loc);
+	this.bufferQuads[index].setUL_XYZ(ul.x, ul.y, ul.z);
+	
+	var lr = this.bufferQuads[index].getLR();
+	lr.sub(loc).applyAxisAngle(axis, angle).add(loc);
+	this.bufferQuads[index].setLR_XYZ(lr.x, lr.y, lr.z);
+	
+	var ur = this.bufferQuads[index].getUR();
+	
+	var test_ur = ur.clone();
+	ur.sub(loc).applyAxisAngle(axis, angle).add(loc);
+	
+	/*console.log("___");
+	console.log(ur, test_ur);
+	
+	console.log(test_ur.sub(loc));
+	console.log(test_ur.applyAxisAngle(axis, angle));
+
+	
+	console.log(test_ur.add(loc), ur);
+	*/
+	
+	console.log(ur.x, ur.y, ur.z);
+	console.log(ur);
+	this.bufferQuads[index].setUR_XYZ(ur.x, ur.y, ur.z);
 }
 
-Surface.prototype.rotateVertexInverse = function(vertex, angle, loc, axis)
+Surface.prototype.rotateQuadInverse = function(index, angle, loc, axis)
 {	
-	vertex.sub(loc).applyAxisAngle(axis, -angle).add(loc);
+	var ll = this.bufferQuads[index].getLL();
+	ll.sub(loc).applyAxisAngle(axis, -angle).add(loc);
+	this.bufferQuads[index].setLL_XYZ(ll.x, ll.y, ll.z);
+	
+	var ul = this.bufferQuads[index].getUL();
+	ul.sub(loc).applyAxisAngle(axis, -angle).add(loc);
+	this.bufferQuads[index].setUL_XYZ(ul.x, ul.y, ul.z);
+	
+	var lr = this.bufferQuads[index].getLR();
+	lr.sub(loc).applyAxisAngle(axis, -angle).add(loc);
+	this.bufferQuads[index].setLR_XYZ(lr.x, lr.y, lr.z);
+	
+	var ur = this.bufferQuads[index].getUR();
+	ur.sub(loc).applyAxisAngle(axis, -angle).add(loc);
+	this.bufferQuads[index].setUR_XYZ(ur.x, ur.y, ur.z);
 }
 
 
@@ -287,55 +517,59 @@ Surface.prototype.setGeometryOffset = function(offset)
 
 Surface.prototype.setAxisLength = function(length)
 {
-	for (var i = 0; i < this.quads.length; i++)
+	for (var i = 0; i < this.bufferQuads.length; i++)
 	{	
-		this.quads[i].ul.y = length / 2.0;
-		this.quads[i].ur.y = length / 2.0;
-		this.quads[i].ll.y = -length / 2.0;
-		this.quads[i].lr.y = -length / 2.0;
+		this.bufferQuads[i].setUL_Y( length / 2.0);
+		this.bufferQuads[i].setUR_Y( length / 2.0);
+		this.bufferQuads[i].setLL_Y(-length / 2.0);
+		this.bufferQuads[i].setLR_Y(-length / 2.0);
 	}
 	
-	this.geometry.verticesNeedUpdate = true;
+	this.bufferGeometry.attributes.position.needsUpdate = true;
 	
 	this.updateGeometry();
 }
 
 Surface.prototype.setTopRadius = function(radius)
 {
-	for (var i = 0; i < this.quads.length; i++)
+	for (var i = 0; i < this.bufferQuads.length; i++)
 	{	
-		var ulV = new THREE.Vector3(this.quads[i].ul.x, 0, this.quads[i].ul.z).normalize().multiplyScalar(radius);
-		this.quads[i].ul.x = ulV.x;
-		this.quads[i].ul.z = ulV.z;
+		var ulV = this.bufferQuads[i].getUL();
+		ulV.y = 0;
+		ulV.normalize().multiplyScalar(radius);
+		this.bufferQuads[i].setUL_XZ(ulV.x, ulV.z);
 		
-		var urV = new THREE.Vector3(this.quads[i].ur.x, 0, this.quads[i].ur.z).normalize().multiplyScalar(radius);
-		this.quads[i].ur.x = urV.x;
-		this.quads[i].ur.z = urV.z;
+		var urV = this.bufferQuads[i].getUR();
+		urV.y = 0;
+		urV.normalize().multiplyScalar(radius);
+		this.bufferQuads[i].setUR_XZ(urV.x, urV.z);
 	}
 	
-	this.geometry.verticesNeedUpdate = true;
+	this.bufferGeometry.attributes.position.needsUpdate = true;
 	
 	this.updateGeometry();
 }
 
 Surface.prototype.setBottomRadius = function(radius)
 {
-	for (var i = 0; i < this.quads.length; i++)
+	for (var i = 0; i < this.bufferQuads.length; i++)
 	{	
-		var llV = new THREE.Vector3(this.quads[i].ll.x, 0, this.quads[i].ll.z).normalize().multiplyScalar(radius);
-		this.quads[i].ll.x = llV.x;
-		this.quads[i].ll.z = llV.z;
+		var llV = this.bufferQuads[i].getLL();
+		llV.y = 0;
+		llV.normalize().multiplyScalar(radius);
+		this.bufferQuads[i].setLL_XZ(llV.x, llV.z);
 		
-		var lrV = new THREE.Vector3(this.quads[i].lr.x, 0, this.quads[i].lr.z).normalize().multiplyScalar(radius);
-		this.quads[i].lr.x = lrV.x;
-		this.quads[i].lr.z = lrV.z;
+		var lrV = this.bufferQuads[i].getLR();
+		lrV.y = 0;
+		lrV.normalize().multiplyScalar(radius);
+		this.bufferQuads[i].setLR_XZ(lrV.x, lrV.z);
 	}
 	
-	this.geometry.verticesNeedUpdate = true;
+	this.bufferGeometry.attributes.position.needsUpdate = true;
 	
 	this.updateGeometry();
 }
-
+ran_once = false;
 Surface.prototype.rollAnimated = function(t)
 {
 	this.overallT += t;
@@ -353,39 +587,40 @@ Surface.prototype.rollAnimated = function(t)
 	
 	
 	var start = this.lastQuad;
-	var end = Math.min(start + quadsToRotateInt, this.quads.length);
+	var end = Math.min(start + quadsToRotateInt, this.bufferQuads.length);
 	
-	if (end > this.quads.length)
+	if (end > this.bufferQuads.length)
 	{
 		return false;
 	}
 	
 	this.lastQuad = end;
 
-	for (var a = start; a < end; a++)
+	if (ran_once == false)
 	{
-		var ul = this.quads[a].ul.clone();
-		var ll = this.quads[a].ll.clone();
+		for (var a = start; a < end; a++)
+		{
+			var ul = this.bufferQuads[a].getUL().clone();
+			var ll = this.bufferQuads[a].getLL().clone();
+			
+			ul.sub(ll);
+			ll.addScaledVector(ul, 0.5);
+			ul.normalize();
+			
+			var axis = ul.clone();
+			var loc = ll.clone();
 		
-		ul.sub(ll);
-		ll.addScaledVector(ul, 0.5);
-		ul.normalize();
-		
-		var axis = ul.clone();
-		var loc = ll.clone();
-	
-		for (var i = a; i < this.quads.length; i++)
-		{	
-			this.rotateVertex(this.quads[i].ul, this.angle, loc, axis);
-			this.rotateVertex(this.quads[i].ll, this.angle, loc, axis);
-			this.rotateVertex(this.quads[i].ur, this.angle, loc, axis);
-			this.rotateVertex(this.quads[i].lr, this.angle, loc, axis);
+			for (var i = a; i < this.bufferQuads.length; i++)
+			{	
+				this.rotateQuad(i, this.angle, loc, axis);
+			}
 		}
+		ran_once = true;
 	}
 	
-	this.geometry.verticesNeedUpdate = true;
+	this.bufferGeometry.attributes.position.needsUpdate = true;
 	
-	if (end == this.quads.length)
+	if (end == this.bufferQuads.length)
 	{
 		return true;
 	}
@@ -425,8 +660,8 @@ Surface.prototype.unrollAnimated = function(t)
 
 	for (var a = start; a > end; a--)
 	{
-		var ul = this.quads[a].ul.clone();
-		var ll = this.quads[a].ll.clone();
+		var ul = this.bufferQuads[a].getUL();
+		var ll = this.bufferQuads[a].getLL();
 		
 		ul.sub(ll);
 		ll.addScaledVector(ul, 0.5);
@@ -435,16 +670,13 @@ Surface.prototype.unrollAnimated = function(t)
 		var axis = ul.clone();
 		var loc = ll.clone();
 
-		for (var i = a; i < this.quads.length; i++)
+		for (var i = a; i < this.bufferQuads.length; i++)
 		{	
-			this.rotateVertexInverse(this.quads[i].ul, this.angle, loc, axis);
-			this.rotateVertexInverse(this.quads[i].ll, this.angle, loc, axis);
-			this.rotateVertexInverse(this.quads[i].ur, this.angle, loc, axis);
-			this.rotateVertexInverse(this.quads[i].lr, this.angle, loc, axis);
+			this.rotateQuadInverse(i, this.angle / 2.0, loc, axis);
 		}
 	}
 	
-	this.geometry.verticesNeedUpdate = true;
+	this.bufferGeometry.attributes.position.needsUpdate = true;
 	
 	if (end == 0)
 	{
@@ -513,7 +745,7 @@ Surface.prototype.roll = function()
 Surface.prototype.unroll = function()
 {
 	this.state = "Unrolling";
-	this.lastQuadInverse = this.quads.length - 1;
+	this.lastQuadInverse = this.bufferQuads.length - 1;
 	this.overallTInverse = 0;
 	this.remainingQuadsFloatInverse = 0;	
 }
