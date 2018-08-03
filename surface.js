@@ -261,10 +261,7 @@ function Surface(scene, earth) {
 	this.state = "Initializing";
 	var preGeometry = new THREE.CylinderGeometry(1, 1, 4, 512, 1, true);
 	
-	this.geometry = new THREE.Geometry();
-	//this.geometry.computeVertexNormals();
-	
-	this.bufferGeometry = new THREE.CylinderBufferGeometry(1, 1, 4, 4, 1, true);
+	this.bufferGeometry = new THREE.CylinderBufferGeometry(1, 1, 4, 512, 1, true);
 	this.bufferGeometry.removeAttribute("uv");
 	
 	this.bufferGeometry.computeVertexNormals();
@@ -326,20 +323,8 @@ function Surface(scene, earth) {
 		this.bufferQuads.push(quad);
 	}
 	
-	
-	for (var m = 0; m < this.bufferQuads.length; m++)
-	{
-		console.log("---");
-		console.log("LL", this.bufferQuads[m].getLL());
-		console.log("UL", this.bufferQuads[m].getUL());
-		console.log("UR", this.bufferQuads[m].getUR());
-		console.log("LR", this.bufferQuads[m].getLR());
-	}
-	
-	
-	
 	this.startTime = new Date();
-	this.maxTime = 5;
+	this.maxTime = 3;
 
 	this.fractionPerSecond = 1 / this.maxTime;
 	this.quadsPerSecond = this.fractionPerSecond * this.bufferQuads.length;
@@ -440,56 +425,22 @@ Surface.prototype.updateGeometry = function()
 	var n2 = this.bufferQuads[1].getNormal();
 	
 	this.angle = -n2.angleTo(n1);
-	console.log(n1, n2, this.angle);
 }
 
 
 Surface.prototype.rotateQuad = function(index, angle, loc, axis)
-{	
-	console.log("---");
-	console.log(index, angle, loc, axis);
-	var ll = this.bufferQuads[index].getLL();
-	ll.sub(loc).applyAxisAngle(axis, angle).add(loc);
-	this.bufferQuads[index].setLL_XYZ(ll.x, ll.y, ll.z);
-	
-	var ul = this.bufferQuads[index].getUL();
-	ul.sub(loc).applyAxisAngle(axis, angle).add(loc);
-	this.bufferQuads[index].setUL_XYZ(ul.x, ul.y, ul.z);
-	
+{		
 	var lr = this.bufferQuads[index].getLR();
 	lr.sub(loc).applyAxisAngle(axis, angle).add(loc);
 	this.bufferQuads[index].setLR_XYZ(lr.x, lr.y, lr.z);
 	
 	var ur = this.bufferQuads[index].getUR();
-	
-	var test_ur = ur.clone();
 	ur.sub(loc).applyAxisAngle(axis, angle).add(loc);
-	
-	/*console.log("___");
-	console.log(ur, test_ur);
-	
-	console.log(test_ur.sub(loc));
-	console.log(test_ur.applyAxisAngle(axis, angle));
-
-	
-	console.log(test_ur.add(loc), ur);
-	*/
-	
-	console.log(ur.x, ur.y, ur.z);
-	console.log(ur);
 	this.bufferQuads[index].setUR_XYZ(ur.x, ur.y, ur.z);
 }
 
 Surface.prototype.rotateQuadInverse = function(index, angle, loc, axis)
 {	
-	var ll = this.bufferQuads[index].getLL();
-	ll.sub(loc).applyAxisAngle(axis, -angle).add(loc);
-	this.bufferQuads[index].setLL_XYZ(ll.x, ll.y, ll.z);
-	
-	var ul = this.bufferQuads[index].getUL();
-	ul.sub(loc).applyAxisAngle(axis, -angle).add(loc);
-	this.bufferQuads[index].setUL_XYZ(ul.x, ul.y, ul.z);
-	
 	var lr = this.bufferQuads[index].getLR();
 	lr.sub(loc).applyAxisAngle(axis, -angle).add(loc);
 	this.bufferQuads[index].setLR_XYZ(lr.x, lr.y, lr.z);
@@ -569,7 +520,7 @@ Surface.prototype.setBottomRadius = function(radius)
 	
 	this.updateGeometry();
 }
-ran_once = false;
+
 Surface.prototype.rollAnimated = function(t)
 {
 	this.overallT += t;
@@ -596,27 +547,25 @@ Surface.prototype.rollAnimated = function(t)
 	
 	this.lastQuad = end;
 
-	if (ran_once == false)
+
+	for (var a = start; a < end; a++)
 	{
-		for (var a = start; a < end; a++)
-		{
-			var ul = this.bufferQuads[a].getUL().clone();
-			var ll = this.bufferQuads[a].getLL().clone();
-			
-			ul.sub(ll);
-			ll.addScaledVector(ul, 0.5);
-			ul.normalize();
-			
-			var axis = ul.clone();
-			var loc = ll.clone();
+		var ul = this.bufferQuads[a].getUL().clone();
+		var ll = this.bufferQuads[a].getLL().clone();
 		
-			for (var i = a; i < this.bufferQuads.length; i++)
-			{	
-				this.rotateQuad(i, this.angle, loc, axis);
-			}
+		ul.sub(ll);
+		ll.addScaledVector(ul, 0.5);
+		ul.normalize();
+		
+		var axis = ul.clone();
+		var loc = ll.clone();
+	
+		for (var i = a; i < this.bufferQuads.length; i++)
+		{	
+			this.rotateQuad(i, this.angle, loc, axis);
 		}
-		ran_once = true;
 	}
+	
 	
 	this.bufferGeometry.attributes.position.needsUpdate = true;
 	
@@ -672,7 +621,7 @@ Surface.prototype.unrollAnimated = function(t)
 
 		for (var i = a; i < this.bufferQuads.length; i++)
 		{	
-			this.rotateQuadInverse(i, this.angle / 2.0, loc, axis);
+			this.rotateQuadInverse(i, this.angle, loc, axis);
 		}
 	}
 	
@@ -720,6 +669,11 @@ Surface.prototype.roll = function()
 	this.overallT = 0;
 	this.remainingQuadsFloat = 0;
 	
+	this.bufferGeometry.attributes.positionRolled = new THREE.Float32BufferAttribute( this.bufferGeometry.attributes.position, 3 );
+	this.bufferGeometry.attributes.positionRolled.needsUpdate = true;
+	
+	console.log(this.bufferGeometry.attributes.positionRolled);
+	/*
 	var faces = this.geometry.faces;
 	var vertices = this.geometry.vertices;
 	
@@ -736,7 +690,8 @@ Surface.prototype.roll = function()
 	}
 	
 	this.geometry.colorsNeedUpdate = true;
-
+	*/
+	
 	this.mesh.material.uniforms.keepVertices.value = 1;
 	
 	this.state = "Rolling";
