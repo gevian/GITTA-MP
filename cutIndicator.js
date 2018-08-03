@@ -6,7 +6,6 @@ function CutIndicator(surface, scene) {
 
 	scene.add(this.sphere);
 	
-	this.referencePoint = this.surface.bufferQuads[0].getLL();
 	this.mesh = this.surface.mesh;
 	
 	this.updateGeometry();
@@ -16,7 +15,7 @@ function CutIndicator(surface, scene) {
 CutIndicator.prototype.updateGeometry = function()
 {
 	//console.log(this.surface.mesh.matrixWorld);
-	var midPos = this.referencePoint.clone().applyMatrix4( this.mesh.matrixWorld );
+	var midPos = this.surface.bufferQuads[0].getLL().applyMatrix4( this.mesh.matrixWorld );
 
 	this.sphere.position.set(midPos.x, midPos.y, midPos.z);
 }
