@@ -117,6 +117,7 @@ var fragmentShaderSource = `
 			gl_FragColor = vec4(color.rgb, opacity);
 			//gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 			//gl_FragColor = vec4(azimuthalNorm, azimuthalNorm, azimuthalNorm, 1.0);
+			//gl_FragColor = vec4(globalPositionTorus.y, 0.0, 0.0, 1.0);
 		}
 	}
 `;
@@ -234,8 +235,7 @@ Quad.prototype.setLR_Y = function(y)
 
 Quad.prototype.getNormal = function()
 {
-	var vA = new THREE.Vector3(), vB = new THREE.Vector3(), vC = new THREE.Vector3();
-	
+	var vA = new THREE.Vector3(), vB = new THREE.Vector3(), vC = new THREE.Vector3();	
 	var cb = new THREE.Vector3(), ab = new THREE.Vector3();
 	
 	vA.fromBufferAttribute( this.positionAttribute, this.f0idx0 );
@@ -268,7 +268,7 @@ function Surface(scene, earth) {
 	
 	var positionAttribute = this.bufferGeometry.attributes.position;
 	
-	var positionRolled     		 = new Float32Array( positionAttribute.array );
+	var positionRolled     	 	 = new Float32Array( positionAttribute.array );
 	var positionProjectionCenter = new Float32Array( positionAttribute.array );
 	
 	// iterate over faces
@@ -294,19 +294,20 @@ function Surface(scene, earth) {
 		
 		
 		// calculate projection center
-		positionProjectionCenter[idx0_0] = -positionProjectionCenter[idx0_0];
+
+		positionProjectionCenter[idx0_0] = -positionRolled[idx0_0];
 		positionProjectionCenter[idx0_1] = 0.0;
-		positionProjectionCenter[idx0_2] = -positionProjectionCenter[idx0_2];
+		positionProjectionCenter[idx0_2] = -positionRolled[idx0_2];
 		
-		positionProjectionCenter[idx1_0] = -positionProjectionCenter[idx1_0];
+		positionProjectionCenter[idx1_0] = -positionRolled[idx1_0];
 		positionProjectionCenter[idx1_1] = 0.0;
-		positionProjectionCenter[idx1_2] = -positionProjectionCenter[idx1_2];
+		positionProjectionCenter[idx1_2] = -positionRolled[idx1_2];
 		
-		positionProjectionCenter[idx2_0] = -positionProjectionCenter[idx2_0];
+		positionProjectionCenter[idx2_0] = -positionRolled[idx2_0];
 		positionProjectionCenter[idx2_1] = 0.0;
-		positionProjectionCenter[idx2_2] = -positionProjectionCenter[idx2_2];
+		positionProjectionCenter[idx2_2] = -positionRolled[idx2_2];
 	}
-	
+
 	this.bufferGeometry.addAttribute( 'positionRolled', new THREE.Float32BufferAttribute( positionRolled, 3 ));
 	this.bufferGeometry.addAttribute( 'positionProjectionCenter', new THREE.Float32BufferAttribute( positionProjectionCenter, 3 ));
 	
@@ -471,10 +472,11 @@ Surface.prototype.setAxisLength = function(length)
 	for (var i = 0; i < this.bufferQuads.length; i++)
 	{	
 		this.bufferQuads[i].setUL_Y( length / 2.0);
-		this.bufferQuads[i].setUR_Y( length / 2.0);
 		this.bufferQuads[i].setLL_Y(-length / 2.0);
-		this.bufferQuads[i].setLR_Y(-length / 2.0);
 	}
+	
+	this.bufferQuads[this.bufferQuads.length -1].setUR_Y( length / 2.0);
+	this.bufferQuads[this.bufferQuads.length -1].setLR_Y( -length / 2.0);
 	
 	this.bufferGeometry.attributes.position.needsUpdate = true;
 	
@@ -669,28 +671,9 @@ Surface.prototype.roll = function()
 	this.overallT = 0;
 	this.remainingQuadsFloat = 0;
 	
-	this.bufferGeometry.attributes.positionRolled = new THREE.Float32BufferAttribute( this.bufferGeometry.attributes.position, 3 );
+	// freeze vertex positions
+	this.bufferGeometry.attributes.positionRolled.array.set(this.bufferGeometry.attributes.position.array);
 	this.bufferGeometry.attributes.positionRolled.needsUpdate = true;
-	
-	console.log(this.bufferGeometry.attributes.positionRolled);
-	/*
-	var faces = this.geometry.faces;
-	var vertices = this.geometry.vertices;
-	
-	for (var i = 0; i < faces.length; i++)
-	{
-		var face = faces[i];
-		var a = vertices[face.a];
-		var b = vertices[face.b];
-		var c = vertices[face.c];
-		
-		face.vertexColors[0].copy(new THREE.Color(a.x, a.y, a.z));
-		face.vertexColors[1].copy(new THREE.Color(b.x, b.y, b.z));
-		face.vertexColors[2].copy(new THREE.Color(c.x, c.y, c.z));
-	}
-	
-	this.geometry.colorsNeedUpdate = true;
-	*/
 	
 	this.mesh.material.uniforms.keepVertices.value = 1;
 	
