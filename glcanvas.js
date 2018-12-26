@@ -20,15 +20,15 @@ function GLCanvas(canvas_id)
 	this.glContainer.append( this.renderer.domElement );
 	this.gl = this.renderer.getContext();
 
-	this.trackballControls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
-
+	this.orbitControls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+	
 	this.light = new THREE.DirectionalLight( 0xeeeeee );
 	this.light.position.set( 1, 1, 1 ).normalize();
 	this.scene.add(this.light);
 
 	this.scene.add(new THREE.AmbientLight(0x111111));
 
-	this.trackballControls.addEventListener('change', function(){
+	this.orbitControls.addEventListener('change', function(){
 		var p = _this.camera.position;
 		_this.light.position.set(p.x, p.y + 1,p.z);
 	});
@@ -54,7 +54,7 @@ function GLCanvas(canvas_id)
 GLCanvas.prototype.update = function(delta)
 {
 	this.renderer.render(this.scene, this.camera);
-	this.trackballControls.update(delta);
+	this.orbitControls.update(delta);
 }
 
 
