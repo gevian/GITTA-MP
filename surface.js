@@ -544,6 +544,23 @@ Surface.prototype.rollAnimated = function(t)
 
 	for (var a = start; a < end; a++)
 	{
+        var stripe = this.stripes[a];
+        var idxLeft = stripe.idxLeft;
+        
+        for (var o = 0; o < idxLeft.length; a++)
+        {
+            var radius = this.bottomRadius + diff * multiplier;
+            var leftVec = new THREE.Vector3();
+            leftVec.fromBufferAttribute(stripe.bufferGeometry.attributes.position, idxLeft[o]);
+            leftVec.y = 0;
+            leftVec.normalize().multiplyScalar(radius);
+            
+            stripe.bufferGeometry.attributes.position.setX(idxLeft[o], leftVec.x);
+            stripe.bufferGeometry.attributes.position.setZ(idxLeft[o], leftVec.z);
+        }
+        
+        
+        /*
 		var ul = this.bufferQuads[a].getUL().clone();
 		var ll = this.bufferQuads[a].getLL().clone();
 		
@@ -558,6 +575,7 @@ Surface.prototype.rollAnimated = function(t)
 		{	
 			this.rotateQuad(i, this.angle, loc, axis);
 		}
+        */
 	}
 	
 	
