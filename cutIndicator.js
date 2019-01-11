@@ -14,6 +14,7 @@ function CutIndicator(surface, scene) {
 
 CutIndicator.prototype.updateGeometry = function()
 {
+    return
 	//console.log(this.surface.mesh.matrixWorld);
 	var midPos = this.surface.bufferQuads[0].getLL().applyMatrix4( this.mesh.matrixWorld );
 

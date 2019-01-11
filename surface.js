@@ -36,6 +36,9 @@ var fragmentShaderSource = `
     uniform sampler2D tGraticule;
     uniform sampler2D tTissot;
 	
+    uniform float projTorusScale;
+	uniform mat4 projTorusMatrix;
+    
 	uniform float opacity;
 	
     varying vec4 globalPosition;
@@ -90,6 +93,9 @@ var fragmentShaderSource = `
 	
     void main() {
 		//vec3 p = point_on_sphere(projOrigin, globalPositionRolled.xyz);
+        
+        vec3 globalPositionTorus = normalize(vec3(-globalPositionRolled.x, 0.0, -globalPositionRolled.z)) * projTorusScale;
+        
 		vec3 p = point_on_sphere(globalPositionTorus.xyz, globalPositionRolled.xyz);
 		
 		if (p.x < -999.0)
@@ -115,7 +121,7 @@ var fragmentShaderSource = `
 			color = vec4(color.rgb * color.a * (1.0 - CTissot.a) + CTissot.a * CTissot.rgb, 1.0);
 			
 			gl_FragColor = vec4(color.rgb, opacity);
-			//gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+			//gl_FragColor = vec4(projTorusScale, 0.0, 0.0, 1.0);
 			//gl_FragColor = vec4(azimuthalNorm, azimuthalNorm, azimuthalNorm, 1.0);
 			//gl_FragColor = vec4(globalPositionTorus.y, 0.0, 0.0, 1.0);
 		}
@@ -253,107 +259,125 @@ Quad.prototype.getNormal = function()
 
 
 
+function Stripe(bufferGeometry, idxLeft, idxRight) {
+    this.bufferGeometry = bufferGeometry;
+    this.idxLeft  = idxLeft;
+    this.idxRight = idxRight;
+}
+
+
+Stripe.prototype.getNormal = function()
+{
+	var vA = new THREE.Vector3(), vB = new THREE.Vector3(), vC = new THREE.Vector3();	
+	var cb = new THREE.Vector3(), ab = new THREE.Vector3();
+	
+	vA.fromBufferAttribute( this.bufferGeometry.attributes.position, this.idxLeft[0] );
+	vB.fromBufferAttribute( this.bufferGeometry.attributes.position, this.idxLeft[1] );
+	vC.fromBufferAttribute( this.bufferGeometry.attributes.position, this.idxRight[0] );
+	cb.subVectors( vC, vB );
+	ab.subVectors( vA, vB );
+	cb.cross( ab );
+
+	cb.normalize();
+	
+	return cb;
+}
+
+
 
 function Surface(scene, earth) {
 	this.scene = scene;
     this.earth = earth;
 	
 	this.state = "Initializing";
-	var preGeometry = new THREE.CylinderGeometry(1, 1, 4, 512, 1, true);
 	
-	this.bufferGeometry = new THREE.CylinderBufferGeometry(1, 1, 4, 512, 1, true);
-	this.bufferGeometry.removeAttribute("uv");
-	
-	this.bufferGeometry.computeVertexNormals();
-	
-	var positionAttribute = this.bufferGeometry.attributes.position;
-	
-	var positionRolled     	 	 = new Float32Array( positionAttribute.array );
-	var positionProjectionCenter = new Float32Array( positionAttribute.array );
-	
-	// iterate over faces
-	for (var a = 0; a < this.bufferGeometry.index.array.length / 3; a++)
-	{
-		// indices of vectors
-		var idx0 = a * 3;
-		var idx1 = a * 3 + 1;
-		var idx2 = a * 3 + 2;
-		
-		// indices of single vector components
-		var idx0_0 = this.bufferGeometry.index.array[idx0] * 3;
-		var idx0_1 = idx0_0 + 1;
-		var idx0_2 = idx0_0 + 2;
-		
-		var idx1_0 = this.bufferGeometry.index.array[idx1] * 3;
-		var idx1_1 = idx1_0 + 1;
-		var idx1_2 = idx1_0 + 2;
-		
-		var idx2_0 = this.bufferGeometry.index.array[idx2] * 3;
-		var idx2_1 = idx2_0 + 1;
-		var idx2_2 = idx2_0 + 2;
-		
-		
-		// calculate projection center
+    
+    // simplified cylinder geometry adapted from https://github.com/mrdoob/three.js/blob/master/src/geometries/CylinderGeometry.js
+    this.bufferGeometry = new THREE.BufferGeometry();
+    
+    
+    this.topRadius = 1.0;
+    this.bottomRadius = 1.0;
+    
+    var segmentsRadial = 128;
+    var segmentsHeight = 64;
+    
+    var indices = [];
+    var position = [];
+    
+    var px, py, pz; // vertex position
+    
+    var indexArray = [];
+    var index = 0;
+    var x, y;
+    for (y = 0; y <= segmentsHeight; y++)
+    {
+        var indexRow = [];
+        
+        var v = y / segmentsHeight;
+        for (x = 0; x <= segmentsRadial; x++)
+        {
+            var u = x / segmentsRadial;
+            var theta = u * 2 * Math.PI;
+            
+            px = Math.sin(theta);
+            py = v - 0.5; // centers the cylinder to zero along the y axis (vertices get built up from bottom to top)
+            pz = Math.cos(theta);
+            position.push(px, py, pz);
+            
+            indexRow.push(index++);
+        }
+        
+        indexArray.push(indexRow);
+    }
+        
+    this.stripes = [];
+    for (x = 0; x < segmentsRadial; x++) {        
+        var idxLeft = [];
+        var idxRight = [];
+        for (y = 0; y < segmentsHeight; y++) {
 
-		positionProjectionCenter[idx0_0] = -positionRolled[idx0_0];
-		positionProjectionCenter[idx0_1] = 0.0;
-		positionProjectionCenter[idx0_2] = -positionRolled[idx0_2];
-		
-		positionProjectionCenter[idx1_0] = -positionRolled[idx1_0];
-		positionProjectionCenter[idx1_1] = 0.0;
-		positionProjectionCenter[idx1_2] = -positionRolled[idx1_2];
-		
-		positionProjectionCenter[idx2_0] = -positionRolled[idx2_0];
-		positionProjectionCenter[idx2_1] = 0.0;
-		positionProjectionCenter[idx2_2] = -positionRolled[idx2_2];
-	}
+            // face indices
+            var a = indexArray[ y ][ x ];
+            var b = indexArray[ y + 1 ][ x ];
+            var c = indexArray[ y + 1 ][ x + 1 ];
+            var d = indexArray[ y ][ x + 1 ];
 
-	this.bufferGeometry.addAttribute( 'positionRolled', new THREE.Float32BufferAttribute( positionRolled, 3 ));
-	this.bufferGeometry.addAttribute( 'positionProjectionCenter', new THREE.Float32BufferAttribute( positionProjectionCenter, 3 ));
-	
-	
-	
-	this.bufferQuads = [];
-	
-	for (var a = 0; a < this.bufferGeometry.index.array.length / 6; a++)
-	{
-		var faceIdx0 = a * 6;
-		var faceIdx1 = a * 6 + 3;
-		
-		var quad = new Quad(this.bufferGeometry, faceIdx0, faceIdx1);
-		this.bufferQuads.push(quad);
-	}
-	
-	this.startTime = new Date();
-	this.maxTime = 3;
-
-	this.fractionPerSecond = 1 / this.maxTime;
-	this.quadsPerSecond = this.fractionPerSecond * this.bufferQuads.length;
-
-	this.secondsPerQuad = this.bufferQuads.length / this.maxTime;
-	
-	this.lastQuadInverse = this.bufferQuads.length - 1;
-	this.overallTInverse = 0;
-	this.remainingQuadsFloatInverse = 0;
-	
-	
-	this.lastQuad = 0;
-	this.overallT = 0;
-	this.remainingQuadsFloat = 0;
-	
+            // faces
+            indices.push( a, b, d );
+            indices.push( b, c, d );
+            
+            if (y == 0)
+            {
+                idxLeft.push(a);
+                idxRight.push(d);                
+            }
+            
+            idxLeft.push(b);
+            idxRight.push(c);
+        }
+        
+        this.stripes.push(new Stripe(this.bufferGeometry, idxLeft, idxRight));
+    }
+    
+    this.bufferGeometry.setIndex( indices );
+    this.bufferGeometry.addAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(position), 3))
+    this.bufferGeometry.addAttribute('positionRolled', new THREE.Float32BufferAttribute(new Float32Array(position), 3))
+    this.bufferGeometry.computeVertexNormals();
+    
     this.countriesTexture = new THREE.TextureLoader().load('images/Countries.png');
     this.tissotTexture    = new THREE.TextureLoader().load('images/Tissot.png');
     this.graticuleTexture = new THREE.TextureLoader().load('images/Graticule.png');
     this.emptyTexture     = new THREE.TextureLoader().load('images/Empty.png');
     
 	var uniforms = {
-		tCountries: { type: "t", value: this.countriesTexture },
-		tGraticule: { type: "t", value: this.graticuleTexture },
-		tTissot:    { type: "t", value: this.tissotTexture },
-		projTorusScale: { type: "f", value: 1.0 },
+		tCountries:      { type: "t", value: this.countriesTexture },
+		tGraticule:      { type: "t", value: this.graticuleTexture },
+		tTissot:         { type: "t", value: this.tissotTexture },
+		projTorusScale:  { type: "f", value: 1.0 },
 		projTorusMatrix: { type: 'm4', value: new THREE.Matrix4()},
-		opacity:    { type: "f", value: 1.0 }, // Note: if not 1.0, set transparent of material to true
-		keepVertices: { type: "i", value: 0 }
+		opacity:         { type: "f", value: 1.0 }, // Note: if not 1.0, set transparent of material to true
+		keepVertices:    { type: "i", value: 0 }
 	};
     
     this.scene = scene; 
@@ -364,10 +388,10 @@ function Surface(scene, earth) {
 												fragmentShader: fragmentShaderSource,
 												side: THREE.DoubleSide,
 												transparent: false
-											} );
-	console.log(this.bufferGeometry);
+                                } );
+                                
 	this.mesh = new THREE.Mesh( this.bufferGeometry, this.material );	
-	
+    
     this.earthCenter = new THREE.Object3D();
 	
     this.earthCenter.add(this.mesh);
@@ -379,51 +403,13 @@ function Surface(scene, earth) {
 	this.disableForms = function(){};
 		
 	this.state = "Waiting";
-	
-	
-	
-	//var bufferMaterial = new THREE.MeshPhongMaterial({color: 0x000044});
-	//var cube = new THREE.Mesh(bufferGeometry, bufferMaterial);
-	//scene.add(cube);
 }
 
-/*
-Surface.prototype.calculateFaceNormals = function(bufferGeometry)
-{	
-	bufferGeometry.faceNormals = [];
-	console.log(bufferGeometry.index.array.length);
-	
-	for (var a = 0; a < bufferGeometry.index.array.length / 3; a++)
-	{
-		console.log(a);
-		// indices of attributes
-		var idx0 = bufferGeometry.index.array[a * 3];
-		var idx1 = bufferGeometry.index.array[a * 3 + 1];
-		var idx2 = bufferGeometry.index.array[a * 3 + 2];
-		
-		var vA = new THREE.Vector3(), vB = new THREE.Vector3(), vC = new THREE.Vector3();
-		
-		var cb = new THREE.Vector3(), ab = new THREE.Vector3();
-		
-		vA.fromBufferAttribute( bufferGeometry.attributes.position, idx0 );
-		vB.fromBufferAttribute( bufferGeometry.attributes.position, idx1 );
-		vC.fromBufferAttribute( bufferGeometry.attributes.position, idx2 );
-		
-		cb.subVectors( vC, vB );
-		ab.subVectors( vA, vB );
-		cb.cross( ab );
-
-		cb.normalize();
-		
-		bufferGeometry.faceNormals.push(cb);
-	}
-}
-*/
 
 Surface.prototype.updateGeometry = function()
 {		
-	var n1 = this.bufferQuads[0].getNormal();
-	var n2 = this.bufferQuads[1].getNormal();
+	var n1 = this.stripes[0].getNormal();
+	var n2 = this.stripes[1].getNormal();
 	
 	this.angle = -n2.angleTo(n1);
 }
@@ -469,58 +455,64 @@ Surface.prototype.setGeometryOffset = function(offset)
 
 Surface.prototype.setAxisLength = function(length)
 {
-	for (var i = 0; i < this.bufferQuads.length; i++)
+    
+    this.mesh.scale.y = length;
+}
+
+Surface.prototype.computeRadii = function()
+{
+    var diff = this.topRadius - this.bottomRadius;
+	for (var i = 0; i < this.stripes.length; i++)
 	{	
-		this.bufferQuads[i].setUL_Y( length / 2.0);
-		this.bufferQuads[i].setLL_Y(-length / 2.0);
-	}
-	
-	this.bufferQuads[this.bufferQuads.length -1].setUR_Y( length / 2.0);
-	this.bufferQuads[this.bufferQuads.length -1].setLR_Y( -length / 2.0);
-	
-	this.bufferGeometry.attributes.position.needsUpdate = true;
+        var stripe = this.stripes[i];
+        var idxLeft = stripe.idxLeft;
+        
+        for (var a = 0; a < idxLeft.length; a++)
+        {
+            var multiplier = a / (idxLeft.length - 1);
+            var radius = this.bottomRadius + diff * multiplier;
+            var leftVec = new THREE.Vector3();
+            leftVec.fromBufferAttribute(stripe.bufferGeometry.attributes.position, idxLeft[a]);
+            leftVec.y = 0;
+            leftVec.normalize().multiplyScalar(radius);
+            
+            stripe.bufferGeometry.attributes.position.setX(idxLeft[a], leftVec.x);
+            stripe.bufferGeometry.attributes.position.setZ(idxLeft[a], leftVec.z);
+        }
+        
+        if (i == this.stripes.length-1)
+        {
+            var idxRight = stripe.idxRight;
+            for (var a = 0; a < idxRight.length; a++)
+            {
+                var multiplier = a / (idxRight.length - 1);
+                var radius = this.bottomRadius + diff * multiplier;
+                var rightVec = new THREE.Vector3();
+                rightVec.fromBufferAttribute(stripe.bufferGeometry.attributes.position, idxRight[a]);
+                rightVec.y = 0;
+                rightVec.normalize().multiplyScalar(radius);
+                
+                stripe.bufferGeometry.attributes.position.setX(idxRight[a], rightVec.x);
+                stripe.bufferGeometry.attributes.position.setZ(idxRight[a], rightVec.z);
+            }
+        }
+    }
+
+    this.bufferGeometry.attributes.position.needsUpdate = true;
 	
 	this.updateGeometry();
 }
 
 Surface.prototype.setTopRadius = function(radius)
 {
-	for (var i = 0; i < this.bufferQuads.length; i++)
-	{	
-		var ulV = this.bufferQuads[i].getUL();
-		ulV.y = 0;
-		ulV.normalize().multiplyScalar(radius);
-		this.bufferQuads[i].setUL_XZ(ulV.x, ulV.z);
-		
-		var urV = this.bufferQuads[i].getUR();
-		urV.y = 0;
-		urV.normalize().multiplyScalar(radius);
-		this.bufferQuads[i].setUR_XZ(urV.x, urV.z);
-	}
-	
-	this.bufferGeometry.attributes.position.needsUpdate = true;
-	
-	this.updateGeometry();
+    this.topRadius = parseFloat(radius);
+    this.computeRadii();
 }
 
 Surface.prototype.setBottomRadius = function(radius)
 {
-	for (var i = 0; i < this.bufferQuads.length; i++)
-	{	
-		var llV = this.bufferQuads[i].getLL();
-		llV.y = 0;
-		llV.normalize().multiplyScalar(radius);
-		this.bufferQuads[i].setLL_XZ(llV.x, llV.z);
-		
-		var lrV = this.bufferQuads[i].getLR();
-		lrV.y = 0;
-		lrV.normalize().multiplyScalar(radius);
-		this.bufferQuads[i].setLR_XZ(lrV.x, lrV.z);
-	}
-	
-	this.bufferGeometry.attributes.position.needsUpdate = true;
-	
-	this.updateGeometry();
+    this.bottomRadius = parseFloat(radius);
+    this.computeRadii();
 }
 
 Surface.prototype.rollAnimated = function(t)
@@ -540,9 +532,9 @@ Surface.prototype.rollAnimated = function(t)
 	
 	
 	var start = this.lastQuad;
-	var end = Math.min(start + quadsToRotateInt, this.bufferQuads.length);
+	var end = Math.min(start + quadsToRotateInt, this.stripes.length);
 	
-	if (end > this.bufferQuads.length)
+	if (end > this.stripes.length)
 	{
 		return false;
 	}
