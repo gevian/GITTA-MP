@@ -639,7 +639,6 @@ Surface.prototype.unrollAnimated = function(t)
 
 	for (var a = start; a > end; a--)
 	{
-        
         var referenceStripe = this.stripes[a];
         var idxLeft = referenceStripe.idxLeft;
 
@@ -675,8 +674,55 @@ Surface.prototype.unrollAnimated = function(t)
 	{
 		return false;
 	}
-	
 }
+
+
+function scale_func(x, y) {
+  var latitude = Math.atan(y);
+  //console.log(latitude);
+  return y * (0.5 * Math.cos(latitude));
+}
+
+function scale_func_inv(x, y) {
+  return y * 2.0;
+}
+
+Surface.prototype.scale = function()
+{
+for (var i = 0; i < this.stripes.length; i++)
+	for (var i = 0; i < this.stripes.length; i++)
+	{	
+        var stripe = this.stripes[i];
+        var idxLeft = stripe.idxLeft;
+        
+        for (var a = 0; a < idxLeft.length; a++)
+        {
+            var leftVec = new THREE.Vector3();
+            leftVec.fromBufferAttribute(stripe.bufferGeometry.attributes.position, idxLeft[a]);
+            leftVec.y = scale_func(leftVec.x, leftVec.y);
+            
+            stripe.bufferGeometry.attributes.position.setXYZ(idxLeft[a], leftVec.x, leftVec.y, leftVec.z);
+        }
+        
+        if (i == this.stripes.length-1)
+        {
+            var idxRight = stripe.idxRight;
+            for (var a = 0; a < idxRight.length; a++)
+            {
+                var rightVec = new THREE.Vector3();
+                rightVec.fromBufferAttribute(stripe.bufferGeometry.attributes.position, idxRight[a]);
+                rightVec.y = scale_func(rightVec.x, rightVec.y);
+                
+                stripe.bufferGeometry.attributes.position.setXYZ(idxRight[a], rightVec.x, rightVec.y, rightVec.z);
+            }
+        }
+    }
+
+    this.bufferGeometry.attributes.position.needsUpdate = true;
+	
+	this.updateGeometry();
+}
+
 
 
 Surface.prototype.update = function(delta)
@@ -688,6 +734,7 @@ Surface.prototype.update = function(delta)
 		if (result)
 		{
 			this.state = "Rolled";
+            this.scale();
 		}
 	}
 	else if (this.state == "Unrolling")
