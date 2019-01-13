@@ -304,9 +304,9 @@ function Surface(scene, earth) {
     this.bottomRadius = 1.0;
     
     var segmentsRadial = 128;
-    var segmentsHeight = 64;
+    var segmentsHeight = 128;
     
-    //var segmentsRadial = 4;
+    //var segmentsRadial = 32;
     //var segmentsHeight = 1;
     
     
@@ -680,16 +680,24 @@ Surface.prototype.unrollAnimated = function(t)
 function scale_func(x, y) {
   var latitude = Math.atan(y);
   //console.log(latitude);
-  return y * (0.5 * Math.cos(latitude));
+  //return y * (0.5 * Math.cos(latitude));
+  //console.log("---");
+  //console.log(latitude);
+  var y_Central = y;
+  var y_Mercator = Math.log(Math.tan((Math.PI/4) + (latitude/2)));
+  //console.log(y, latitude, y_Mercator, y_Central / y_Mercator, y_Mercator / y_Central );
+  
+  //console.log(1/2 * Math.log((1+Math.sin(latitude))/(1-Math.sin(latitude))));
+  return y_Mercator;
 }
 
 function scale_func_inv(x, y) {
-  return y * 2.0;
+  return y;
 }
 
 Surface.prototype.scale = function()
 {
-for (var i = 0; i < this.stripes.length; i++)
+
 	for (var i = 0; i < this.stripes.length; i++)
 	{	
         var stripe = this.stripes[i];
@@ -699,9 +707,9 @@ for (var i = 0; i < this.stripes.length; i++)
         {
             var leftVec = new THREE.Vector3();
             leftVec.fromBufferAttribute(stripe.bufferGeometry.attributes.position, idxLeft[a]);
-            leftVec.y = scale_func(leftVec.x, leftVec.y);
+            leftVec.y = scale_func(leftVec.x, leftVec.y * this.mesh.scale.y);
             
-            stripe.bufferGeometry.attributes.position.setXYZ(idxLeft[a], leftVec.x, leftVec.y, leftVec.z);
+            stripe.bufferGeometry.attributes.position.setXYZ(idxLeft[a], leftVec.x, leftVec.y / this.mesh.scale.y, leftVec.z);
         }
         
         if (i == this.stripes.length-1)
@@ -711,9 +719,9 @@ for (var i = 0; i < this.stripes.length; i++)
             {
                 var rightVec = new THREE.Vector3();
                 rightVec.fromBufferAttribute(stripe.bufferGeometry.attributes.position, idxRight[a]);
-                rightVec.y = scale_func(rightVec.x, rightVec.y);
+                rightVec.y = scale_func(rightVec.x, rightVec.y * this.mesh.scale.y);
                 
-                stripe.bufferGeometry.attributes.position.setXYZ(idxRight[a], rightVec.x, rightVec.y, rightVec.z);
+                stripe.bufferGeometry.attributes.position.setXYZ(idxRight[a], rightVec.x, rightVec.y / this.mesh.scale.y, rightVec.z);
             }
         }
     }
