@@ -36,15 +36,13 @@ LineProjector.prototype.setManualProjectionLine = function(event)
 	
 	raycaster.setFromCamera( mouse, this.glcanvas.camera );
 	
-	var projectionWorldPosition = this.projectionCenter.sphere.getWorldPosition();
-	
 	var intersectsSurface = raycaster.intersectObject( this.earth.earthMesh );
 	if ( intersectsSurface.length > 0 ) {
 		
 		var earthIntersection = intersectsSurface[0].point.clone();
 
 		this.manualLine.disable();
-		
+        
 		this.manualLine = new ProjectionLine(earthIntersection, this.projectionCenter, this.surface, this.scene, this.earth, 0xff0000);
 		this.manualLine.enable();
 	}
@@ -142,10 +140,16 @@ ProjectionLine.prototype.update = function()
 	if (this.state == "Disabled")
 		return
 	
-	var projectionWorldPosition = this.projectionCenter.sphere.getWorldPosition();
-	var directionVector = this.target.clone().sub(projectionWorldPosition).normalize();
+	var projectionWorldPosition = this.projectionCenter.torus.getWorldPosition();
+    
+    // calculate torus location
+    var torusLocationV3 = new THREE.Vector3(-this.target.x, 0.0, -this.target.z).normalize().multiplyScalar(this.projectionCenter.scale);
+    var torusLocationV4 = new THREE.Vector4(torusLocationV3.x, torusLocationV3.y, torusLocationV3.z, 1.0).applyMatrix4(this.projectionCenter.lightCenter.matrixWorld);
+    var torusGlobalLocationV3 = new THREE.Vector3(torusLocationV4.x, torusLocationV4.y, torusLocationV4.z);
+    
+	var directionVector = this.target.clone().sub(torusGlobalLocationV3).normalize();
 	
-	var auxiliaryRaycaster = new THREE.Raycaster(projectionWorldPosition, directionVector.clone());
+	var auxiliaryRaycaster = new THREE.Raycaster(torusGlobalLocationV3, directionVector.clone());
 	
 	var auxiliaryIntersectsSurface = auxiliaryRaycaster.intersectObject( this.surface.mesh );
     var auxiliaryIntersectsEarth   = auxiliaryRaycaster.intersectObject( this.earth.earthMesh );
@@ -153,21 +157,29 @@ ProjectionLine.prototype.update = function()
     // neither intersection with globe nor with surface
     if (auxiliaryIntersectsEarth.length > 0 && auxiliaryIntersectsSurface.length == 0)
     {
-		this.lineGeometry.vertices[0] = projectionWorldPosition.clone().add(directionVector.clone().multiplyScalar(1000));
+		this.lineGeometry.vertices[0] = torusGlobalLocationV3.clone().add(directionVector.clone().multiplyScalar(1000));
     }
     else
     {
-        if (auxiliaryIntersectsEarth[0].distance > auxiliaryIntersectsSurface[0].distance)
+        // calculate farest intersecton point
+        var intersectionsAll = auxiliaryIntersectsEarth.concat(auxiliaryIntersectsSurface);
+        
+        var maxDistance = intersectionsAll[0].distance;
+        var maxPoint = intersectionsAll[0].point.clone();
+        
+        for (var i = 0; i < intersectionsAll.length; i++)
         {
-            this.lineGeometry.vertices[0] = auxiliaryIntersectsEarth[0].point.clone();
+            if (intersectionsAll[i].distance > maxDistance)
+            {
+                maxDistance = intersectionsAll[i].distance;
+                maxPoint = intersectionsAll[i].point.clone();
+            }
         }
-        else
-        {
-            this.lineGeometry.vertices[0] = auxiliaryIntersectsSurface[0].point.clone();
-        }
+        
+        this.lineGeometry.vertices[0] = maxPoint;
     }
     
-    this.lineGeometry.vertices[1] = projectionWorldPosition;
+    this.lineGeometry.vertices[1] = torusGlobalLocationV3;
     this.lineGeometry.verticesNeedUpdate = true;
 }
 
