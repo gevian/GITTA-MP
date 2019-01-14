@@ -13,10 +13,12 @@ function CutIndicator(surface, scene) {
 
 
 CutIndicator.prototype.updateGeometry = function()
-{
-    return
+{   
+    var ll = new THREE.Vector3();
+    ll.fromBufferAttribute(this.surface.stripes[0].bufferGeometry.attributes.position, this.surface.stripes[0].idxLeft[0]);
+    
 	//console.log(this.surface.mesh.matrixWorld);
-	var midPos = this.surface.bufferQuads[0].getLL().applyMatrix4( this.mesh.matrixWorld );
+	var midPos = ll.applyMatrix4( this.mesh.matrixWorld );
 
 	this.sphere.position.set(midPos.x, midPos.y, midPos.z);
 }
