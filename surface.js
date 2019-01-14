@@ -100,6 +100,8 @@ var fragmentShaderSource = `
         //vec3 globalPositionTorus = normalize(vec3(-globalPositionRolled.x, 0.0, -globalPositionRolled.z)) * projTorusScale;
         vec3 globalPositionTorus = (projTorusMatrix * vec4(normalize(vec3(-localPosition.x, 0.0, -localPosition.z)) * projTorusScale, 1.0)).xyz;
         
+        float l = length(globalPositionRolled.xyz);
+        
 		vec3 p = point_on_sphere(globalPositionTorus.xyz, globalPositionRolled.xyz);
 		
 		if (p.x < -999.0)
@@ -125,6 +127,11 @@ var fragmentShaderSource = `
 			color = vec4(color.rgb * color.a * (1.0 - CTissot.a) + CTissot.a * CTissot.rgb, 1.0);
 			
 			gl_FragColor = vec4(color.rgb, opacity);
+            if (l > 0.999 && l < 1.001)
+                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+
+            //gl_FragColor = vec4(l, 0.0, 0.0, 1.0);
+            
 			//gl_FragColor = vec4(projTorusScale, 0.0, 0.0, 1.0);
 			//gl_FragColor = vec4(azimuthalNorm, azimuthalNorm, azimuthalNorm, 1.0);
 			//gl_FragColor = vec4(globalPositionTorus.y, 0.0, 0.0, 1.0);
@@ -304,7 +311,7 @@ function Surface(scene, renderer, earth) {
     this.topRadius = 1.0;
     this.bottomRadius = 1.0;
     
-    var segmentsRadial = 128;
+    var segmentsRadial = 256;
     var segmentsHeight = 64;
     
     //var segmentsRadial = 32;
@@ -405,12 +412,12 @@ function Surface(scene, renderer, earth) {
     
     this.tissotTexture    = new THREE.TextureLoader().load('images/Tissot.png');
     this.tissotTexture.magFilter = THREE.LinearFilter;
-    this.tissotTexture.magFilter = THREE.LinearMipMapLinearFilter;    
+    this.tissotTexture.minFilter = THREE.LinearMipMapLinearFilter;    
     this.tissotTexture.anisotropy = maxAnisotropy;
     
     this.graticuleTexture = new THREE.TextureLoader().load('images/Graticule.png');
     this.graticuleTexture.magFilter = THREE.LinearFilter;
-    this.graticuleTexture.magFilter = THREE.LinearMipMapLinearFilter;   
+    this.graticuleTexture.minFilter = THREE.LinearMipMapLinearFilter;   
     this.graticuleTexture.anisotropy = maxAnisotropy;
     
     this.emptyTexture     = new THREE.TextureLoader().load('images/Empty.png');
