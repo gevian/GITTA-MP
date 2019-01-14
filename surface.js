@@ -289,7 +289,8 @@ Stripe.prototype.getNormal = function()
 
 
 
-function Surface(scene, earth) {
+function Surface(scene, renderer, earth) {
+    this.renderer = renderer;
 	this.scene = scene;
     this.earth = earth;
 	
@@ -304,7 +305,7 @@ function Surface(scene, earth) {
     this.bottomRadius = 1.0;
     
     var segmentsRadial = 128;
-    var segmentsHeight = 128;
+    var segmentsHeight = 64;
     
     //var segmentsRadial = 32;
     //var segmentsHeight = 1;
@@ -391,10 +392,27 @@ function Surface(scene, earth) {
 	this.overallT = 0;
     this.remainingQuadsFloat = 0;
     
-    
+    var maxAnisotropy = renderer.getMaxAnisotropy();
     this.countriesTexture = new THREE.TextureLoader().load('images/Countries.png');
+    this.countriesTexture.magFilter = THREE.LinearFilter;
+    //this.countriesTexture.minFilter = THREE.NearestFilter
+    //this.countriesTexture.minFilter = THREE.NearestMipMapNearestFilter
+    //this.countriesTexture.minFilter = THREE.NearestMipMapLinearFilter
+    //this.countriesTexture.minFilter = THREE.LinearFilter
+    //this.countriesTexture.minFilter = THREE.LinearMipMapNearestFilter
+    this.countriesTexture.minFilter = THREE.LinearMipMapLinearFilter
+    this.countriesTexture.anisotropy = maxAnisotropy;
+    
     this.tissotTexture    = new THREE.TextureLoader().load('images/Tissot.png');
+    this.tissotTexture.magFilter = THREE.LinearFilter;
+    this.tissotTexture.magFilter = THREE.LinearMipMapLinearFilter;    
+    this.tissotTexture.anisotropy = maxAnisotropy;
+    
     this.graticuleTexture = new THREE.TextureLoader().load('images/Graticule.png');
+    this.graticuleTexture.magFilter = THREE.LinearFilter;
+    this.graticuleTexture.magFilter = THREE.LinearMipMapLinearFilter;   
+    this.graticuleTexture.anisotropy = maxAnisotropy;
+    
     this.emptyTexture     = new THREE.TextureLoader().load('images/Empty.png');
     
 	var uniforms = {

@@ -352,7 +352,7 @@
 		var glcanvas = new GLCanvas("webgl_canvas");
 		
         var earth = new Earth(glcanvas.scene);
-		var surface = new Surface(glcanvas.scene, earth);
+		var surface = new Surface(glcanvas.scene, glcanvas.renderer, earth);
 		var projectionCenter = new ProjectionCenter(glcanvas.scene);
 		var cutIndicator = new CutIndicator(surface, glcanvas.scene);
 		var lineProjector = new LineProjector(glcanvas, surface, earth, projectionCenter);
