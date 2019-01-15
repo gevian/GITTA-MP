@@ -100,8 +100,6 @@ var fragmentShaderSource = `
         //vec3 globalPositionTorus = normalize(vec3(-globalPositionRolled.x, 0.0, -globalPositionRolled.z)) * projTorusScale;
         vec3 globalPositionTorus = (projTorusMatrix * vec4(normalize(vec3(-localPosition.x, 0.0, -localPosition.z)) * projTorusScale, 1.0)).xyz;
         
-        float l = length(globalPositionRolled.xyz);
-        
 		vec3 p = point_on_sphere(globalPositionTorus.xyz, globalPositionRolled.xyz);
 		
 		if (p.x < -999.0)
@@ -126,10 +124,15 @@ var fragmentShaderSource = `
 			color = vec4(color.rgb * color.a * (1.0 - CGraticule.a) + CGraticule.a * CGraticule.rgb, 1.0);
 			color = vec4(color.rgb * color.a * (1.0 - CTissot.a) + CTissot.a * CTissot.rgb, 1.0);
 			
-			gl_FragColor = vec4(color.rgb, opacity);
+            gl_FragColor = vec4(color.rgb, opacity);
+            
+            /* very simple intersection indicator
+            float l = length(globalPositionRolled.xyz);
             if (l > 0.999 && l < 1.001)
                 gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 
+            */
+            
             //gl_FragColor = vec4(l, 0.0, 0.0, 1.0);
             
 			//gl_FragColor = vec4(projTorusScale, 0.0, 0.0, 1.0);
@@ -334,7 +337,7 @@ function Surface(scene, renderer, earth) {
         for (x = 0; x <= segmentsRadial; x++)
         {
             var u = x / segmentsRadial;
-            var theta = u * 2 * Math.PI;
+            var theta = u * 2 * Math.PI - Math.PI/2;
             
             px = Math.sin(theta);
             py = v - 0.5; // centers the cylinder to zero along the y axis (vertices get built up from bottom to top)
@@ -508,7 +511,35 @@ Surface.prototype.setGeometryOffset = function(offset)
 Surface.prototype.setAxisLength = function(length)
 {
     
-    this.mesh.scale.y = length;
+    //this.mesh.scale.y = length;
+    
+    var diff = this.topRadius - this.bottomRadius;
+	for (var i = 0; i < this.stripes.length; i++)
+	{	
+        var stripe = this.stripes[i];
+        var idxLeft = stripe.idxLeft;
+        
+        for (var a = 0; a < idxLeft.length; a++)
+        {
+            var newY = length * ((a / (idxLeft.length - 1)) - 0.5);
+            stripe.bufferGeometry.attributes.position.setY(idxLeft[a], newY);
+        }
+        
+        if (i == this.stripes.length-1)
+        {
+            var idxRight = stripe.idxRight;
+            for (var a = 0; a < idxRight.length; a++)
+            {               
+                var newY = length * ((a / (idxRight.length - 1)) - 0.5);
+                stripe.bufferGeometry.attributes.position.setY(idxRight[a], newY);
+            }
+        }
+    }
+
+    this.bufferGeometry.attributes.position.needsUpdate = true;
+	
+	this.updateGeometry();
+    
 }
 
 Surface.prototype.computeRadii = function()
@@ -732,9 +763,9 @@ Surface.prototype.scale = function()
         {
             var leftVec = new THREE.Vector3();
             leftVec.fromBufferAttribute(stripe.bufferGeometry.attributes.position, idxLeft[a]);
-            leftVec.y = scale_func(leftVec.x, leftVec.y * this.mesh.scale.y);
+            leftVec.y = scale_func(leftVec.x, leftVec.y);
             
-            stripe.bufferGeometry.attributes.position.setXYZ(idxLeft[a], leftVec.x, leftVec.y / this.mesh.scale.y, leftVec.z);
+            stripe.bufferGeometry.attributes.position.setXYZ(idxLeft[a], leftVec.x, leftVec.y, leftVec.z);
         }
         
         if (i == this.stripes.length-1)
