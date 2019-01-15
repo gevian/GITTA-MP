@@ -1,10 +1,13 @@
 function CutIndicator(surface, scene) {
 	this.surface = surface;
 	this.scene = scene;
-	this.sphere = new THREE.Mesh(new THREE.SphereGeometry(0.05, 32, 32),
-								 new THREE.MeshBasicMaterial({color: 0xff0000}));
 
-	scene.add(this.sphere);
+    // sprite texture taken from https://en.wikipedia.org/wiki/File:Scissors_icon_black.svg
+    this.spriteMap = new THREE.TextureLoader().load( "images/Scissors_icon_black.svg.png" );
+    this.spriteMaterial = new THREE.SpriteMaterial( { map: this.spriteMap, color: 0xffffff } );
+    this.sprite = new THREE.Sprite( this.spriteMaterial );
+    this.sprite.scale.set(0.2, 0.2, 1)
+    scene.add( this.sprite );                                         
 	
 	this.mesh = this.surface.mesh;
 	
@@ -20,5 +23,5 @@ CutIndicator.prototype.updateGeometry = function()
 	//console.log(this.surface.mesh.matrixWorld);
 	var midPos = ll.applyMatrix4( this.mesh.matrixWorld );
 
-	this.sphere.position.set(midPos.x, midPos.y, midPos.z);
+	this.sprite.position.set(midPos.x, midPos.y, midPos.z);
 }
