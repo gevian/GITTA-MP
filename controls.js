@@ -104,7 +104,7 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 	   var rot = ((_this.rotSlider.value / 360) * 2 * Math.PI);
 	   
 	   _this.surface.setOrientation(lat, lon, rot);
-	   _this.projectionCenter.setOrientation(lat, lon);
+	   _this.projectionCenter.setOrientation(lat, lon, rot);
 	   
 	   _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
 	   _this.cutIndicator.updateGeometry();
@@ -129,7 +129,7 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 	   var rot = ((_this.rotSlider.value / 360) * 2 * Math.PI);
 	   
 	   _this.surface.setOrientation(lat, lon, rot);
-	   _this.projectionCenter.setOrientation(lat, lon);
+	   _this.projectionCenter.setOrientation(lat, lon, rot);
 	   
 	   _this.surface.setProjectionTorusParams(_this.projectionCenter.scale, _this.projectionCenter.lightCenter.matrixWorld);
 	   _this.cutIndicator.updateGeometry();

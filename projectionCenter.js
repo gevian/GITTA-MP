@@ -36,10 +36,11 @@ ProjectionCenter.prototype.setScale = function(scale)
 	this.reconstructTorus(scale);
 }
 
-ProjectionCenter.prototype.setOrientation = function(lat, lon)
+ProjectionCenter.prototype.setOrientation = function(lat, lon, rot)
 {
 	this.earthCenter.rotation.z = lat;
 	this.earthCenter.rotation.y = lon;
+    this.lightCenter.rotation.y = rot;
 }
 
 ProjectionCenter.prototype.setOffset = function(offset)
