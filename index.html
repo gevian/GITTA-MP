@@ -61,6 +61,10 @@
 				text-align: center;
 			} 
 			
+            .active {
+              stroke: #000;
+              stroke-width: 2px;
+            }
 		</style>
 	</head>
 	<body>
@@ -174,6 +178,9 @@
                   <td><button type="button" id="roll-button" onclick="rollPressed()">unroll</button><br></td>
 				 </tr>
 				</table>
+                
+                
+            <svg width="200" height="200"></svg>
 		</div>
 		<div id="webgl_canvas"></div>
 		<div id="explanation">
@@ -335,6 +342,7 @@
 		</div>
 		<script src="libs/three.js"></script>
 		<script src="libs/OrbitControls.js"></script>
+		<script src="libs/d3.js"></script>
 		
 		<script src="glcanvas.js"></script>
 		<script src="earth.js"></script>
@@ -345,12 +353,15 @@
 		
 		<script src="sliderAnimator.js"></script>
 		<script src="tutorialControls.js"></script>
-		<script src="controls.js"></script>		
+		<script src="controls.js"></script>
+        
+        <script src="stretchWidget.js"></script>
 
 		<script>
 
 		var glcanvas = new GLCanvas("webgl_canvas");
-		
+		var stretchWidget = new StretchWidget("svg");
+        
         var earth = new Earth(glcanvas.scene);
 		var surface = new Surface(glcanvas.scene, glcanvas.renderer, earth);
 		var projectionCenter = new ProjectionCenter(glcanvas.scene);
