@@ -1,15 +1,15 @@
 function StretchWidget(svgName)
 {
     this.svg = d3.select(svgName);
-    this.width = +svg.attr("width");
-    this.height = +svg.attr("height");
+    this.width = +this.svg.attr("width");
+    this.height = +this.svg.attr("height");
     this.radius = 7.5;
     this.numCircles = 11;
     
-    this.x = d3.scaleLinear().range([0,width]);
-    this.y = d3.scaleLinear().range([height,0]);
-    this.xAxis = d3.axisBottom().scale(x);
-    this.yAxis = d3.axisLeft().scale(y);
+    this.x = d3.scaleLinear().range([0,this.width]);
+    this.y = d3.scaleLinear().range([this.height,0]);
+    this.xAxis = d3.axisBottom().scale(this.x);
+    this.yAxis = d3.axisLeft().scale(this.y);
 }
 
 StretchWidget.prototype.setAxisLength = function(length)
@@ -26,7 +26,7 @@ StretchWidget.prototype.setAxisLength = function(length)
       };
     });
 
-    svg.selectAll("circle")
+    this.svg.selectAll("circle")
       .data(circles)
       .enter().append("circle")
         .attr("cx", function(d) { return d.x; })
@@ -50,11 +50,11 @@ StretchWidget.prototype.setAxisLength = function(length)
       d3.select(this).classed("active", false);
     }
         
-  svg.append("g")
+  this.svg.append("g")
       .attr("class", "x axis")
       .call(this.xAxis)
 
-  svg.append("g")
+  this.svg.append("g")
       .attr("class", "y axis")
       .call(this.yAxis);
 }
