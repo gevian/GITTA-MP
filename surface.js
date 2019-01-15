@@ -499,6 +499,7 @@ Surface.prototype.setOrientation = function(lat, lon, rot)
     this.earthCenter.rotation.z = lat;
     this.earthCenter.rotation.y = lon;
     this.mesh.rotation.y = rot;
+    
 }
 
 
@@ -798,7 +799,7 @@ Surface.prototype.update = function(delta)
 		if (result)
 		{
 			this.state = "Rolled";
-            this.scale();
+            
 		}
 	}
 	else if (this.state == "Unrolling")
