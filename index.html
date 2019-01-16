@@ -180,7 +180,7 @@
 				</table>
                 
                 
-            <svg width="200" height="200"></svg>
+            <svg viewBox="-50 -50 300 300" width="300" height="300"></svg>
 		</div>
 		<div id="webgl_canvas"></div>
 		<div id="explanation">
@@ -360,7 +360,6 @@
 		<script>
 
 		var glcanvas = new GLCanvas("webgl_canvas");
-		var stretchWidget = new StretchWidget("svg");
         
         var earth = new Earth(glcanvas.scene);
 		var surface = new Surface(glcanvas.scene, glcanvas.renderer, earth);
@@ -369,7 +368,8 @@
 		var lineProjector = new LineProjector(glcanvas, surface, earth, projectionCenter);
 		
 		var controls = new Controls(glcanvas, earth, surface, projectionCenter, cutIndicator, lineProjector);
-
+		var stretchWidget = new StretchWidget("svg", surface);
+		
 		var sliderAnimator = new SliderAnimator(controls);
 		
 		var tutorialControls = new TutorialControls(controls, sliderAnimator, projectionCenter, glcanvas);

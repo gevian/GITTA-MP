@@ -754,7 +754,6 @@ function scale_func_inv(x, y) {
 
 Surface.prototype.scale = function()
 {
-
 	for (var i = 0; i < this.stripes.length; i++)
 	{	
         var stripe = this.stripes[i];
@@ -784,7 +783,6 @@ Surface.prototype.scale = function()
     }
 
     this.bufferGeometry.attributes.position.needsUpdate = true;
-	
 	this.updateGeometry();
 }
 
