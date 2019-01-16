@@ -384,6 +384,7 @@ function Surface(scene, renderer, earth) {
     this.bufferGeometry.addAttribute('positionRolled', new THREE.Float32BufferAttribute(new Float32Array(position), 3))
     this.bufferGeometry.computeVertexNormals();
     
+	this.savedRolledPositions = new Float32Array(position);
     
 	this.startTime = new Date();
 	this.maxTime = 2;
@@ -752,8 +753,48 @@ function scale_func_inv(x, y) {
   return y;
 }
 
-Surface.prototype.scale = function()
+Surface.prototype.scale = function(targets)
 {
+	console.log(targets);
+	for (var i = 0; i < this.stripes.length; i++)
+	{
+        var stripe = this.stripes[i];
+        var idxLeft = stripe.idxLeft;
+        
+        var p1 = new THREE.Vector3(this.savedRolledPositions[idxLeft[0] * 3],
+         						   this.savedRolledPositions[(idxLeft[0] * 3) + 1],
+ 								   this.savedRolledPositions[(idxLeft[0] * 3) + 2]);
+        var p2 = new THREE.Vector3(this.savedRolledPositions[idxLeft[idxLeft.length-1] * 3],
+								   this.savedRolledPositions[(idxLeft[idxLeft.length-1] * 3) + 1],
+								   this.savedRolledPositions[(idxLeft[idxLeft.length-1] * 3) + 2]);
+		
+		var vec = p2.sub(p1).normalize();
+
+        for (var a = 0; a < idxLeft.length; a++)
+        {
+			var f = a / (idxLeft.length - 1);
+			var s = f * (targets.length - 1);
+			
+			var s1 = Math.floor(s);
+			var s2 = s1 + 1;
+			
+			if (s2 == targets.length)
+				s2 = s1;
+
+			var w1 = s - s1;
+			var w2 = 1 - w1;
+
+			var offset = w1 * targets[s1] + w2 * targets[s2];
+			var offsetVec = vec.clone().addScaledVector(p1, offset);
+            
+            stripe.bufferGeometry.attributes.position.setXYZ(idxLeft[a], offsetVec.x, offsetVec.y, offsetVec.z);
+        }
+    }
+
+    this.bufferGeometry.attributes.position.needsUpdate = true;
+	this.updateGeometry();
+	
+	/*
 	for (var i = 0; i < this.stripes.length; i++)
 	{	
         var stripe = this.stripes[i];
@@ -784,9 +825,13 @@ Surface.prototype.scale = function()
 
     this.bufferGeometry.attributes.position.needsUpdate = true;
 	this.updateGeometry();
+	*/
 }
 
-
+Surface.prototype.saveUnrolledPositions = function()
+{
+	this.savedRolledPositions.set(this.bufferGeometry.attributes.position.array);
+}
 
 Surface.prototype.update = function(delta)
 {
@@ -797,7 +842,7 @@ Surface.prototype.update = function(delta)
 		if (result)
 		{
 			this.state = "Rolled";
-            
+            this.saveUnrolledPositions();
 		}
 	}
 	else if (this.state == "Unrolling")
@@ -821,6 +866,7 @@ Surface.prototype.roll = function()
 	
 	// freeze vertex positions
 	this.bufferGeometry.attributes.positionRolled.array.set(this.bufferGeometry.attributes.position.array);
+	console.log(this.bufferGeometry.attributes.positionRolled.array);
 	this.bufferGeometry.attributes.positionRolled.needsUpdate = true;
 	
 	this.mesh.material.uniforms.keepVertices.value = 1;

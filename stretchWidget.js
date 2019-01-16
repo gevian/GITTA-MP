@@ -88,14 +88,14 @@ StretchWidget.prototype.setAxisLength = function(length)
 
     function dragged(d) {
       d3.select(this).attr("cy", d.y = d3.event.y);
-	  console.log(circles);
-	  
-	  var mapping = {};
+
+	  var targets = [];
 	  for (var i = 0; i < _this.numCircles; i++)
 	  {
-		  circles[i].x, circles[i].y
+		  targets.push(length - (length * (circles[i].y / _this.height)));
 	  }
 	  
+	  _this.surface.scale(targets);
     }
 
     function dragended(d) {
