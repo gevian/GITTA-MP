@@ -314,11 +314,11 @@ function Surface(scene, renderer, earth) {
     this.topRadius = 1.0;
     this.bottomRadius = 1.0;
     
-    var segmentsRadial = 256;
-    var segmentsHeight = 64;
+    //var segmentsRadial = 256;
+    //var segmentsHeight = 64;
     
-    //var segmentsRadial = 32;
-    //var segmentsHeight = 1;
+    var segmentsRadial = 4;
+    var segmentsHeight = 1;
     
     
     var indices = [];
@@ -767,9 +767,7 @@ Surface.prototype.scale = function(targets)
         var p2 = new THREE.Vector3(this.savedRolledPositions[idxLeft[idxLeft.length-1] * 3],
 								   this.savedRolledPositions[(idxLeft[idxLeft.length-1] * 3) + 1],
 								   this.savedRolledPositions[(idxLeft[idxLeft.length-1] * 3) + 2]);
-		
-		var vec = p2.sub(p1).normalize();
-
+		var vec = p2.clone().sub(p1.clone()).normalize();
         for (var a = 0; a < idxLeft.length; a++)
         {
 			var f = a / (idxLeft.length - 1);
@@ -777,17 +775,23 @@ Surface.prototype.scale = function(targets)
 			
 			var s1 = Math.floor(s);
 			var s2 = s1 + 1;
-			
+
 			if (s2 == targets.length)
 				s2 = s1;
 
-			var w1 = s - s1;
+			var w1 = 1 - (s - s1);
 			var w2 = 1 - w1;
 
 			var offset = w1 * targets[s1] + w2 * targets[s2];
-			var offsetVec = vec.clone().addScaledVector(p1, offset);
-            
-            stripe.bufferGeometry.attributes.position.setXYZ(idxLeft[a], offsetVec.x, offsetVec.y, offsetVec.z);
+
+			var targetVec = new THREE.Vector3(this.savedRolledPositions[idxLeft[a] * 3],
+											  this.savedRolledPositions[(idxLeft[a] * 3) + 1],
+											  this.savedRolledPositions[(idxLeft[a] * 3) + 2]);
+			//console.log(targetVec);
+
+			var offsetVec = vec.clone().multiplyScalar(offset);
+			var pa = p1.clone().add(offsetVec);
+            stripe.bufferGeometry.attributes.position.setXYZ(idxLeft[a], pa.x, pa.y, pa.z);
         }
     }
 
