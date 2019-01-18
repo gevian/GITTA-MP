@@ -29,11 +29,23 @@ var fragmentShaderEarth = `
 	}
 `;
 
-function Earth(scene) {
-    
+function Earth(scene, renderer) {
+    var maxAnisotropy = renderer.getMaxAnisotropy();
     this.countriesTexture = new THREE.TextureLoader().load('images/Countries.png');
+    this.countriesTexture.magFilter = THREE.LinearFilter;
+    this.countriesTexture.minFilter = THREE.LinearMipMapLinearFilter
+    this.countriesTexture.anisotropy = maxAnisotropy;
+    
     this.tissotTexture    = new THREE.TextureLoader().load('images/Tissot.png');
+    this.tissotTexture.magFilter = THREE.LinearFilter;
+    this.tissotTexture.minFilter = THREE.LinearMipMapLinearFilter;    
+    this.tissotTexture.anisotropy = maxAnisotropy;
+    
     this.graticuleTexture = new THREE.TextureLoader().load('images/Graticule.png');
+    this.graticuleTexture.magFilter = THREE.LinearFilter;
+    this.graticuleTexture.minFilter = THREE.LinearMipMapLinearFilter;   
+    this.graticuleTexture.anisotropy = maxAnisotropy;
+    
     this.emptyTexture     = new THREE.TextureLoader().load('images/Empty.png');
     
 	this.scene = scene;

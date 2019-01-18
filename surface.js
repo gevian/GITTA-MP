@@ -403,33 +403,10 @@ function Surface(scene, renderer, earth) {
 	this.overallT = 0;
     this.remainingQuadsFloat = 0;
     
-    var maxAnisotropy = renderer.getMaxAnisotropy();
-    this.countriesTexture = new THREE.TextureLoader().load('images/Countries.png');
-    this.countriesTexture.magFilter = THREE.LinearFilter;
-    //this.countriesTexture.minFilter = THREE.NearestFilter
-    //this.countriesTexture.minFilter = THREE.NearestMipMapNearestFilter
-    //this.countriesTexture.minFilter = THREE.NearestMipMapLinearFilter
-    //this.countriesTexture.minFilter = THREE.LinearFilter
-    //this.countriesTexture.minFilter = THREE.LinearMipMapNearestFilter
-    this.countriesTexture.minFilter = THREE.LinearMipMapLinearFilter
-    this.countriesTexture.anisotropy = maxAnisotropy;
-    
-    this.tissotTexture    = new THREE.TextureLoader().load('images/Tissot.png');
-    this.tissotTexture.magFilter = THREE.LinearFilter;
-    this.tissotTexture.minFilter = THREE.LinearMipMapLinearFilter;    
-    this.tissotTexture.anisotropy = maxAnisotropy;
-    
-    this.graticuleTexture = new THREE.TextureLoader().load('images/Graticule.png');
-    this.graticuleTexture.magFilter = THREE.LinearFilter;
-    this.graticuleTexture.minFilter = THREE.LinearMipMapLinearFilter;   
-    this.graticuleTexture.anisotropy = maxAnisotropy;
-    
-    this.emptyTexture     = new THREE.TextureLoader().load('images/Empty.png');
-    
 	var uniforms = {
-		tCountries:      { type: "t", value: this.countriesTexture },
-		tGraticule:      { type: "t", value: this.graticuleTexture },
-		tTissot:         { type: "t", value: this.tissotTexture },
+		tCountries:      { type: "t", value: this.earth.countriesTexture },
+		tGraticule:      { type: "t", value: this.earth.graticuleTexture },
+		tTissot:         { type: "t", value: this.earth.tissotTexture },
 		projTorusScale:  { type: "f", value: 1.0 },
 		projTorusMatrix: { type: 'm4', value: new THREE.Matrix4()},
 		opacity:         { type: "f", value: 1.0 }, // Note: if not 1.0, set transparent of material to true
