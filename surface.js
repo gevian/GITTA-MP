@@ -314,11 +314,11 @@ function Surface(scene, renderer, earth) {
     this.topRadius = 1.0;
     this.bottomRadius = 1.0;
     
-    //var segmentsRadial = 256;
-    //var segmentsHeight = 64;
+    var segmentsRadial = 256;
+    var segmentsHeight = 64;
     
-    var segmentsRadial = 4;
-    var segmentsHeight = 1;
+    //var segmentsRadial = 4;
+    //var segmentsHeight = 1;
     
     
     var indices = [];
@@ -732,7 +732,7 @@ function scale_func_inv(x, y) {
 
 Surface.prototype.scale = function(targets)
 {
-	console.log(targets);
+	//console.log(targets);
 	for (var i = 0; i < this.stripes.length; i++)
 	{
         var stripe = this.stripes[i];
@@ -764,12 +764,42 @@ Surface.prototype.scale = function(targets)
 			var targetVec = new THREE.Vector3(this.savedRolledPositions[idxLeft[a] * 3],
 											  this.savedRolledPositions[(idxLeft[a] * 3) + 1],
 											  this.savedRolledPositions[(idxLeft[a] * 3) + 2]);
-			//console.log(targetVec);
 
 			var offsetVec = vec.clone().multiplyScalar(offset);
 			var pa = p1.clone().add(offsetVec);
             stripe.bufferGeometry.attributes.position.setXYZ(idxLeft[a], pa.x, pa.y, pa.z);
         }
+        
+        if (i == this.stripes.length-1)
+        {
+            var idxRight = stripe.idxRight;
+            for (var a = 0; a < idxRight.length; a++)
+            {
+                var f = a / (idxLeft.length - 1);
+                var s = f * (targets.length - 1);
+                
+                var s1 = Math.floor(s);
+                var s2 = s1 + 1;
+
+                if (s2 == targets.length)
+                    s2 = s1;
+
+                var w1 = 1 - (s - s1);
+                var w2 = 1 - w1;
+
+                var offset = w1 * targets[s1] + w2 * targets[s2];
+
+                var targetVec = new THREE.Vector3(this.savedRolledPositions[idxRight[a] * 3],
+                                                  this.savedRolledPositions[(idxRight[a] * 3) + 1],
+                                                  this.savedRolledPositions[(idxRight[a] * 3) + 2]);
+
+                var offsetVec = vec.clone().multiplyScalar(offset);
+                var pa = p1.clone().add(offsetVec);
+                stripe.bufferGeometry.attributes.position.setXYZ(idxRight[a], pa.x, pa.y, pa.z);
+            }
+        }
+        
+        
     }
 
     this.bufferGeometry.attributes.position.needsUpdate = true;
@@ -847,7 +877,7 @@ Surface.prototype.roll = function()
 	
 	// freeze vertex positions
 	this.bufferGeometry.attributes.positionRolled.array.set(this.bufferGeometry.attributes.position.array);
-	console.log(this.bufferGeometry.attributes.positionRolled.array);
+	//console.log(this.bufferGeometry.attributes.positionRolled.array);
 	this.bufferGeometry.attributes.positionRolled.needsUpdate = true;
 	
 	this.mesh.material.uniforms.keepVertices.value = 1;

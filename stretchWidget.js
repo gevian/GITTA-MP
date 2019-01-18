@@ -31,15 +31,23 @@ function StretchWidget(svgName, surface)
 		.attr("transform", "rotate(-90)");
 	
 	
-	this.setAxisLength(4);
+	this.setAxisLength(4, 8);
 }
 
-StretchWidget.prototype.setAxisLength = function(length)
+StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
 {
 	var _this = this;
-    this.x.domain([0, length]);
-    this.y.domain([0, length]);
+    this.maxSource = maxSource;
+    this.maxTarget = maxTarget;
 
+    this.x.domain([0, maxSource]);
+    this.y.domain([0, maxTarget]);
+
+    this.minX = 0;
+    this.maxX = _this.width
+    this.minY = 0;
+    this.maxY = _this.height;
+    
 	
 	this.svg.append("g")
 	  .attr("class", "x axis")
@@ -61,7 +69,7 @@ StretchWidget.prototype.setAxisLength = function(length)
 	  
 	
 	
-    var circles = d3.range(this.numCircles).map(function(i) {
+    this.circles = d3.range(this.numCircles).map(function(i) {
 		console.log((i / (_this.numCircles-1)))
       return {
         x: (i / (_this.numCircles-1)) * (_this.width),
@@ -69,9 +77,9 @@ StretchWidget.prototype.setAxisLength = function(length)
 		
       };
     });
-	console.log(circles)
+	console.log(_this.circles)
     this.svg.selectAll("circle")
-      .data(circles)
+      .data(_this.circles)
       .enter().append("circle")
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; })
@@ -82,27 +90,63 @@ StretchWidget.prototype.setAxisLength = function(length)
             .on("drag", dragged)
             .on("end", dragended));
 
-    function dragstarted(d) {
+    function dragstarted(d, i) {
       d3.select(this).raise().classed("active", true);
+      console.log(i);
+      if (i > 0)
+      {
+        _this.maxPos = _this.circles[i-1].y;
+      }
+      else
+      {
+        console.log(_this.y);
+        _this.maxPos = _this.maxY;          
+      }  
+      
+      if (i < _this.numCircles-2)
+      {
+        console.log(i + 1, _this.circles, _this.circles[i+1])
+        _this.minPos = _this.circles[i+1].y;
+        console.log(_this.minPos);
+      }
+      else
+      {
+        _this.minPos = _this.minY;
+      }
     }
 
-    function dragged(d) {
-      d3.select(this).attr("cy", d.y = d3.event.y);
-
-	  var targets = [];
-	  for (var i = 0; i < _this.numCircles; i++)
-	  {
-		  targets.push(length - (length * (circles[i].y / _this.height)));
-	  }
-	  
-	  _this.surface.scale(targets);
+    function dragged(d, i) {
+      //console.log(d3.event.y, _this.minPos, _this.maxPos);
+      if (d3.event.y <= _this.minPos)
+      {
+          d3.select(this).attr("cy", d.y = _this.minPos);
+      }
+      else if (d3.event.y >= _this.maxPos)
+      {
+          d3.select(this).attr("cy", d.y = _this.maxPos);
+      }
+      else
+      {
+          d3.select(this).attr("cy", d.y = d3.event.y);
+      }
+      _this.scaleSurface();
     }
 
     function dragended(d) {
       d3.select(this).classed("active", false);
     }
-        
-
 }
+
+StretchWidget.prototype.scaleSurface = function()
+{
+      var targets = [];
+      for (var i = 0; i < this.numCircles; i++)
+      {
+          targets.push(this.maxTarget - (this.maxTarget * (this.circles[i].y / this.height)));
+      }
+      this.surface.scale(targets);
+      
+}
+
 
 
