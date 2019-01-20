@@ -7,6 +7,7 @@ function StretchWidget(svgName, surface)
     this.radius = 7.5;
     this.numCircles = 11;
 	this.surface = surface;
+    this.surface.setStretchWidget(this);
 
     this.x = d3.scaleLinear().range([0, this.width]);
     this.y = d3.scaleLinear().range([this.height, 0]);
@@ -15,7 +16,28 @@ function StretchWidget(svgName, surface)
     this.xLine = d3.axisTop().scale(this.x).tickFormat("").tickSize(-this.height);
 	this.yLine = d3.axisRight().scale(this.y).tickFormat("").tickSize(-this.width);
 	
-	this.svg.append("text")
+
+
+	this.state = "Unstretched";
+    this.step = 1;
+}
+
+StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
+{
+    this.svg.selectAll("*").remove();
+	var _this = this;
+    this.maxSource = maxSource;
+    this.maxTarget = maxTarget;
+
+    this.x.domain([0, maxSource]);
+    this.y.domain([0, maxTarget]);
+
+    this.minX = 0;
+    this.maxX = _this.width
+    this.minY = 0;
+    this.maxY = _this.height;
+
+    this.svg.append("text")
         .attr("x", (this.width / 2))             
         .attr("y", this.height + this.margin)
         .attr("text-anchor", "middle")  
@@ -29,26 +51,7 @@ function StretchWidget(svgName, surface)
         .style("font-size", "16px") 
         .text("Target")
 		.attr("transform", "rotate(-90)");
-	
-	
-	this.setAxisLength(4, 8);
-}
-
-StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
-{
-	var _this = this;
-    this.maxSource = maxSource;
-    this.maxTarget = maxTarget;
-
-    this.x.domain([0, maxSource]);
-    this.y.domain([0, maxTarget]);
-
-    this.minX = 0;
-    this.maxX = _this.width
-    this.minY = 0;
-    this.maxY = _this.height;
-    
-	
+        
 	this.svg.append("g")
 	  .attr("class", "x axis")
 	  .attr("transform", "translate(" + 0 + ", " + _this.height + ")")
@@ -70,15 +73,14 @@ StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
 	
 	
     this.circles = d3.range(this.numCircles).map(function(i) {
-		console.log((i / (_this.numCircles-1)))
       return {
         x: (i / (_this.numCircles-1)) * (_this.width),
-        y: _this.height - (i / (_this.numCircles-1)) * (_this.height),
-		
+        y: _this.height - (i / (_this.numCircles-1)) * ((_this.maxSource / _this.maxTarget) * _this.height),
+        i: i
       };
     });
-	console.log(_this.circles)
-    this.svg.selectAll("circle")
+
+    this.selection = this.svg.selectAll("circle")
       .data(_this.circles)
       .enter().append("circle")
         .attr("cx", function(d) { return d.x; })
@@ -92,7 +94,6 @@ StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
 
     function dragstarted(d, i) {
       d3.select(this).raise().classed("active", true);
-      console.log(i);
       if (i > 0)
       {
         _this.maxPos = _this.circles[i-1].y;
@@ -103,11 +104,9 @@ StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
         _this.maxPos = _this.maxY;          
       }  
       
-      if (i < _this.numCircles-2)
+      if (i < _this.numCircles-1)
       {
-        console.log(i + 1, _this.circles, _this.circles[i+1])
         _this.minPos = _this.circles[i+1].y;
-        console.log(_this.minPos);
       }
       else
       {
@@ -134,6 +133,7 @@ StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
 
     function dragended(d) {
       d3.select(this).classed("active", false);
+      _this.state = "Stretched";
     }
 }
 
@@ -148,5 +148,89 @@ StretchWidget.prototype.scaleSurface = function()
       
 }
 
+StretchWidget.prototype.resetStretch = function(duration)
+{
+      var instructions = [];
+      for (var i = 0; i < this.numCircles; i++)
+      {            
+          instructions.push({circle: this.selection._groups[0][i], target: this.height - (i / (this.numCircles-1)) * ((this.maxSource / this.maxTarget) * this.height)});
+      }
+      
+      this.startAnimations(instructions, duration);
+      this.state = "Unstretching"
+}
+
+
+
+StretchWidget.prototype.startAnimations = function(instructions, duration)
+{
+	this.instructions = instructions;
+	this.duration = duration;
+	
+	for ( var i = 0; i < this.instructions.length; i++)
+	{
+		var instruction = this.instructions[i];
+        
+		instruction.changePerSecond = (instruction.target - Number(instruction.circle.getAttribute('cy'))) / duration;
+		instruction.finished = false;
+	}
+}
+
+
+StretchWidget.prototype.update = function(delta)
+{
+	var allFinished = true;
+	
+	if (this.state == "Stretching" || this.state == "Unstretching")
+	{
+        var newPositions = [];
+		for (var i = 0; i < this.instructions.length; i++)
+		{
+			var instruction = this.instructions[i];
+			if (instruction.finished)
+				continue
+			
+			var allFinished = false;
+			
+			var deltaValue = delta * instruction.changePerSecond;
+			var increment =  Math.round(deltaValue / this.step) * this.step;
+
+			if (increment == 0)
+			{
+				if (instruction.changePerSecond > 0)
+					increment = this.step;
+				else
+					increment = -this.step;
+			}
+			
+            var newPosition = Number(instruction.circle.getAttribute('cy')) + increment;
+
+			if (instruction.changePerSecond >= 0 && Number(instruction.circle.getAttribute('cy')) >= instruction.target)
+			{
+                newPosition = instruction.target;
+				instruction.finished = true;
+			}
+			else if (instruction.changePerSecond <= 0 && Number(instruction.circle.getAttribute('cy')) <= instruction.target)
+			{
+                newPosition = instruction.target;
+				instruction.finished = true;
+			}
+            
+            instruction.circle.setAttribute("cy", newPosition);
+            this.circles[i].y = newPosition;
+		}
+        
+        this.scaleSurface();
+        
+		if (allFinished)
+		{
+            if (this.state == "Unstretching")
+                this.state = "Unstretched";
+            else if (this.state == "Stretching")
+                this.state = "Stretched";
+		}
+			
+	}
+}
 
 

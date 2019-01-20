@@ -310,11 +310,12 @@ function Surface(scene, renderer, earth) {
     // simplified cylinder geometry adapted from https://github.com/mrdoob/three.js/blob/master/src/geometries/CylinderGeometry.js
     this.bufferGeometry = new THREE.BufferGeometry();
     
+    this.stretchTime = 500;
     
     this.topRadius = 1.0;
     this.bottomRadius = 1.0;
     
-    var segmentsRadial = 256;
+    var segmentsRadial = 128;
     var segmentsHeight = 64;
     
     //var segmentsRadial = 4;
@@ -438,7 +439,12 @@ function Surface(scene, renderer, earth) {
 	this.state = "Waiting";
 }
 
+Surface.prototype.setStretchWidget = function(widget)
+{
+    this.stretchWidget = widget;
+}
 
+    
 Surface.prototype.updateGeometry = function()
 {		
 	var n1 = this.stripes[0].getNormal();
@@ -700,7 +706,7 @@ Surface.prototype.unrollAnimated = function(t)
 	}
 	
 	this.bufferGeometry.attributes.position.needsUpdate = true;
-	
+    
 	if (end == 0)
 	{
 		return true;
@@ -803,7 +809,6 @@ Surface.prototype.scale = function(targets)
     }
 
     this.bufferGeometry.attributes.position.needsUpdate = true;
-	this.updateGeometry();
 	
 	/*
 	for (var i = 0; i < this.stripes.length; i++)
@@ -839,9 +844,28 @@ Surface.prototype.scale = function(targets)
 	*/
 }
 
-Surface.prototype.saveUnrolledPositions = function()
+Surface.prototype.prepareStretching = function()
 {
 	this.savedRolledPositions.set(this.bufferGeometry.attributes.position.array);
+
+    var firstStripe = this.stripes[0];
+    var vecBottomFirst = new THREE.Vector3();
+    vecBottomFirst.fromBufferAttribute(firstStripe.bufferGeometry.attributes.position, firstStripe.idxLeft[0]);
+    var vecTopFirst = new THREE.Vector3();
+    vecTopFirst.fromBufferAttribute(firstStripe.bufferGeometry.attributes.position, firstStripe.idxLeft[firstStripe.idxLeft.length-1]);
+    
+    this.distance = vecBottomFirst.distanceTo(vecTopFirst);
+    
+    /*
+    var lastStripe = this.stripes[this.stripes.lenght-1];
+    var vecBottomLast = new THREE.Vector3();
+    vecBottomLast.fromBufferAttribute(lastStripe.bufferGeometry.attributes.position, lastStripe.idxRight[0]);
+    var vecTopLast = new THREE.Vector3();
+    vecTopLast.fromBufferAttribute(lastStripe.bufferGeometry.attributes.position, lastStripe.idxRight[lastStripe.idxRight.length-1]);
+    */
+    
+    
+    this.stretchWidget.setAxisLength(this.distance, this.distance * 2);
 }
 
 Surface.prototype.update = function(delta)
@@ -853,13 +877,13 @@ Surface.prototype.update = function(delta)
 		if (result)
 		{
 			this.state = "Rolled";
-            this.saveUnrolledPositions();
+            this.prepareStretching();
 		}
 	}
 	else if (this.state == "Unrolling")
 	{
 		var result = this.unrollAnimated(delta);
-		
+
 		if (result)
 		{
 			this.mesh.material.uniforms.keepVertices.value = 0;
@@ -895,6 +919,7 @@ Surface.prototype.unroll = function()
 
 Surface.prototype.toggleRoll = function()
 {
+    console.log(this.state, this.stretchWidget.state);
 	if (this.state == "Rolling" || this.state == "Unrolling")
 	{
 		return;
@@ -904,11 +929,14 @@ Surface.prototype.toggleRoll = function()
 		this.disableForms(true);
 		this.roll();
 	}
-	else if (this.state == "Rolled")
+	else if (this.state == "Rolled" && this.stretchWidget.state == "Stretched")
 	{
-		this.unroll();
+        this.stretchWidget.resetStretch(this.stretchTime);
 	}
-	
+    else if (this.state == "Rolled" && this.stretchWidget.state == "Unstretched")
+	{
+        this.unroll();
+    }
 }
 
 Surface.prototype.setProjectionTorusParams = function(scale, transformMatrix)

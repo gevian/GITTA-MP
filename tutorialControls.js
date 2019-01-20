@@ -194,7 +194,7 @@ TutorialControls.prototype.setProjection = function(name)
 	{
 		var latBoxInstruction = {slider: this.controls.latBox, target:90};
 		var lonBoxInstruction = {slider: this.controls.lonBox, target: 0};
-		var rotBoxInstruction = {slider: this.controls.rotBox, target:0};
+		var rotBoxInstruction = {slider: this.controls.rotBox, target: 0};
 		
 		var axisBoxInstruction = {slider: this.controls.axisBox, target:4};
 		var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 0.01};
