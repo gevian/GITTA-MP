@@ -750,7 +750,7 @@ Surface.prototype.scale = function(targets)
         var p2 = new THREE.Vector3(this.savedRolledPositions[idxLeft[idxLeft.length-1] * 3],
 								   this.savedRolledPositions[(idxLeft[idxLeft.length-1] * 3) + 1],
 								   this.savedRolledPositions[(idxLeft[idxLeft.length-1] * 3) + 2]);
-		var vec = p2.clone().sub(p1.clone()).normalize();
+		var vec1 = p2.clone().sub(p1.clone()).normalize();
         for (var a = 0; a < idxLeft.length; a++)
         {
 			var f = a / (idxLeft.length - 1);
@@ -771,7 +771,7 @@ Surface.prototype.scale = function(targets)
 											  this.savedRolledPositions[(idxLeft[a] * 3) + 1],
 											  this.savedRolledPositions[(idxLeft[a] * 3) + 2]);
 
-			var offsetVec = vec.clone().multiplyScalar(offset);
+			var offsetVec = vec1.clone().multiplyScalar(offset);
 			var pa = p1.clone().add(offsetVec);
             stripe.bufferGeometry.attributes.position.setXYZ(idxLeft[a], pa.x, pa.y, pa.z);
         }
@@ -779,6 +779,15 @@ Surface.prototype.scale = function(targets)
         if (i == this.stripes.length-1)
         {
             var idxRight = stripe.idxRight;
+            var p3 = new THREE.Vector3(this.savedRolledPositions[ idxRight[0] * 3],
+                                       this.savedRolledPositions[(idxRight[0] * 3) + 1],
+                                       this.savedRolledPositions[(idxRight[0] * 3) + 2]);
+                                       
+            var p4 = new THREE.Vector3(this.savedRolledPositions[ idxRight[idxRight.length-1] * 3],
+								       this.savedRolledPositions[(idxRight[idxRight.length-1] * 3) + 1],
+								       this.savedRolledPositions[(idxRight[idxRight.length-1] * 3) + 2]);
+                                       
+            var vec2 = p4.clone().sub(p3.clone()).normalize();
             for (var a = 0; a < idxRight.length; a++)
             {
                 var f = a / (idxLeft.length - 1);
@@ -799,8 +808,8 @@ Surface.prototype.scale = function(targets)
                                                   this.savedRolledPositions[(idxRight[a] * 3) + 1],
                                                   this.savedRolledPositions[(idxRight[a] * 3) + 2]);
 
-                var offsetVec = vec.clone().multiplyScalar(offset);
-                var pa = p1.clone().add(offsetVec);
+                var offsetVec = vec2.clone().multiplyScalar(offset);
+                var pa = p3.clone().add(offsetVec);
                 stripe.bufferGeometry.attributes.position.setXYZ(idxRight[a], pa.x, pa.y, pa.z);
             }
         }
