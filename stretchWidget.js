@@ -5,7 +5,7 @@ function StretchWidget(svgName, surface)
     this.height = 200;
 	this.margin = 30;
     this.radius = 7.5;
-    this.numCircles = 11;
+    this.numCircles = 51;
 	this.surface = surface;
     this.surface.setStretchWidget(this);
 
@@ -19,7 +19,7 @@ function StretchWidget(svgName, surface)
 
 
 	this.state = "Unstretched";
-    this.step = 0.1;
+    this.step = 0.01;
 }
 
 StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
@@ -100,7 +100,6 @@ StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
       }
       else
       {
-        console.log(_this.y);
         _this.maxPos = _this.maxY;          
       }  
       

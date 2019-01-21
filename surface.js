@@ -316,7 +316,7 @@ function Surface(scene, renderer, earth) {
     this.bottomRadius = 1.0;
     
     var segmentsRadial = 100;
-    var segmentsHeight = 100;
+    var segmentsHeight = 50;
     
     //var segmentsRadial = 4;
     //var segmentsHeight = 1;
