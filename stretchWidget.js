@@ -19,7 +19,7 @@ function StretchWidget(svgName, surface)
 
 
 	this.state = "Unstretched";
-    this.step = 1;
+    this.step = 0.1;
 }
 
 StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
@@ -148,6 +148,22 @@ StretchWidget.prototype.scaleSurface = function()
       
 }
 
+StretchWidget.prototype.stretch = function(func, duration)
+{
+      var instructions = [];
+      for (var i = 0; i < this.numCircles; i++)
+      {            
+          var y_in = this.maxTarget - (this.maxTarget * (this.circles[i].y / this.height));
+          var target = func(y_in);
+          var target_scaled = this.height - (target / this.maxTarget) * this.height;
+          instructions.push({circle: this.selection._groups[0][i], target: target_scaled});
+      }
+    
+    
+      this.state = "Stretching";
+      this.startAnimations(instructions, duration);
+}
+
 StretchWidget.prototype.resetStretch = function(duration)
 {
       var instructions = [];
@@ -156,10 +172,9 @@ StretchWidget.prototype.resetStretch = function(duration)
           instructions.push({circle: this.selection._groups[0][i], target: this.height - (i / (this.numCircles-1)) * ((this.maxSource / this.maxTarget) * this.height)});
       }
       
+      this.state = "Unstretching";
       this.startAnimations(instructions, duration);
-      this.state = "Unstretching"
 }
-
 
 
 StretchWidget.prototype.startAnimations = function(instructions, duration)

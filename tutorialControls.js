@@ -1,8 +1,9 @@
-function TutorialControls(controls, animator, projectionCenter, canvas)
+function TutorialControls(controls, animator, stretchWidget, projectionCenter, canvas)
 {
 	this.controls = controls;
 	this.animator = animator;
 	this.canvas = canvas;
+    this.stretchWidget = stretchWidget;
 	this.projectionCenter = projectionCenter;
 	
 	this.animationTime = 3;
@@ -234,6 +235,24 @@ TutorialControls.prototype.resetControls = function()
 	
 	this.animator.startAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], 1);
 }
+
+
+TutorialControls.prototype.setScale = function(name)
+{
+	if (name == "central cylindrical to mercator")
+	{        
+        var centralCylindricalToMercator = function(y)
+        {
+            var center_bias = this.stretchWidget.maxTarget / 4;
+            var latitude = Math.atan(y-center_bias);
+            var y_Mercator = Math.log(Math.tan((Math.PI/4) + (latitude/2)));
+            return y_Mercator+center_bias;
+        }
+        
+        this.stretchWidget.stretch(centralCylindricalToMercator, this.animationTime);
+    }
+}
+
 
 /*
 Controls.prototype.reset = function()

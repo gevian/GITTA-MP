@@ -310,13 +310,13 @@ function Surface(scene, renderer, earth) {
     // simplified cylinder geometry adapted from https://github.com/mrdoob/three.js/blob/master/src/geometries/CylinderGeometry.js
     this.bufferGeometry = new THREE.BufferGeometry();
     
-    this.stretchTime = 500;
+    this.stretchTime = 3;
     
     this.topRadius = 1.0;
     this.bottomRadius = 1.0;
     
-    var segmentsRadial = 128;
-    var segmentsHeight = 64;
+    var segmentsRadial = 100;
+    var segmentsHeight = 100;
     
     //var segmentsRadial = 4;
     //var segmentsHeight = 1;
@@ -747,9 +747,11 @@ Surface.prototype.scale = function(targets)
         var p1 = new THREE.Vector3(this.savedRolledPositions[idxLeft[0] * 3],
          						   this.savedRolledPositions[(idxLeft[0] * 3) + 1],
  								   this.savedRolledPositions[(idxLeft[0] * 3) + 2]);
+                                   
         var p2 = new THREE.Vector3(this.savedRolledPositions[idxLeft[idxLeft.length-1] * 3],
 								   this.savedRolledPositions[(idxLeft[idxLeft.length-1] * 3) + 1],
 								   this.savedRolledPositions[(idxLeft[idxLeft.length-1] * 3) + 2]);
+                                   
 		var vec1 = p2.clone().sub(p1.clone()).normalize();
         for (var a = 0; a < idxLeft.length; a++)
         {

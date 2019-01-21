@@ -176,6 +176,7 @@
 				  <td><button type="button" id="reset-button" onclick="tutorialControls.resetControls()">reset</button><br></td>
 				  <td><button type="button" id="remove-line-button" onclick="lineProjector.disableLines()">remove line</button><br></td>
                   <td><button type="button" id="roll-button" onclick="rollPressed()">unroll</button><br></td>
+                  <td><button type="button" id="reset-stretch-button" onclick="resetStretchPressed()">reset stretch</button><br></td>
 				 </tr>
 				</table>
                 
@@ -338,6 +339,7 @@
 				<button onclick="tutorialControls.setProjection('brauns stereographic conic')">Braun's Stereographic Conic</button><br></div>
 				
 				You now learned the general concepts behind the construction of map projections as exemplified with the true perspective projections. In the future, it is aimed to extend this tool with other classes of projections such as the 
+                <button onclick="tutorialControls.setScale('central cylindrical to mercator')">scale to Mercator</button><br></div>
 			</div>
 		</div>
 		<script src="libs/three.js"></script>
@@ -367,12 +369,12 @@
 		var cutIndicator = new CutIndicator(surface, glcanvas.scene);
 		var lineProjector = new LineProjector(glcanvas, surface, earth, projectionCenter);
 		
-		var controls = new Controls(glcanvas, earth, surface, projectionCenter, cutIndicator, lineProjector);
+		var controls = new Controls(glcanvas, earth, surface, stretchWidget, projectionCenter, cutIndicator, lineProjector);
 		var stretchWidget = new StretchWidget("svg", surface);
 		
 		var sliderAnimator = new SliderAnimator(controls);
 		
-		var tutorialControls = new TutorialControls(controls, sliderAnimator, projectionCenter, glcanvas);
+		var tutorialControls = new TutorialControls(controls, sliderAnimator, stretchWidget, projectionCenter, glcanvas);
 		//tutorialControls.resetControls();
 		
 		var clock  = new THREE.Clock();

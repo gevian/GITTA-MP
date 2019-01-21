@@ -1,8 +1,9 @@
-function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LineProjector)
+function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIndicator, LineProjector)
 {
 	var _this = this;
     this.earth = earth;	
 	this.surface = surface;
+    this.stretchWidget = stretchWidget;
 	this.projectionCenter = projectionCenter;
 	this.cutIndicator = cutIndicator;
 	this.LineProjector = LineProjector;
@@ -85,7 +86,16 @@ function Controls(canvas, earth, surface, projectionCenter, cutIndicator, LinePr
 
 		_this.LineProjector.disableLines();
 	}
-			
+		
+	this.resetStretchButton = document.getElementById("reset-stretch-button");
+	this.resetStretchButton.onclick = resetStretchClick;
+	
+	function resetStretchClick() {
+		_this.surface.toggleRoll();
+
+		_this.LineProjector.disableLines();
+	}
+        
 	function orientationSliderChanged(event) {
 	   _this.latBox.oninput = null;
 	   _this.lonBox.oninput = null;
