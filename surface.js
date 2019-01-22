@@ -326,31 +326,6 @@ Surface.prototype.updateGeometry = function()
 	this.angle = -n2.angleTo(n1);
 }
 
-
-Surface.prototype.rotateQuad = function(index, angle, loc, axis)
-{		
-	var lr = this.bufferQuads[index].getLR();
-	lr.sub(loc).applyAxisAngle(axis, angle).add(loc);
-	this.bufferQuads[index].setLR_XYZ(lr.x, lr.y, lr.z);
-	
-	var ur = this.bufferQuads[index].getUR();
-	ur.sub(loc).applyAxisAngle(axis, angle).add(loc);
-	this.bufferQuads[index].setUR_XYZ(ur.x, ur.y, ur.z);
-}
-
-Surface.prototype.rotateQuadInverse = function(index, angle, loc, axis)
-{	
-	var lr = this.bufferQuads[index].getLR();
-	lr.sub(loc).applyAxisAngle(axis, -angle).add(loc);
-	this.bufferQuads[index].setLR_XYZ(lr.x, lr.y, lr.z);
-	
-	var ur = this.bufferQuads[index].getUR();
-	ur.sub(loc).applyAxisAngle(axis, -angle).add(loc);
-	this.bufferQuads[index].setUR_XYZ(ur.x, ur.y, ur.z);
-}
-
-
-
 Surface.prototype.setOrientation = function(lat, lon, rot)
 {
     this.earthCenter.rotation.z = lat;
