@@ -16,11 +16,16 @@ function StretchWidget(svgName, surface)
     this.xLine = d3.axisTop().scale(this.x).tickFormat("").tickSize(-this.height);
 	this.yLine = d3.axisRight().scale(this.y).tickFormat("").tickSize(-this.width);
 	
-
-
-	this.state = "Unstretched";
     this.step = 0.01;
 }
+
+
+
+StretchWidget.prototype.setSliderAnimator = function(sliderAnimator)
+{
+    this.sliderAnimator = sliderAnimator;
+}
+
 
 StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
 {
@@ -128,11 +133,11 @@ StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
           d3.select(this).attr("cy", d.y = d3.event.y);
       }
       _this.scaleSurface();
+      _this.surface.setStretched(true);
     }
 
     function dragended(d) {
       d3.select(this).classed("active", false);
-      _this.state = "Stretched";
     }
 }
 
@@ -144,7 +149,6 @@ StretchWidget.prototype.scaleSurface = function()
           targets.push(this.maxTarget - (this.maxTarget * (this.circles[i].y / this.height)));
       }
       this.surface.scale(targets);
-      
 }
 
 StretchWidget.prototype.stretch = function(func, duration)
@@ -155,12 +159,12 @@ StretchWidget.prototype.stretch = function(func, duration)
           var y_in = this.maxTarget - (this.maxTarget * (this.circles[i].y / this.height));
           var target = func(y_in);
           var target_scaled = this.height - (target / this.maxTarget) * this.height;
-          instructions.push({circle: this.selection._groups[0][i], target: target_scaled});
+          instructions.push({circle: this.selection._groups[0][i],
+                             target: target_scaled,
+                             step: this.step});
       }
     
-    
-      this.state = "Stretching";
-      this.startAnimations(instructions, duration);
+      this.sliderAnimator.startStretchAnimations(instructions, duration, false);
 }
 
 StretchWidget.prototype.resetStretch = function(duration)
@@ -168,83 +172,13 @@ StretchWidget.prototype.resetStretch = function(duration)
       var instructions = [];
       for (var i = 0; i < this.numCircles; i++)
       {            
-          instructions.push({circle: this.selection._groups[0][i], target: this.height - (i / (this.numCircles-1)) * ((this.maxSource / this.maxTarget) * this.height)});
+          instructions.push({circle: this.selection._groups[0][i],
+                             target: this.height - (i / (this.numCircles-1)) * ((this.maxSource / this.maxTarget) * this.height),
+                             step: this.step});
       }
       
-      this.state = "Unstretching";
-      this.startAnimations(instructions, duration);
+      this.sliderAnimator.startStretchAnimations(instructions, duration, true);
 }
 
-
-StretchWidget.prototype.startAnimations = function(instructions, duration)
-{
-	this.instructions = instructions;
-	this.duration = duration;
-	
-	for ( var i = 0; i < this.instructions.length; i++)
-	{
-		var instruction = this.instructions[i];
-        
-		instruction.changePerSecond = (instruction.target - Number(instruction.circle.getAttribute('cy'))) / duration;
-		instruction.finished = false;
-	}
-}
-
-
-StretchWidget.prototype.update = function(delta)
-{
-	var allFinished = true;
-	
-	if (this.state == "Stretching" || this.state == "Unstretching")
-	{
-        var newPositions = [];
-		for (var i = 0; i < this.instructions.length; i++)
-		{
-			var instruction = this.instructions[i];
-			if (instruction.finished)
-				continue
-			
-			var allFinished = false;
-			
-			var deltaValue = delta * instruction.changePerSecond;
-			var increment =  Math.round(deltaValue / this.step) * this.step;
-
-			if (increment == 0)
-			{
-				if (instruction.changePerSecond > 0)
-					increment = this.step;
-				else
-					increment = -this.step;
-			}
-			
-            var newPosition = Number(instruction.circle.getAttribute('cy')) + increment;
-
-			if (instruction.changePerSecond >= 0 && Number(instruction.circle.getAttribute('cy')) >= instruction.target)
-			{
-                newPosition = instruction.target;
-				instruction.finished = true;
-			}
-			else if (instruction.changePerSecond <= 0 && Number(instruction.circle.getAttribute('cy')) <= instruction.target)
-			{
-                newPosition = instruction.target;
-				instruction.finished = true;
-			}
-            
-            instruction.circle.setAttribute("cy", newPosition);
-            this.circles[i].y = newPosition;
-		}
-        
-        this.scaleSurface();
-        
-		if (allFinished)
-		{
-            if (this.state == "Unstretching")
-                this.state = "Unstretched";
-            else if (this.state == "Stretching")
-                this.state = "Stretched";
-		}
-			
-	}
-}
 
 

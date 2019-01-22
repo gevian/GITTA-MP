@@ -9,7 +9,7 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
 	this.LineProjector = LineProjector;
 	this.canvas = canvas;
 	
-	this.surface.setFormsCallbacks(this.enableForms, this.disableForms);
+	this.surface.setFormsCallbacks(this.rolledToFlattened, this.flattenedToRolled, this.flattenedToStretched, this.stretchedToFlattened);
 	
 	this.latSlider = document.getElementById("lat_slider");
 	this.lonSlider = document.getElementById("lon_slider");
@@ -91,9 +91,7 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
 	this.resetStretchButton.onclick = resetStretchClick;
 	
 	function resetStretchClick() {
-		_this.surface.toggleRoll();
-
-		_this.LineProjector.disableLines();
+		_this.stretchWidget.resetStretch(3);
 	}
         
 	function orientationSliderChanged(event) {
@@ -363,7 +361,7 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
 
 }
 
-Controls.prototype.enableForms = function(roll)
+Controls.prototype.flattenedToRolled = function(roll)
 {
 	var fieldsets = document.getElementsByTagName('fieldset');
 
@@ -382,7 +380,7 @@ Controls.prototype.enableForms = function(roll)
 	var rollButton = document.getElementById("roll-button");
 	if (roll)
 	{
-		rollButton.innerHTML = "unroll";
+		rollButton.innerHTML = "flatten";
 	}
 	else
 	{
@@ -390,7 +388,8 @@ Controls.prototype.enableForms = function(roll)
 	}
 }
 
-Controls.prototype.disableForms = function(roll)
+
+Controls.prototype.rolledToFlattened = function(roll)
 {
 	var fieldsets = document.getElementsByTagName('fieldset');
 
@@ -416,6 +415,41 @@ Controls.prototype.disableForms = function(roll)
 		rollButton.setAttribute("disabled", "disabled");
 	}
 }
+
+
+Controls.prototype.flattenedToStretched = function()
+{
+	var rollButton = document.getElementById("roll-button");
+    rollButton.setAttribute("disabled", "disabled");
+    
+    var unstretchButton = document.getElementById("reset-stretch-button");
+    unstretchButton.removeAttribute("disabled");
+}
+
+
+Controls.prototype.stretchedToFlattened = function()
+{
+	var rollButton = document.getElementById("roll-button");
+    rollButton.removeAttribute("disabled");
+    
+    var unstretchButton = document.getElementById("reset-stretch-button");
+    unstretchButton.setAttribute("disabled", "disabled");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

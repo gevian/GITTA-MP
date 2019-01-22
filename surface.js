@@ -303,11 +303,13 @@ function Surface(scene, renderer, earth) {
 	this.scene.add(this.earthCenter);	
 	
 	this.updateGeometry();
-	
-	this.enableForms = function(){};
-	this.disableForms = function(){};
-		
-	this.state = "Waiting";
+			
+	this.flattenedToRolled = function(){};;
+	this.rolledToFlattened = function(){};;
+    this.flattenedToStretched = function(){};;
+    this.stretchedToFlattened = function(){};;   
+        
+	this.state = "Rolled";
 }
 
 Surface.prototype.setStretchWidget = function(widget)
@@ -454,7 +456,7 @@ Surface.prototype.setBottomRadius = function(radius)
     this.computeRadii();
 }
 
-Surface.prototype.rollAnimated = function(t)
+Surface.prototype.flattenAnimated = function(t)
 {
 	this.overallT += t;
 	
@@ -521,7 +523,7 @@ Surface.prototype.rollAnimated = function(t)
 	}
 }
 
-Surface.prototype.unrollAnimated = function(t)
+Surface.prototype.rollAnimated = function(t)
 {
 	this.overallTInverse += t;	
 	
@@ -589,37 +591,18 @@ Surface.prototype.unrollAnimated = function(t)
 }
 
 
-function scale_func(x, y) {
-  var latitude = Math.atan(y);
-  //console.log(latitude);
-  //return y * (0.5 * Math.cos(latitude));
-  //console.log("---");
-  //console.log(latitude);
-  var y_Central = y;
-  var y_Mercator = Math.log(Math.tan((Math.PI/4) + (latitude/2)));
-  //console.log(y, latitude, y_Mercator, y_Central / y_Mercator, y_Mercator / y_Central );
-  
-  //console.log(1/2 * Math.log((1+Math.sin(latitude))/(1-Math.sin(latitude))));
-  return y_Mercator;
-}
-
-function scale_func_inv(x, y) {
-  return y;
-}
-
 Surface.prototype.scale = function(targets)
 {
-	//console.log(targets);
 	for (var i = 0; i < this.stripes.length; i++)
 	{
         var stripe = this.stripes[i];
         var idxLeft = stripe.idxLeft;
         
-        var p1 = new THREE.Vector3(this.savedRolledPositions[idxLeft[0] * 3],
+        var p1 = new THREE.Vector3(this.savedRolledPositions[idxLeft[0]  * 3],
          						   this.savedRolledPositions[(idxLeft[0] * 3) + 1],
  								   this.savedRolledPositions[(idxLeft[0] * 3) + 2]);
                                    
-        var p2 = new THREE.Vector3(this.savedRolledPositions[idxLeft[idxLeft.length-1] * 3],
+        var p2 = new THREE.Vector3(this.savedRolledPositions[idxLeft[idxLeft.length-1]  * 3],
 								   this.savedRolledPositions[(idxLeft[idxLeft.length-1] * 3) + 1],
 								   this.savedRolledPositions[(idxLeft[idxLeft.length-1] * 3) + 2]);
                                    
@@ -640,7 +623,7 @@ Surface.prototype.scale = function(targets)
 
 			var offset = w1 * targets[s1] + w2 * targets[s2];
 
-			var targetVec = new THREE.Vector3(this.savedRolledPositions[idxLeft[a] * 3],
+			var targetVec = new THREE.Vector3(this.savedRolledPositions[ idxLeft[a] * 3],
 											  this.savedRolledPositions[(idxLeft[a] * 3) + 1],
 											  this.savedRolledPositions[(idxLeft[a] * 3) + 2]);
 
@@ -677,7 +660,7 @@ Surface.prototype.scale = function(targets)
 
                 var offset = w1 * targets[s1] + w2 * targets[s2];
 
-                var targetVec = new THREE.Vector3(this.savedRolledPositions[idxRight[a] * 3],
+                var targetVec = new THREE.Vector3(this.savedRolledPositions[idxRight[a]  * 3],
                                                   this.savedRolledPositions[(idxRight[a] * 3) + 1],
                                                   this.savedRolledPositions[(idxRight[a] * 3) + 2]);
 
@@ -686,44 +669,10 @@ Surface.prototype.scale = function(targets)
                 stripe.bufferGeometry.attributes.position.setXYZ(idxRight[a], pa.x, pa.y, pa.z);
             }
         }
-        
-        
     }
 
     this.bufferGeometry.attributes.position.needsUpdate = true;
-	
-	/*
-	for (var i = 0; i < this.stripes.length; i++)
-	{	
-        var stripe = this.stripes[i];
-        var idxLeft = stripe.idxLeft;
-        
-        for (var a = 0; a < idxLeft.length; a++)
-        {
-            var leftVec = new THREE.Vector3();
-            leftVec.fromBufferAttribute(stripe.bufferGeometry.attributes.position, idxLeft[a]);
-            leftVec.y = scale_func(leftVec.x, leftVec.y);
-            
-            stripe.bufferGeometry.attributes.position.setXYZ(idxLeft[a], leftVec.x, leftVec.y, leftVec.z);
-        }
-        
-        if (i == this.stripes.length-1)
-        {
-            var idxRight = stripe.idxRight;
-            for (var a = 0; a < idxRight.length; a++)
-            {
-                var rightVec = new THREE.Vector3();
-                rightVec.fromBufferAttribute(stripe.bufferGeometry.attributes.position, idxRight[a]);
-                rightVec.y = scale_func(rightVec.x, rightVec.y * this.mesh.scale.y);
-                
-                stripe.bufferGeometry.attributes.position.setXYZ(idxRight[a], rightVec.x, rightVec.y / this.mesh.scale.y, rightVec.z);
-            }
-        }
-    }
 
-    this.bufferGeometry.attributes.position.needsUpdate = true;
-	this.updateGeometry();
-	*/
 }
 
 Surface.prototype.prepareStretching = function()
@@ -738,44 +687,35 @@ Surface.prototype.prepareStretching = function()
     
     this.distance = vecBottomFirst.distanceTo(vecTopFirst);
     
-    /*
-    var lastStripe = this.stripes[this.stripes.lenght-1];
-    var vecBottomLast = new THREE.Vector3();
-    vecBottomLast.fromBufferAttribute(lastStripe.bufferGeometry.attributes.position, lastStripe.idxRight[0]);
-    var vecTopLast = new THREE.Vector3();
-    vecTopLast.fromBufferAttribute(lastStripe.bufferGeometry.attributes.position, lastStripe.idxRight[lastStripe.idxRight.length-1]);
-    */
-    
-    
     this.stretchWidget.setAxisLength(this.distance, this.distance * 2);
 }
 
 Surface.prototype.update = function(delta)
 {
-	if (this.state == "Rolling")
+	if (this.state == "Flattening")
 	{
-		var result = this.rollAnimated(delta);	
+		var result = this.flattenAnimated(delta);	
 		
 		if (result)
 		{
-			this.state = "Rolled";
+			this.state = "Flattened";
             this.prepareStretching();
 		}
 	}
-	else if (this.state == "Unrolling")
+	else if (this.state == "Rolling")
 	{
-		var result = this.unrollAnimated(delta);
+		var result = this.rollAnimated(delta);
 
 		if (result)
 		{
 			this.mesh.material.uniforms.keepVertices.value = 0;
-			this.state = "Waiting";
-			this.enableForms(true);
+			this.state = "Rolled";
+			this.flattenedToRolled(true);
 		}			
 	}
 }
 
-Surface.prototype.roll = function()
+Surface.prototype.flatten = function()
 {
 	this.lastQuad = 1;
 	this.overallT = 0;
@@ -788,12 +728,12 @@ Surface.prototype.roll = function()
 	
 	this.mesh.material.uniforms.keepVertices.value = 1;
 	
-	this.state = "Rolling";
+	this.state = "Flattening";
 }
 
-Surface.prototype.unroll = function()
+Surface.prototype.roll = function()
 {
-	this.state = "Unrolling";
+	this.state = "Rolling";
 	this.lastQuadInverse = this.stripes.length - 1;
 	this.overallTInverse = 0;
 	this.remainingQuadsFloatInverse = 0;	
@@ -801,23 +741,28 @@ Surface.prototype.unroll = function()
 
 Surface.prototype.toggleRoll = function()
 {
-    console.log(this.state, this.stretchWidget.state);
-	if (this.state == "Rolling" || this.state == "Unrolling")
+	if (this.state == "Rolled")
 	{
-		return;
+		this.rolledToFlattened(true);
+		this.flatten();
 	}
-	else if (this.state == "Waiting")
+    else if (this.state == "Flattened")
 	{
-		this.disableForms(true);
-		this.roll();
-	}
-	else if (this.state == "Rolled" && this.stretchWidget.state == "Stretched")
-	{
-        this.stretchWidget.resetStretch(this.stretchTime);
-	}
-    else if (this.state == "Rolled" && this.stretchWidget.state == "Unstretched")
-	{
-        this.unroll();
+        this.roll();
+    }
+}
+
+Surface.prototype.setStretched = function(isStretched)
+{
+    if (isStretched)
+    {
+        this.state = "Stretched";
+        this.flattenedToStretched();
+    }
+    else
+    {
+        this.state = "Flattened";
+        this.stretchedToFlattened();
     }
 }
 
@@ -827,10 +772,12 @@ Surface.prototype.setProjectionTorusParams = function(scale, transformMatrix)
     this.mesh.material.uniforms.projTorusMatrix.value = transformMatrix;
 }
 
-Surface.prototype.setFormsCallbacks = function(enableForms, disableForms)
+Surface.prototype.setFormsCallbacks = function(rolledToFlattened, flattenedToRolled, flattenedToStretched, stretchedToFlattened)
 {
-	this.enableForms = enableForms;
-	this.disableForms = disableForms;
+	this.flattenedToRolled = flattenedToRolled;
+	this.rolledToFlattened = rolledToFlattened;
+    this.flattenedToStretched = flattenedToStretched;
+    this.stretchedToFlattened = stretchedToFlattened;    
 }
 
 Surface.prototype.enableBordersTexture = function()
