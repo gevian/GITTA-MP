@@ -4,7 +4,7 @@ function StretchWidget(svgName, surface)
     this.width = 200;
     this.height = 200;
 	this.margin = 30;
-    this.radius = 7.5;
+    this.radius = 3;
     this.numCircles = 51;
 	this.surface = surface;
     this.surface.setStretchWidget(this);
