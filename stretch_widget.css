@@ -1,0 +1,73 @@
+#sw {
+  margin: auto;
+  width: 400px;
+  height: 400px;
+}
+
+#sw-container {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.sw-enabled {
+  background-color: #ffffff;
+}
+
+.sw-enabled text{
+  fill: #000000;
+}
+
+.sw-enabled line{
+  stroke: #000000;
+}
+
+.sw-enabled path{
+  stroke: #000000;
+}
+
+.sw-disabled {
+  background-color: #f2f2f2;
+}
+
+.sw-disabled text{
+   fill: #bbbbbb;
+}
+
+.sw-disabled line{
+  stroke: #bbbbbb;
+}
+
+.sw-disabled path{
+  stroke: #bbbbbb;
+}
+
+.stretch-point {
+  stroke-width: 1;
+  stroke: black;
+  fill-opacity: 0.0;
+}
+
+.stretch_path{
+  stroke: black;
+  fill-opacity: 0.0;
+}
+
+#target-curve{
+  stroke: black;
+  fill-opacity: 0.0;
+}
+
+.handle-point {
+  cursor: pointer;
+  stroke-width: 1;
+  fill: grey;
+  fill-opacity: 1.0;
+}
+
+.control-point {
+  cursor: pointer;
+  stroke-width: 1;
+  stroke: black;
+  fill: black;
+  fill-opacity: 1.0;
+}

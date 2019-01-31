@@ -86,13 +86,6 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
 
 		_this.LineProjector.disableLines();
 	}
-		
-	this.resetStretchButton = document.getElementById("reset-stretch-button");
-	this.resetStretchButton.onclick = resetStretchClick;
-	
-	function resetStretchClick() {
-		_this.stretchWidget.resetStretch(3);
-	}
         
 	function orientationSliderChanged(event) {
 	   _this.latBox.oninput = null;

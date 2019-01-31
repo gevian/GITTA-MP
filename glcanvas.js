@@ -47,8 +47,8 @@ function GLCanvas(canvas_id)
 	this.scene.add(this.earthMesh);
     */
 
-	var axisHelper = new THREE.AxisHelper( 2 );
-	this.scene.add( axisHelper );
+	//var axisHelper = new THREE.AxisHelper( 2 );
+	//this.scene.add( axisHelper );
 }
 
 GLCanvas.prototype.update = function(delta)

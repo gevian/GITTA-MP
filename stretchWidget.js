@@ -1,184 +1,404 @@
-function StretchWidget(svgName, surface)
+function StretchWidget(graphContainer, controlsContainer, maxSource, maxTarget)
 {
-    this.svg = d3.select(svgName);
-    this.width = 200;
-    this.height = 200;
-	this.margin = 30;
-    this.radius = 3;
-    this.numCircles = 51;
-	this.surface = surface;
-    this.surface.setStretchWidget(this);
+    if (maxSource == undefined) maxSource = 2.0;
+    if (maxTarget == undefined) maxTarget = 4.0;
+    
+    this.widgetWidth = 400;
+    this.widgetHeight = 400;
+    this.widgetMargin = 50;
+    
+    this.margin = 35;
+    
+    this.stretchPointSize = 3;
+    this.stretchPoints = [];
+    
+    this.e = 0.00000000001;
+    
+    this.numStretchPoints = 100;
+    
+    // set up SVG
+    this.svg = d3.select('#' + graphContainer)
+                .append('svg')
+                .attr('id', 'sw')
+                .attr("viewBox", -this.widgetMargin + " " + -this.widgetMargin + " " + (this.widgetWidth + 2*this.widgetMargin) + " " + (this.widgetHeight + 2*this.widgetMargin))
+                .attr('width', this.widgetWidth + 2 * this.widgetMargin)
+                .attr('height', this.widgetHeight + 2 * this.widgetMargin)
+    
+    
+    // set up controls
+    this.controlsContainer = document.getElementById(controlsContainer);
+    this.ebtn = document.createElement("button");
+    this.et = document.createTextNode("start editing");
+    this.ebtn.appendChild(this.et);
+    this.ebtn.setAttribute("id", "sw-edit-button");
+    this.controlsContainer.appendChild(this.ebtn);
 
-    this.x = d3.scaleLinear().range([0, this.width]);
-    this.y = d3.scaleLinear().range([this.height, 0]);
-    this.xAxis = d3.axisBottom().scale(this.x);
-    this.yAxis = d3.axisLeft().scale(this.y);
-    this.xLine = d3.axisTop().scale(this.x).tickFormat("").tickSize(-this.height);
-	this.yLine = d3.axisRight().scale(this.y).tickFormat("").tickSize(-this.width);
-	
-    this.step = 0.01;
+    this.ebtn.onclick = this.editButtonClicked.bind(this);
+    
+    this.rbtn = document.createElement("button");
+    var rt = document.createTextNode("reset");
+    this.rbtn.appendChild(rt);
+    this.rbtn.setAttribute("id", "sw-reset-button");
+    this.controlsContainer.appendChild(this.rbtn);
+
+    this.rbtn.onclick = this.resetButtonClicked.bind(this);
+    
+    document.getElementById('sw').oncontextmenu = function() {return false;};
+    
+    this.callbacks = [];
+    
+    this.state = null;
+    this.editControls = null;
+    
+    this.defaultDuration = 3;
+    
+    this.setRange(maxSource, maxTarget);
+    this.enable();
 }
 
-
-
-StretchWidget.prototype.setSliderAnimator = function(sliderAnimator)
+StretchWidget.prototype.setRange = function(maxSource, maxTarget)
 {
-    this.sliderAnimator = sliderAnimator;
-}
-
-
-StretchWidget.prototype.setAxisLength = function(maxSource, maxTarget)
-{
-    this.svg.selectAll("*").remove();
-	var _this = this;
     this.maxSource = maxSource;
     this.maxTarget = maxTarget;
+}
 
-    this.x.domain([0, maxSource]);
-    this.y.domain([0, maxTarget]);
+StretchWidget.prototype.editButtonClicked = function()
+{
+    if (this.state == "enabled")
+    {
+        this.enableEditing();
+        this.et.nodeValue = "stop editing";
+        this.rbtn.disabled = true;
+        this.state = "editing";
+    }
+    else if (this.state == "editing")
+    {
+        this.disableEditing();
+        this.et.nodeValue = "start editing";
+        this.rbtn.disabled = false;
+        this.state = "enabled";
+    }
+}
 
-    this.minX = 0;
-    this.maxX = _this.width
-    this.minY = 0;
-    this.maxY = _this.height;
+StretchWidget.prototype.resetButtonClicked = function()
+{
+    if (this.state == "stretched" || this.state == "enabled")
+        this.resetStretch(this.defaultDuration);
+}
 
+StretchWidget.prototype.addCallback = function(callback)
+{
+    this.callbacks.add(callback);
+}
+
+StretchWidget.prototype.sendSignal = function(name, data)
+{
+    for (var i = 0; i < this.callbacks.length; i++)
+    {
+        this.callbacks[i](name, data);
+    }
+}
+
+StretchWidget.prototype.enable = function()
+{
+    this.svg.selectAll("*").remove();
+
+    this.svg.classed('sw-enabled', true);    
+    this.svg.classed('sw-disabled', false);
+    
+    this.drawGrid(this.maxSource, this.maxTarget);
+    var pts = this.getPresetStretchPoints("identity");
+    this.setStretchPoints(pts);
+    
+    
+    this.ebtn.disabled = false;
+    this.rbtn.disabled = false;
+    this.state = "enabled";
+}
+
+StretchWidget.prototype.disable = function()
+{
+    this.svg.selectAll("*").remove();
+    
+    this.svg.classed('sw-enabled', false);    
+    this.svg.classed('sw-disabled', true);
+    
+    this.drawGrid(this.maxSource, this.maxTarget);
+    
+    this.ebtn.disabled = true;
+    this.rbtn.disabled = true;    
+    this.state = "disabled";
+}
+
+StretchWidget.prototype.drawGrid = function(maxSource, maxTarget)
+{
+    var x = d3.scaleLinear().range([0, this.widgetWidth]);
+    var y = d3.scaleLinear().range([this.widgetHeight, 0]);
+    var xAxis = d3.axisBottom().scale(x);
+    var yAxis = d3.axisLeft().scale(y);
+    var xLine = d3.axisTop().scale(x).tickFormat("").tickSize(-this.widgetHeight);
+	var yLine = d3.axisRight().scale(y).tickFormat("").tickSize(-this.widgetWidth);
+    
+    x.domain([0, maxSource]);
+    y.domain([0, maxTarget]);
+
+    var minX = 0;
+    var maxX = this.widgetWidth;
+    var minY = 0;
+    var maxY = this.widgetHeight;
+    
     this.svg.append("text")
-        .attr("x", (this.width / 2))             
-        .attr("y", this.height + this.margin)
+        .attr("x", (this.widgetWidth/ 2))             
+        .attr("y", this.widgetHeight + this.margin)
         .attr("text-anchor", "middle")  
         .style("font-size", "16px") 
-        .text("Source");
+        .text("source");
 	
 	this.svg.append("g")
-		.attr("transform", "translate(" + -this.margin + "," + this.height / 2 + ")")
+		.attr("transform", "translate(" + -this.margin + "," + this.widgetHeight / 2 + ")")
 		.append("text")
         .attr("text-anchor", "middle")  
+		.attr("transform", "rotate(-90)")
         .style("font-size", "16px") 
-        .text("Target")
-		.attr("transform", "rotate(-90)");
+        .text("target")
         
 	this.svg.append("g")
-	  .attr("class", "x axis")
-	  .attr("transform", "translate(" + 0 + ", " + _this.height + ")")
-	  .call(this.xAxis)
+	  .attr("class", "axis")
+	  .attr("transform", "translate(" + 0 + ", " + this.widgetHeight + ")")
+	  .call(xAxis)
 
 	this.svg.append("g")
-	  .attr("class", "y axis")
-	  .call(this.yAxis);
+	  .attr("class", "axis")
+	  .call(yAxis);
 	  
 	this.svg.append("g")
-	  .attr("class", "y axis")
-	  .attr("transform", "translate(" + _this.width + ", " + 0 + ")")
-	  .call(this.yLine)
+	  .attr("class", "axis")
+	  .attr("transform", "translate(" + this.widgetWidth + ", " + 0 + ")")
+	  .call(yLine)
 
 	this.svg.append("g")
-	  .attr("class", "x axis")
-	  .call(this.xLine);
-	  
-	
-	
-    this.circles = d3.range(this.numCircles).map(function(i) {
-      return {
-        x: (i / (_this.numCircles-1)) * (_this.width),
-        y: _this.height - (i / (_this.numCircles-1)) * ((_this.maxSource / _this.maxTarget) * _this.height),
-        i: i
-      };
-    });
-
-    this.selection = this.svg.selectAll("circle")
-      .data(_this.circles)
-      .enter().append("circle")
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
-        .attr("r", _this.radius)
-        .style("fill", function(d, i) { return "lightblue"; })
-        .call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
-
-    function dragstarted(d, i) {
-      d3.select(this).raise().classed("active", true);
-      if (i > 0)
-      {
-        _this.maxPos = _this.circles[i-1].y;
-      }
-      else
-      {
-        _this.maxPos = _this.maxY;          
-      }  
-      
-      if (i < _this.numCircles-1)
-      {
-        _this.minPos = _this.circles[i+1].y;
-      }
-      else
-      {
-        _this.minPos = _this.minY;
-      }
-    }
-
-    function dragged(d, i) {
-      //console.log(d3.event.y, _this.minPos, _this.maxPos);
-      if (d3.event.y <= _this.minPos)
-      {
-          d3.select(this).attr("cy", d.y = _this.minPos);
-      }
-      else if (d3.event.y >= _this.maxPos)
-      {
-          d3.select(this).attr("cy", d.y = _this.maxPos);
-      }
-      else
-      {
-          d3.select(this).attr("cy", d.y = d3.event.y);
-      }
-      _this.scaleSurface();
-      _this.surface.setStretched(true);
-    }
-
-    function dragended(d) {
-      d3.select(this).classed("active", false);
-    }
+	  .attr("class", "axis")
+	  .call(xLine);
 }
 
-StretchWidget.prototype.scaleSurface = function()
-{
-      var targets = [];
-      for (var i = 0; i < this.numCircles; i++)
-      {
-          targets.push(this.maxTarget - (this.maxTarget * (this.circles[i].y / this.height)));
-      }
-      this.surface.scale(targets);
-}
 
-StretchWidget.prototype.stretch = function(func, duration)
+StretchWidget.prototype.setStretchPoints = function(stretchPoints)
 {
-      var instructions = [];
-      for (var i = 0; i < this.numCircles; i++)
-      {            
-          var y_in = this.maxTarget - (this.maxTarget * (this.circles[i].y / this.height));
-          var target = func(y_in);
-          var target_scaled = this.height - (target / this.maxTarget) * this.height;
-          instructions.push({circle: this.selection._groups[0][i],
-                             target: target_scaled,
-                             step: this.step});
-      }
+    this.stretchPoints = stretchPoints;
     
-      this.sliderAnimator.startStretchAnimations(instructions, duration, false);
+    this.svg
+      .selectAll('.stretch-point')
+      .remove();
+      
+    this.svg
+      .selectAll('.stretch-point')
+      .data(this.stretchPoints)
+      .enter()
+      .append('circle')
+      .classed('stretch-point', true)
+      .attr('cx', function(d) {
+        return d.source;
+      })
+      .attr('cy', function(d) {
+        return d.target;
+      })
+      .attr('r', this.stretchPointSize);
+      
+  
+    var stretchInstructions = [];
+    for (var i = 0; i < this.numStretchPoints+1; i++)
+    {
+        stretchInstructions.push(this.diagram2stretched(this.stretchPoints[i]));
+    }
+    
+    this.sendSignal("stretch changed", stretchInstructions);
+}
+
+
+
+StretchWidget.prototype.stretched2normalized = function(p)
+{
+    return {source: p.source / this.maxSource, target: p.target / this.maxTarget};
+}
+
+StretchWidget.prototype.normalized2stretched = function(p)
+{
+    return {source: p.source * this.maxSource, target: p.target * this.maxTarget};
+}
+
+StretchWidget.prototype.normalized2diagram = function(p)
+{
+    return {source: p.source * this.widgetWidth, target: (1 - p.target) * this.widgetHeight}
+}
+
+StretchWidget.prototype.diagram2normalized = function(p)
+{
+    return {source: p.source / this.widgetWidth, target: (p.target - this.widgetHeight) / (-this.widgetHeight)}
+}
+
+StretchWidget.prototype.stretched2diagram = function(p)
+{
+    return this.normalized2diagram(this.stretched2normalized(p));
+}
+
+StretchWidget.prototype.diagram2stretched = function(p)
+{
+    return this.normalized2stretched(this.diagram2normalized(p));
+}
+
+
+StretchWidget.prototype.enableEditing = function()
+{
+    this.editControls = new StretchEditControls(this);
+}
+
+
+StretchWidget.prototype.disableEditing = function()
+{
+    this.editControls.destroy();
+    this.editControls = null;
 }
 
 StretchWidget.prototype.resetStretch = function(duration)
 {
-      var instructions = [];
-      for (var i = 0; i < this.numCircles; i++)
-      {            
-          instructions.push({circle: this.selection._groups[0][i],
-                             target: this.height - (i / (this.numCircles-1)) * ((this.maxSource / this.maxTarget) * this.height),
-                             step: this.step});
-      }
-      
-      this.sliderAnimator.startStretchAnimations(instructions, duration, true);
+    this.startStretchAnimations("identity", duration);
 }
+
+StretchWidget.prototype.getPresetStretchPoints = function(name)
+{
+    if (name == "identity")
+    {
+        var stretchPoints = [];
+        for (var i = 0; i < this.numStretchPoints + 1; i++)
+        {
+            var f = i / this.numStretchPoints;
+            var p = { source : f * this.maxSource, target : f * this.maxSource};
+            var p_diagram = this.stretched2diagram(p);
+            stretchPoints.push(p_diagram);
+        }
+        return stretchPoints;
+    }
+    else if (name == "halfed")
+    {
+        var stretchPoints = [];
+        for (var i = 0; i < this.numStretchPoints + 1; i++)
+        {
+            var f = i / this.numStretchPoints;
+            var p = { source : f * this.maxSource, target : 0.5 * f * this.maxSource};
+            var p_diagram = this.stretched2diagram(p);
+            stretchPoints.push(p_diagram);
+        }
+        return stretchPoints;
+    }
+    else if (name == "central cylindrical to mercator")
+    {
+        var center_bias = this.maxTarget / 4;
+        
+        var stretchPoints = [];
+        for (var i = 0; i < this.numStretchPoints + 1; i++)
+        {
+            var f = i / this.numStretchPoints;
+            var x = f * this.maxSource
+            var y = x;
+            var latitude = Math.atan(y - center_bias);
+            var y_Mercator = Math.log(Math.tan((Math.PI/4) + (latitude/2)));
+            var p = { source : x, target : y_Mercator+center_bias};
+            var p_diagram = this.stretched2diagram(p);
+            stretchPoints.push(p_diagram);
+        }
+        return stretchPoints;
+    }
+
+}
+
+StretchWidget.prototype.startStretchAnimations = function(name, duration)
+{
+    this.duration = duration;
+    var pts = this.getPresetStretchPoints(name);
+    
+    for (var i = 0; i < this.numStretchPoints + 1; i++)
+    {
+        pts[i].changePerSecond = (pts[i].target - this.stretchPoints[i].target) / duration;
+
+        if (Math.abs(pts[i].changePerSecond) < this.e)
+            pts[i].finished = true;    
+        else
+            pts[i].finished = false;
+
+        pts[i].currentTarget = this.stretchPoints[i].target;
+    }
+    
+    this.instructions = pts;
+    
+    if (name == "identity")
+        this.state = "unstretching";
+    else
+        this.state = "stretching";
+    
+    this.rbtn.disabled = true;
+    this.ebtn.disabled = true;
+}
+
+StretchWidget.prototype.update = function(delta)
+{	
+    if (!(this.state == "stretching" || this.state == "unstretching"))
+        return
+        
+    var allFinished = true;
+    
+    var newPoints = [];
+    for (var i = 0; i < this.numStretchPoints + 1; i++)
+    {
+        var instruction = this.instructions[i];
+        if (instruction.finished)
+        {
+            newPoints.push({source: instruction.source, target: instruction.currentTarget})
+        }
+        else
+        {
+            var allFinished = false;
+            
+            var increment = delta * instruction.changePerSecond;
+            var newPosition = instruction.currentTarget + increment;
+            
+            if ((instruction.changePerSecond >= 0) && (instruction.currentTarget >= instruction.target))
+            {
+                newPosition = instruction.target;
+                instruction.finished = true;        
+            }
+            else if ((instruction.changePerSecond <= 0) && (instruction.currentTarget <= instruction.target))
+            {
+                newPosition = instruction.target;
+                instruction.finished = true;
+            }
+            
+            
+            instruction.currentTarget = newPosition;
+            newPoints.push({source: instruction.source, target: instruction.currentTarget});
+        }
+    }
+    console.log(this.instructions);
+    this.setStretchPoints(newPoints);
+    
+    if (allFinished)
+    {
+        if (this.state == "stretching")
+        {
+            this.state = "stretched";
+            //this.surface.setStretched(true);
+            this.ebtn.disabled = true;
+            this.rbtn.disabled = false;   
+        }
+        else if (this.state == "unstretching")
+        {
+            this.state = "enabled";
+            //this.surface.setStretched(false);
+            this.ebtn.disabled = false;
+            this.rbtn.disabled = false;            
+        }
+    }
+}
+
 
 
 
