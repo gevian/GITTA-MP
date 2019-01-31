@@ -3,6 +3,24 @@ function StretchWidget(graphContainer, controlsContainer, maxSource, maxTarget)
     if (maxSource == undefined) maxSource = 2.0;
     if (maxTarget == undefined) maxTarget = 4.0;
     
+    // https://github.com/wbkd/d3-extended
+    // http://bl.ocks.org/eesur/4e0a69d57d3bfc8a82c2
+    d3.selection.prototype.moveToBack = function() {  
+      return this.each(function() { 
+          var firstChild = this.parentNode.firstChild; 
+          if (firstChild) { 
+              this.parentNode.insertBefore(this, firstChild); 
+          } 
+      });
+    };
+    
+    d3.selection.prototype.moveToFront = function() {  
+      return this.each(function(){
+        this.parentNode.appendChild(this);
+      });
+    };
+    
+    
     this.widgetWidth = 400;
     this.widgetHeight = 400;
     this.widgetMargin = 50;
@@ -200,10 +218,11 @@ StretchWidget.prototype.setStretchPoints = function(stretchPoints)
         return d.source;
       })
       .attr('cy', function(d) {
+        d3.select(this).moveToBack();
         return d.target;
       })
       .attr('r', this.stretchPointSize);
-      
+
   
     var stretchInstructions = [];
     for (var i = 0; i < this.numStretchPoints+1; i++)

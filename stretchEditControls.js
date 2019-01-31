@@ -1,16 +1,5 @@
 function StretchEditControls(stretchWidget)
-{
-    // https://github.com/wbkd/d3-extended
-    // http://bl.ocks.org/eesur/4e0a69d57d3bfc8a82c2
-    d3.selection.prototype.moveToBack = function() {  
-      return this.each(function() { 
-          var firstChild = this.parentNode.firstChild; 
-          if (firstChild) { 
-              this.parentNode.insertBefore(this, firstChild); 
-          } 
-      });
-    };
-    
+{    
     this.stretchWidget = stretchWidget;
     this.g = this.stretchWidget.svg.append("g").attr("id", "stretch-controls");
     
