@@ -9,7 +9,7 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
 	this.LineProjector = LineProjector;
 	this.canvas = canvas;
 	
-	this.surface.setFormsCallbacks(this.rolledToFlattened, this.flattenedToRolled, this.flattenedToStretched, this.stretchedToFlattened);
+	this.surface.setFormsCallbacks(this.rolledToFlattened.bind(this), this.flattenedToRolled.bind(this), this.flattenedToStretched.bind(this), this.stretchedToFlattened.bind(this));
 	
 	this.latSlider = document.getElementById("lat_slider");
 	this.lonSlider = document.getElementById("lon_slider");
@@ -354,13 +354,28 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
 
 }
 
-Controls.prototype.flattenedToRolled = function(roll)
+Controls.prototype.disableForms = function()
+{
+	var fieldsets = document.getElementsByTagName('fieldset');
+
+	for(var i = 0; i < fieldsets.length; i++) {
+		fieldsets[i].disabled = true;
+	}
+}
+
+Controls.prototype.enableForms = function()
 {
 	var fieldsets = document.getElementsByTagName('fieldset');
 
 	for(var i = 0; i < fieldsets.length; i++) {
 		fieldsets[i].disabled = false;
 	}
+}
+
+
+Controls.prototype.flattenedToRolled = function(roll)
+{
+    this.enableForms();
 	
 	var tutButtons = document.querySelectorAll(".tut-button button");
 	
@@ -384,11 +399,7 @@ Controls.prototype.flattenedToRolled = function(roll)
 
 Controls.prototype.rolledToFlattened = function(roll)
 {
-	var fieldsets = document.getElementsByTagName('fieldset');
-
-	for(var i = 0; i < fieldsets.length; i++) {
-		fieldsets[i].disabled = true;
-	}
+    this.disableForms();
 	
 	var tutButtons = document.querySelectorAll(".tut-button button");
 	
@@ -430,7 +441,13 @@ Controls.prototype.stretchedToFlattened = function()
 }
 
 
-
+Controls.prototype.reset = function()
+{
+	document.getElementById("surface_orientation").reset();
+	document.getElementById("surface_geometry").reset();
+	document.getElementById("lightsource").reset();
+	document.getElementById("textures").reset();
+}
 
 
 

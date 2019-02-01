@@ -66,8 +66,9 @@ TutorialControls.prototype.setProjection = function(name)
 		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 0};
 		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
 		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
 			
-		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction], this.animationTime);
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
 		
 	}
 	else if (name == "orthographic azimuthal")
@@ -84,8 +85,9 @@ TutorialControls.prototype.setProjection = function(name)
 		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: -100};
 		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
 		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
 			
-		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction], this.animationTime);
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
 	}
 	else if (name == "stereographic azimuthal")
 	{
@@ -101,8 +103,10 @@ TutorialControls.prototype.setProjection = function(name)
 		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: -1};
 		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
 		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
+        
 			
-		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction], this.animationTime);
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
 	}
 	else if (name == "vertical perspective azimuthal near side")
 	{		
@@ -118,8 +122,9 @@ TutorialControls.prototype.setProjection = function(name)
 		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 2};
 		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
 		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
 			
-		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction], this.animationTime);
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
 	}
 	else if (name == "vertical perspective azimuthal far side")
 	{
@@ -135,8 +140,9 @@ TutorialControls.prototype.setProjection = function(name)
 		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: -2};
 		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
 		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
 			
-		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction], this.animationTime);
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
 	}
 	else if (name == "oblique perspective non-azimuthal")
 	{
@@ -152,8 +158,9 @@ TutorialControls.prototype.setProjection = function(name)
 		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 2};
 		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 24};
 		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
 			
-		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction], this.animationTime);
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
 	}
 	else if (name == "central cylindrical")
 	{		
@@ -169,8 +176,9 @@ TutorialControls.prototype.setProjection = function(name)
 		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 0};
 		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
 		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
 			
-		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction], this.animationTime);
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
 		
 	}
 	else if (name == "centrographic conic")
@@ -187,8 +195,9 @@ TutorialControls.prototype.setProjection = function(name)
 		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 0};
 		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
 		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
 			
-		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction], this.animationTime);
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
 		
 	}
 	else if (name == "brauns stereographic conic")
@@ -205,23 +214,87 @@ TutorialControls.prototype.setProjection = function(name)
 		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: -1};
 		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
 		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
 			
-		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction], this.animationTime);
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
+	}
+    
+	else if (name == "lamberts equal area cylindrical")
+	{
+		var latBoxInstruction = {slider: this.controls.latBox, target:90};
+		var lonBoxInstruction = {slider: this.controls.lonBox, target: 0};
+		var rotBoxInstruction = {slider: this.controls.rotBox, target:0};
+		
+		var axisBoxInstruction = {slider: this.controls.axisBox, target:4};
+		var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 1};
+		var lowerRadiusBoxInstruction = {slider: this.controls.lowerRadiusBox, target: 1};
+		
+		var geometryOffsetBoxInstruction = {slider: this.controls.geometryOffsetBox, target:0};
+		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 0};
+		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
+		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 100};
+			
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
+	}
+	else if (name == "brauns stereographic cylindrical")
+	{
+		var latBoxInstruction = {slider: this.controls.latBox, target:90};
+		var lonBoxInstruction = {slider: this.controls.lonBox, target: 0};
+		var rotBoxInstruction = {slider: this.controls.rotBox, target:0};
+		
+		var axisBoxInstruction = {slider: this.controls.axisBox, target:4};
+		var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 1};
+		var lowerRadiusBoxInstruction = {slider: this.controls.lowerRadiusBox, target: 1};
+		
+		var geometryOffsetBoxInstruction = {slider: this.controls.geometryOffsetBox, target:0};
+		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 0};
+		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
+		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 1};
+			
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
+	}
+	else if (name == "brauns pseudomercator")
+	{
+		var latBoxInstruction = {slider: this.controls.latBox, target:90};
+		var lonBoxInstruction = {slider: this.controls.lonBox, target: 0};
+		var rotBoxInstruction = {slider: this.controls.rotBox, target:0};
+		
+		var axisBoxInstruction = {slider: this.controls.axisBox, target:4};
+		var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 1};
+		var lowerRadiusBoxInstruction = {slider: this.controls.lowerRadiusBox, target: 1};
+		
+		var geometryOffsetBoxInstruction = {slider: this.controls.geometryOffsetBox, target:0};
+		var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 0};
+		var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
+		var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.33};
+			
+		this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], this.animationTime);
 	}
 }
 
-TutorialControls.prototype.resetControls = function()
+
+
+TutorialControls.prototype.resetControls = function(duration)
 {
+    if (duration == undefined)
+        duration = 1
+    
 	this.controls.bordersCheckbox.checked = true;
 	this.controls.bordersCheckbox.onclick();
+
 	this.controls.graticuleCheckbox.checked = true;
 	this.controls.graticuleCheckbox.onclick();
+
 	this.controls.tissotCheckbox.checked = false;
 	this.controls.tissotCheckbox.onclick();
-	
+
+    
 	var latBoxInstruction = {slider: this.controls.latBox, target:90};
 	var lonBoxInstruction = {slider: this.controls.lonBox, target: 0};
-	var rotBoxInstruction = {slider: this.controls.rotBox, target:0};
+	var rotBoxInstruction = {slider: this.controls.rotBox, target: 0};
 	
 	var axisBoxInstruction = {slider: this.controls.axisBox, target:0};
 	var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 0.01};
@@ -231,35 +304,17 @@ TutorialControls.prototype.resetControls = function()
 	var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 0};
 	var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
 	var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
-	var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 1};
+	var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
 	
-	this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], 1);
+	this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], duration);
 }
 
 
 TutorialControls.prototype.setScale = function(name)
 {
-	if (name == "central cylindrical to mercator")
-	{        
-        var centralCylindricalToMercator = function(y)
-        {
-            var center_bias = this.stretchWidget.maxTarget / 4;
-            var latitude = Math.atan(y-center_bias);
-            var y_Mercator = Math.log(Math.tan((Math.PI/4) + (latitude/2)));
-            return y_Mercator+center_bias;
-        }
-        
-        this.stretchWidget.stretch(centralCylindricalToMercator, this.animationTime);
-    }
+    this.stretchWidget.startStretchAnimations(name, this.animationTime);
 }
 
 
-/*
-Controls.prototype.reset = function()
-{
-	document.getElementById("surface_orientation").reset();
-	document.getElementById("surface_geometry").reset();
-	document.getElementById("lightsource").reset();
-	document.getElementById("textures").reset();
-}
-*/
+
+

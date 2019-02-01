@@ -1,7 +1,8 @@
-function StretchWidget(graphContainer, controlsContainer, maxSource, maxTarget)
+function StretchWidget(graphContainer, controlsContainer, maxSource, minTarget, maxTarget)
 {
-    if (maxSource == undefined) maxSource = 2.0;
-    if (maxTarget == undefined) maxTarget = 4.0;
+    if (maxSource == undefined) maxSource =  2.0;
+    if (minTarget == undefined) minTarget = -4.0;
+    if (maxTarget == undefined) maxTarget =  4.0;
     
     // https://github.com/wbkd/d3-extended
     // http://bl.ocks.org/eesur/4e0a69d57d3bfc8a82c2
@@ -74,14 +75,15 @@ function StretchWidget(graphContainer, controlsContainer, maxSource, maxTarget)
     
     this.defaultDuration = 3;
     
-    this.setRange(maxSource, maxTarget);
+    this.setRange(maxSource, minTarget, maxTarget);
     this.enable();
 }
 
-StretchWidget.prototype.setRange = function(maxSource, maxTarget)
+StretchWidget.prototype.setRange = function(maxSource, minTarget, maxTarget)
 {
     this.maxSource = maxSource;
     this.maxTarget = maxTarget;
+    this.minTarget = minTarget;
 }
 
 StretchWidget.prototype.editButtonClicked = function()
@@ -110,7 +112,7 @@ StretchWidget.prototype.resetButtonClicked = function()
 
 StretchWidget.prototype.addCallback = function(callback)
 {
-    this.callbacks.add(callback);
+    this.callbacks.push(callback);
 }
 
 StretchWidget.prototype.sendSignal = function(name, data)
@@ -128,7 +130,7 @@ StretchWidget.prototype.enable = function()
     this.svg.classed('sw-enabled', true);    
     this.svg.classed('sw-disabled', false);
     
-    this.drawGrid(this.maxSource, this.maxTarget);
+    this.drawGrid(this.maxSource, this.minTarget, this.maxTarget);
     var pts = this.getPresetStretchPoints("identity");
     this.setStretchPoints(pts);
     
@@ -145,14 +147,14 @@ StretchWidget.prototype.disable = function()
     this.svg.classed('sw-enabled', false);    
     this.svg.classed('sw-disabled', true);
     
-    this.drawGrid(this.maxSource, this.maxTarget);
+    this.drawGrid(this.maxSource, this.minTarget, this.maxTarget);
     
     this.ebtn.disabled = true;
     this.rbtn.disabled = true;    
     this.state = "disabled";
 }
 
-StretchWidget.prototype.drawGrid = function(maxSource, maxTarget)
+StretchWidget.prototype.drawGrid = function(maxSource, minTarget, maxTarget)
 {
     var x = d3.scaleLinear().range([0, this.widgetWidth]);
     var y = d3.scaleLinear().range([this.widgetHeight, 0]);
@@ -162,7 +164,7 @@ StretchWidget.prototype.drawGrid = function(maxSource, maxTarget)
 	var yLine = d3.axisRight().scale(y).tickFormat("").tickSize(-this.widgetWidth);
     
     x.domain([0, maxSource]);
-    y.domain([0, maxTarget]);
+    y.domain([minTarget, maxTarget]);
 
     var minX = 0;
     var maxX = this.widgetWidth;
@@ -231,7 +233,7 @@ StretchWidget.prototype.setStretchPoints = function(stretchPoints)
     var stretchInstructions = [];
     for (var i = 0; i < this.numStretchPoints+1; i++)
     {
-        stretchInstructions.push(this.diagram2stretched(this.stretchPoints[i]));
+        stretchInstructions.push(this.diagram2stretched(this.stretchPoints[i]).target);
     }
     
     this.sendSignal("stretch changed", stretchInstructions);
@@ -241,12 +243,12 @@ StretchWidget.prototype.setStretchPoints = function(stretchPoints)
 
 StretchWidget.prototype.stretched2normalized = function(p)
 {
-    return {source: p.source / this.maxSource, target: p.target / this.maxTarget};
+    return {source: p.source / this.maxSource, target: (p.target - this.minTarget) / (this.maxTarget - this.minTarget)};
 }
 
 StretchWidget.prototype.normalized2stretched = function(p)
 {
-    return {source: p.source * this.maxSource, target: p.target * this.maxTarget};
+    return {source: p.source * this.maxSource, target: p.target * (this.maxTarget - this.minTarget) + this.minTarget};
 }
 
 StretchWidget.prototype.normalized2diagram = function(p)
@@ -400,7 +402,7 @@ StretchWidget.prototype.update = function(delta)
             newPoints.push({source: instruction.source, target: instruction.currentTarget});
         }
     }
-    console.log(this.instructions);
+
     this.setStretchPoints(newPoints);
     
     if (allFinished)

@@ -66,18 +66,17 @@ StretchEditControls.prototype.initializeControls = function() {
     this.controlPoints = [];
     this.handles = [];
     
-    var r = this.stretchWidget.maxSource / this.stretchWidget.maxTarget;
     var p0 = {source: 0.0, target: 0.0};
-    var p1 = {source: 1.0, target: r};
+    var p1 = {source: 1.0 * this.stretchWidget.maxSource, target: 1.0 * this.stretchWidget.maxSource};
 
-    this.controlPoints.push(this.stretchWidget.normalized2diagram(p0));
-    this.controlPoints.push(this.stretchWidget.normalized2diagram(p1));
+    this.controlPoints.push(this.stretchWidget.stretched2diagram(p0));
+    this.controlPoints.push(this.stretchWidget.stretched2diagram(p1));
 
-    var h0 = {source: 0.25, target: 0.25 * r};
-    var h1 = {source: 0.75, target: 0.75 * r};
+    var h0 = {source: 0.25 * this.stretchWidget.maxSource, target: 0.25 * this.stretchWidget.maxSource};
+    var h1 = {source: 0.75 * this.stretchWidget.maxSource, target: 0.75 * this.stretchWidget.maxSource};
     
-    this.handles.push(this.stretchWidget.normalized2diagram(h0));
-    this.handles.push(this.stretchWidget.normalized2diagram(h1));
+    this.handles.push(this.stretchWidget.stretched2diagram(h0));
+    this.handles.push(this.stretchWidget.stretched2diagram(h1));
 }
 
 StretchEditControls.prototype.refresh = function() {

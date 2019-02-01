@@ -170,11 +170,14 @@ Stripe.prototype.getNormal = function()
 
 
 
-function Surface(scene, renderer, earth) {
+function Surface(scene, renderer, earth, stretchWidget) {
     this.renderer = renderer;
 	this.scene = scene;
     this.earth = earth;
-	
+    
+    this.stretchWidget = stretchWidget;
+	this.stretchWidget.addCallback(this.applyStretchInstructions.bind(this));
+    
 	this.state = "Initializing";
 	
     
@@ -304,10 +307,10 @@ function Surface(scene, renderer, earth) {
 	
 	this.updateGeometry();
 			
-	this.flattenedToRolled = function(){};;
-	this.rolledToFlattened = function(){};;
-    this.flattenedToStretched = function(){};;
-    this.stretchedToFlattened = function(){};;   
+	this.flattenedToRolled = function(){};
+	this.rolledToFlattened = function(){};
+    this.flattenedToStretched = function(){};
+    this.stretchedToFlattened = function(){};   
         
 	this.state = "Rolled";
 }
@@ -566,6 +569,16 @@ Surface.prototype.rollAnimated = function(t)
 }
 
 
+
+Surface.prototype.applyStretchInstructions = function(name, data)
+{   
+    if (name == "stretch changed")
+    {
+        this.scale(data);
+    }
+}
+
+
 Surface.prototype.scale = function(targets)
 {
 	for (var i = 0; i < this.stripes.length; i++)
@@ -662,7 +675,9 @@ Surface.prototype.prepareStretching = function()
     
     this.distance = vecBottomFirst.distanceTo(vecTopFirst);
     
-    this.stretchWidget.setAxisLength(this.distance, this.distance * 2);
+    //this.stretchWidget.setAxisLength(this.distance, this.distance * 2);
+    this.stretchWidget.setRange(this.distance, -2*this.distance, 2*this.distance);
+    this.stretchWidget.enable();
 }
 
 Surface.prototype.update = function(delta)
@@ -757,32 +772,32 @@ Surface.prototype.setFormsCallbacks = function(rolledToFlattened, flattenedToRol
 
 Surface.prototype.enableBordersTexture = function()
 {
-    this.mesh.material.uniforms.tCountries.value = this.countriesTexture;
+    this.mesh.material.uniforms.tCountries.value = this.earth.countriesTexture;
 }
 
 Surface.prototype.disableBordersTexture = function()
 {
-    this.mesh.material.uniforms.tCountries.value = this.emptyTexture;    
+    this.mesh.material.uniforms.tCountries.value = this.earth.emptyTexture;    
 }
 
 Surface.prototype.enableGraticuleTexture = function()
 {
-    this.mesh.material.uniforms.tGraticule.value = this.graticuleTexture;
+    this.mesh.material.uniforms.tGraticule.value = this.earth.graticuleTexture;
 }
 
 Surface.prototype.disableGraticuleTexture = function()
 {
-    this.mesh.material.uniforms.tGraticule.value = this.emptyTexture;    
+    this.mesh.material.uniforms.tGraticule.value = this.earth.emptyTexture;    
 }
 
 Surface.prototype.enableTissotTexture = function()
 {
-    this.mesh.material.uniforms.tTissot.value = this.tissotTexture;
+    this.mesh.material.uniforms.tTissot.value = this.earth.tissotTexture;
 }
 
 Surface.prototype.disableTissotTexture = function()
 {
-    this.mesh.material.uniforms.tTissot.value = this.emptyTexture;    
+    this.mesh.material.uniforms.tTissot.value = this.earth.emptyTexture;    
 }
 
 
