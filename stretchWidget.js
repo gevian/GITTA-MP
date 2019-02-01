@@ -44,8 +44,11 @@ function StretchWidget(graphContainer, controlsContainer, maxSource, maxTarget)
     
     
     // set up controls
+    this.div = document.createElement("div");
+    this.div.setAttribute("class", "stretch-centered");
     this.controlsContainer = document.getElementById(controlsContainer);
     this.ebtn = document.createElement("button");
+    this.ebtn.setAttribute("class", "stretch-button");
     this.et = document.createTextNode("start editing");
     this.ebtn.appendChild(this.et);
     this.ebtn.setAttribute("id", "sw-edit-button");
@@ -54,6 +57,7 @@ function StretchWidget(graphContainer, controlsContainer, maxSource, maxTarget)
     this.ebtn.onclick = this.editButtonClicked.bind(this);
     
     this.rbtn = document.createElement("button");
+    this.rbtn.setAttribute("class", "stretch-button");
     var rt = document.createTextNode("reset");
     this.rbtn.appendChild(rt);
     this.rbtn.setAttribute("id", "sw-reset-button");

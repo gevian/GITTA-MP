@@ -8,27 +8,27 @@
 	<body>
 		<div id ="controls">
           <form style="font-weight: normal" id="surface_geometry">
-            <fieldset>
+            <fieldset class="centered">
             <b>geometry</b>
             <br>
             <table>
              <tr>
-              <td>axis length</td>
-              <td><input id="axis_slider" class="slider" type="range"  min="0" max="4" step="0.01" value="4"/></td>
-              <td><input id="axis_box"    class="box"    type="number" min="0" max="4" step="0.01" value="4"/><br></td>
+              <td class="controls-label">axis length</td>
+              <td><input id="axis_slider" class="slider" type="range"  min="0" max="8" step="0.01" value="4"/></td>
+              <td><input id="axis_box"    class="box"    type="number" min="0" max="8" step="0.01" value="4"/><br></td>
              </tr>
              <tr>
-              <td>upper radius</td>
+              <td class="controls-label">upper radius</td>
               <td><input id="upper_radius_slider" class="slider" type="range"  min="0.01" max="4" step="0.01" value="1"/></td>
               <td><input id="upper_radius_box"    class="box"    type="number" min="0.01" max="4" step="0.01" value="1"/></td>
              </tr>
              <tr>
-              <td>lower radius</td>
+              <td class="controls-label">lower radius</td>
               <td><input id="lower_radius_slider" class="slider" type="range"  min="0.01" max="4" step="0.01" value="1"/></td>
               <td><input id="lower_radius_box"    class="box"    type="number" min="0.01" max="4" step="0.01" value="1"/></td>
              </tr>
              <tr>
-              <td>offset</td>
+              <td class="controls-label">offset</td>
               <td><input id="geometry_offset_slider" class="slider" type="range"  min="-2" max="2" step="0.01" value="0"/></td>
               <td><input id="geometry_offset_box"    class="box"    type="number" min="-2" max="2" step="0.01" value="0"/></td>
              </tr>
@@ -37,22 +37,22 @@
           </form>
           
           <form style="font-weight: normal" id="surface_orientation">
-            <fieldset>
+            <fieldset class="centered">
               <b>orientation</b>
               <br>
               <table>
               <tr>
-                <td>latitude [°]</td>
+                <td class="controls-label">latitude [°]</td>
                 <td><input id="lat_slider" class="slider" type="range" min="-90" max="90" step="1" value="90"/></td>
                 <td><input id="lat_box"    class="box" type="number" min="-90" max="90" step="1" value="90"/><br></td>
               </tr>
               <tr>
-                <td>longitude [°]</td>
+                <td class="controls-label">longitude [°]</td>
                 <td><input id="lon_slider" class="slider" type="range" min="-180" max="180" step="1" value="0"/></td>
                 <td><input id="lon_box"    class="box" type="number" min="-180" max="180" step="1" value="0"/></td>
               </tr>
               <tr>
-                <td>rotation [°]</td>
+                <td class="controls-label">rotation [°]</td>
                 <td><input id="rot_slider" class="slider" type="range" min="-180" max="180" step="1" value="0"/></td>
                 <td><input id="rot_box"    class="box" type="number" min="-180" max="180" step="1" value="0"/></td>
               </tr>
@@ -61,27 +61,27 @@
           </form>
           
           <form style="font-weight: normal" id="lightsource">
-            <fieldset>
+            <fieldset class="centered">
               <b>light source</b>
               <br>
               <table>
              <tr>
-              <td>relative latitude</td>
+              <td class="controls-label">relative latitude</td>
               <td><input id="lightsource_latitude_slider" class="slider" type="range"  min="-180" max="180"  step="1" value="0"/></td>
               <td><input id="lightsource_latitude_box"    class="box"    type="number"  min="-180" max="180" step="1" value="0"/></td>
              </tr>
              <tr>
-              <td>relative longitude</td>
+              <td class="controls-label">relative longitude</td>
               <td><input id="lightsource_longitude_slider" class="slider" type="range"  min="-180" max="180"  step="1" value="0"/></td>
               <td><input id="lightsource_longitude_box"    class="box"    type="number"  min="-180" max="180" step="1" value="0"/></td>
              </tr>
              <tr>
-              <td>offset</td>
+              <td class="controls-label">offset</td>
               <td><input id="lightsource_offset_slider" class="slider" type="range"  min="-2"   max="2"   step="0.01" value="0"/></td>
               <td><input id="lightsource_offset_box"    class="box"    type="number" min="-100" max="100" step="0.01" value="0"/></td>
              </tr>
              <tr>
-              <td>scale</td>
+              <td class="controls-label">scale</td>
               <td><input id="lightsource_scale_slider" class="slider" type="range"  min="0.01"   max="2"   step="0.01" value="0"/></td>
               <td><input id="lightsource_scale_box"    class="box"    type="number" min="0.01"   max="100" step="0.01" value="0"/></td>
              </tr>
@@ -90,120 +90,48 @@
           </form>
           
           <form style="font-weight: normal" id="textures">
-            <fieldset>
-              <b>texture</b>
+            <fieldset class="centered">
+              <b>layers</b>
               <br>
-              <table>
-             <tr>
-              <td>borders</td>
-              <td><input type="checkbox" id="borders-checkbox" checked=""><br></td>
-             </tr>
-             <tr>
-              <td>graticule</td>
-              <td><input type="checkbox" id="graticule-checkbox" checked=""><br></td>
-             </tr>
-             <tr>
-              <td>Tissots indicatrices</td>
-              <td><input type="checkbox" id="tissot-checkbox" checked=""><br></td>
-             </tr>
+              <table class="center-table">
+                 <tr>
+                  <td>borders</td>
+                  <td><input type="checkbox" id="borders-checkbox" checked=""><br></td>
+                 </tr>
+                 <tr>
+                  <td>graticule</td>
+                  <td><input type="checkbox" id="graticule-checkbox" checked=""><br></td>
+                 </tr>
+                 <tr>
+                  <td>Tissots indicatrices</td>
+                  <td><input type="checkbox" id="tissot-checkbox" checked=""><br></td>
+                 </tr>
               </table>
             </fieldset>
           </form>
-            <table>
-             <tr>
-              <td><button type="button" id="reset-button" onclick="tutorialControls.resetControls()">reset</button><br></td>
-              <td><button type="button" id="remove-line-button" onclick="lineProjector.disableLines()">remove line</button><br></td>
-              <td><button type="button" id="roll-button" onclick="rollPressed()">flatten</button><br></td>
-             </tr>
-            </table>
+             <div class="centered">
+              <button type="button" id="reset-button" onclick="tutorialControls.resetControls()">reset</button>
+              <button type="button" id="remove-line-button" onclick="lineProjector.disableLines()">remove line</button>
+              <button type="button" id="roll-button" onclick="rollPressed()">flatten</button>
+            </div>
                 
                 
-        <div id="sw-container">
-            <div id="sw-graph"></div>
-            <div id="sw-controls"></div>
-        </div>
+            <div id="sw-container">
+                <div id="sw-graph"></div>
+                <div id="sw-controls"></div>
+            </div>
 		</div>
 		<div id="webgl_canvas"></div>
 		<div id="explanation">
 			 <!-- Tab links -->
 			<div class="tab">
-			  <button id="tut1-button" class="tablinks" onclick="openTab('tut1-button', 'tut1')">Map Construction</button>
-			  <button id="tut2-button" class="tablinks" onclick="openTab('tut2-button', 'tut2')">Projection Surfaces</button>
-			  <button id="tut3-button" class="tablinks" onclick="openTab('tut3-button', 'tut3')">Common Projections</button>
+			  <button id="tut1-button" class="tablinks" onclick="openTab('tut1-button', 'tut1')">Map Distortion Basics</button>
+			  <button id="tut2-button" class="tablinks" onclick="openTab('tut2-button', 'tut2')">Angle, Area and Length</button>
+			  <button id="tut3-button" class="tablinks" onclick="openTab('tut3-button', 'tut3')">The Mercator Projection</button>
 			</div>
 
 			<!-- Tab content -->
 			<div id="tut1" class="tabcontent">
-			The intention of this web application is to demonstrate the construction of map projections. On the left side of the application, you find the controls panel to adjust the parameters of the different objects present in the 3D-scene in the center of this application. To navigate within the 3D-scene, use the left mouse button to rotate, the right mouse button to pan and the middle mouse button to zoom.
-			If you want to restore the default settings, use the reset-button in the control panel.
-			
-			<br> A common approach to construct map projections makes use of three geometric objects:
-			
-			 <ul>
-			  <li> A simplified representation of the earth, typically in the shape of a sphere or a spheroid.</li>
-			  <li> A projection center, typically represented as a point.</li>
-			  <li> A projection surface, typically in the shape of a plane, cylinder or cone.</li>
-			 </ul>
-			
-			In the simplest case, the map surface is directly represented as a flat plane as shown by default when opening this web application. If the settings were changed, you can click the button below to reset them.
-			  <div class="tut-button">
-				<button onclick="tutorialControls.resetControls()">Reset</button>
-			  </div>
-			As you can see, the projection surface is currently a flat disk, touching the earth at the North Pole. The projection center is located at the center of the earth, represented as a yellow sphere. The earth can be imagined as a sphere of coloured glass, effectively coloring each ray that passes through its surface. The rays then paint the projection surface according to their color.
-			<br>
-			  Shift-click on the earth to visualize the ray originating from the projection center and passing the clicked location. Note how some rays hit the surface while some do not.  
-			<br>
-			Alternatively, click the following button to move the camera to the position of the projection center. Note how the borders of the sphere and the borders painted on the projection surface start to coincide. Move the camera slightly to emphasize this effect.
-			  <div class="tut-button">
-			  <button onclick="tutorialControls.moveCameraToProjectionCenter()">Move Camera to Projection Center</button>
-			  </div>
-			The position of the projection center is an important aspect when constructing map projections. This can be adjusted by changing the "offset" value in the "light source" section of the controls panel. Observe how different positions of the projection center change the resulting projection and the geometry of the rays.
-			<br>
-			
-			Now that you learned the basics of how map projections are constructed, move on to the next section by clicking on the tab "Projection Surfaces" at the top of this panel or click the button below.
-			<div class="tut-button">
-			  <button onclick="openTab('tut2-button', 'tut2')">Projection Surfaces</button>
-			</div>  
-			</div>
-
-			<div id="tut2" class="tabcontent">
-				
-				Typically, three different projection surfaces are used: The plane, the cone and the cylinder. A projection based on the plane is shown by default when starting this web application. If the settings have been modified, you can use the following button to enable the default settings.
-					<div class="tut-button">
-					<button onclick="tutorialControls.resetControls()">Reset</button>
-					</div>
-				Adjust the "lat" and "lon" values under the "orientation" section of the controls panel to investigate how different positions of the plane affect the resulting projection. Use the buttons below to construct a cone and a cylinder, respectively.
-				
-					<div class="tut-button">
-					<button onclick="tutorialControls.constructCone()">Cone</button>
-					<button onclick="tutorialControls.constructCylinder()">Cylinder</button>
-					</div>
-				
-				While the plane is flat by default and hence can be used as a map out-of-the-box once the projection has been calculated, the cylinder and the cone need to be unrolled first to obtain their flat, two-dimensional form. To construct the flat representation based on the current orientation, use the "unroll" button in the controls panel to flatten the surface. Once flattend, use the same button (now labeled "roll") to obtain the original three-dimensional form. The location where these cylinders are "cut" can be adjusted with the "rot" value in the "orientation" section of the controls panel. The cut location is indicated by a red sphere.<br>
-				
-				It is interesting to know that these three projection surfaces, the plane, the  cylinder and the plane can be interpreted as special cases of the conical frustum. Use the following button to construct an open conical frustum (i.e., a conical frustum without caps on top and bottom). 
-					<div class="tut-button">
-					<button onclick="tutorialControls.constructFrustum()">Frustum</button>
-					</div>
-				Based on this surface, you can use the following ways to adjust the parameters in the control panel to construct the three common projection surfaces.
-					
-				 <ul>
-				  <li> To construct a plane, set the "axis length" to 0, the "upper radius" to 0.01 and the "lower radius" to a value greater 0.01 such as 4 and the offset to 1.</li>
-				  <li> To construct a cone, set the "upper radius" to 0.01, the "lower radius" to a value greater 0.01 such as 4 and the axis length to a value greater 0 such as 4 and the offset to 1.</li>
-				  <li> To construct a cylinder, set the "upper radius" equal the "lower radius" with a value such as 1 and the "axis length" to a value greater 0 such as 4 and the offset to 0.</li>
-				 </ul>
-				
-				Make yourself familiar with these parameters and how they influence the geometry of the projection surface.
-				<br>
-				
-				Now that you learned about the three common projection surfaces and their connection, move on to the next section by clicking on the tab "Common Map Projections" at the top of this panel or click on the button below.
-					<div class="tut-button">
-					<button onclick="openTab('tut3-button', 'tut3')">Common Map Projections</button>
-					</div>
-			</div>
-
-            <!--
-			<div id="Tutorial_II" class="tabcontent">
 				Each map projection distorts the surface of the earth. Although these distortions can be precisly mathematically quantified, a more intuitive approach to these distortions can be followed using Tissot's indicatrix. Tissot's indicatrix is a graphical means to analyze such distortions and can be enabled by ticking the box labeled "Tissots indicatrices" in the "texture" section of the controls panel.
 				
 				<br>
@@ -224,61 +152,23 @@
 				<br>
 				
 				 Apart from these main properties of map projections, specifically the term "compromising" can be found in the literature, denoting map projections which reduce the distortions mentioned above while not entirely eliminating any of them.
-				
+				  
 			</div>
-            -->
+            
+			<div id="tut2" class="tabcontent">
+                So far we discussed map projections that are constructed by using a single projection center.
+                With the exception of the Stereographic Azimuthal Projection, these rarely have interesting properties.
+                
+                Hence, 
+                
+                
+			</div>
+            
 			<div id="tut3" class="tabcontent">
-				In this segment, we will briefly discuss some named map projections. These projections form the class of the so-called "true perspective projections" and are the only common projections that can be constructed using this web application.
-				
-				Maybe the most simple map projection one can imagine is the gnomonic azimuthal map projection, which is also the default setting in this web application. In this case, the projection surface is the plane touch the North Pole and the light source is located at the center of the earth. Use the following button to construct this map projection:
-			
-				<div class="tut-button">
-				<button onclick="tutorialControls.setProjection('gnomonic azimuthal')">Gnomonic Azimuthal</button>
-				</div>
-				
-				A slightly different map projection is the stereographic azimuthal map projection. In this case, the light source is located at the opposite pole of where the projection plane is touching the earth.
-				
-				<div class="tut-button">
-				<button onclick="tutorialControls.setProjection('stereographic azimuthal')">Stereographic Azimuthal</button>
-				</div>
-			
-				Another variant is the orthographic azimuthal projection. In this case, the projection center is located at an infinitely distant location perpendicular to the projection surface. Note how the projection rays form straight, parallel lines.
-			
-				<div class="tut-button">
-				<button onclick="tutorialControls.setProjection('orthographic azimuthal')">Orthographic Azimuthal</button>
-				</div>
-				
-				The vertical perspective azimuthal projections places the light source outside of the earth's surface. The near-side variant places the light source "above" the projection surface while the far-side variante places the light source "below" the projection surface.
-
-				<div class="tut-button">
-				<button onclick="tutorialControls.setProjection('vertical perspective azimuthal near side')">Vertical perspective Azimuthal, near-side</button>
-				<button onclick="tutorialControls.setProjection('vertical perspective azimuthal far side')">Vertical perspective Azimuthal, far-side</button>
-				</div>
-				
-				A rather special case of map projection is the so-called oblique perspective non-azimuthal perspective, in which case the surface orientation the vector between the light source and the earth's center is not perpendicular to the projection surface.
-				
-				<div class="tut-button">
-				<button onclick="tutorialControls.setProjection('oblique perspective non-azimuthal')">Oblique perspective non-Azimuthal</button>
-				</div>
-				
-				The only common cylindrical projection constructable with this tool is the central cylindrical projection. In this case, the light source is directly positioned in the center of the earth and the cylinder is touching the earth's surface along a great circle.
-				
-				<div class="tut-button">
-				<button onclick="tutorialControls.setProjection('central cylindrical')">Central Cylindrical</button>
-				</div>
-				
-				A common conical projection is the centrographic conic. Similarly to the gnomonic and the cylindrical projections, this projection places the light source in the center of the earth.
-				
-				<div class="tut-button">
-				<button onclick="tutorialControls.setProjection('centrographic conic')">Centrographic Conic</button>
-				</div>
-				
-				A slightly different construction scheme is followed in the case of Braun's stereographic conic projection. In this case, the light source is centered on the opposite pole of where the cone peak is located.
-				
-				<div class="tut-button">
-				<button onclick="tutorialControls.setProjection('brauns stereographic conic')">Braun's Stereographic Conic</button><br></div>
-				
-				You now learned the general concepts behind the construction of map projections as exemplified with the true perspective projections. In the future, it is aimed to extend this tool with other classes of projections such as the 
+                Some projections
+            
+            
+				You now learned the general concepts behind the construction of map projections as exemplified with the true perspective projections.
                 <button onclick="tutorialControls.setScale('central cylindrical to mercator')">scale to Mercator</button><br></div>
 			</div>
 		</div>

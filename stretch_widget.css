@@ -1,12 +1,14 @@
 #sw {
   margin: auto;
-  width: 400px;
-  height: 400px;
+  width: 450px;
+  height: 450px;
 }
 
 #sw-container {
   display: inline-block;
   vertical-align: top;
+  text-align: center;
+  margin: auto;
 }
 
 .sw-enabled {
@@ -71,3 +73,9 @@
   fill: black;
   fill-opacity: 1.0;
 }
+
+.stretch-button {
+    margin: 2px;
+}
+
+

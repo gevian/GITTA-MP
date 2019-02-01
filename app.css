@@ -1,8 +1,40 @@
 #webgl_canvas {
-    width: 750px;
-    height: 750px;
+    width: 1100px;
+    height: 1100px;
     
     display: inline-block;
+}
+
+form {
+    border: 0px solid;   
+    outline: 0px;
+}
+
+button {
+    border: none;
+    background-color: lightgrey;
+}
+
+fieldset {
+    border: 0;
+}
+
+
+.box {
+    width: 75px;
+}
+
+
+.centered {
+    text-align: center;
+vertical-align: middle;
+}
+
+
+.controls-label {
+    width: 120px;
+    
+    
 }
 
 #controls {
@@ -13,13 +45,12 @@
 #explanation {
     display: inline-block;
     vertical-align: top;
-    width: 500px;
+    width: 600px;
 }
             
  /* Style the tab */
 .tab {
     overflow: hidden;
-    border: 1px solid #ccc;
     background-color: #f1f1f1;
 }
 
@@ -48,7 +79,6 @@
 .tabcontent {
     display: none;
     padding: 6px 12px;
-    border: 1px solid #ccc;
     border-top: none;
 } 
 
@@ -60,3 +90,18 @@
   stroke: #000;
   stroke-width: 2px;
 }
+
+
+body {
+  font-family: Helvetica;
+}
+
+
+.center-table {
+    display: inline-block;
+}
+
+
+
+
+

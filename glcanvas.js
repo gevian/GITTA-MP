@@ -7,7 +7,7 @@ function GLCanvas(canvas_id)
 	this.height = this.glContainer.offsetHeight;
 
 	this.scene  = new THREE.Scene();
-	this.scene.background = new THREE.Color("#FFFAE2");
+	this.scene.background = new THREE.Color("#e8f0ff");
 	this.camera = new THREE.PerspectiveCamera( 75, this.width/this.height, 0.1, 1000 );
 
 	this.camera.position.y = 5;
