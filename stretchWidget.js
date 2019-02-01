@@ -45,17 +45,7 @@ function StretchWidget(graphContainer, controlsContainer, maxSource, minTarget, 
     
     
     // set up controls
-    this.div = document.createElement("div");
-    this.div.setAttribute("class", "stretch-centered");
     this.controlsContainer = document.getElementById(controlsContainer);
-    this.ebtn = document.createElement("button");
-    this.ebtn.setAttribute("class", "stretch-button");
-    this.et = document.createTextNode("start editing");
-    this.ebtn.appendChild(this.et);
-    this.ebtn.setAttribute("id", "sw-edit-button");
-    this.controlsContainer.appendChild(this.ebtn);
-
-    this.ebtn.onclick = this.editButtonClicked.bind(this);
     
     this.rbtn = document.createElement("button");
     this.rbtn.setAttribute("class", "stretch-button");
@@ -65,6 +55,16 @@ function StretchWidget(graphContainer, controlsContainer, maxSource, minTarget, 
     this.controlsContainer.appendChild(this.rbtn);
 
     this.rbtn.onclick = this.resetButtonClicked.bind(this);
+    this.ebtn = document.createElement("button");
+    this.ebtn.setAttribute("class", "stretch-button");
+    this.et = document.createTextNode("start editing");
+    this.ebtn.appendChild(this.et);
+    this.ebtn.setAttribute("id", "sw-edit-button");
+    this.controlsContainer.appendChild(this.ebtn);
+
+    this.ebtn.onclick = this.editButtonClicked.bind(this);
+    
+
     
     document.getElementById('sw').oncontextmenu = function() {return false;};
     
@@ -78,6 +78,12 @@ function StretchWidget(graphContainer, controlsContainer, maxSource, minTarget, 
     this.setRange(maxSource, minTarget, maxTarget);
     this.enable();
 }
+
+StretchWidget.prototype.setState = function(state)
+{   
+    this.sendSignal("state", state);
+}
+
 
 StretchWidget.prototype.setRange = function(maxSource, minTarget, maxTarget)
 {
@@ -100,7 +106,8 @@ StretchWidget.prototype.editButtonClicked = function()
         this.disableEditing();
         this.et.nodeValue = "start editing";
         this.rbtn.disabled = false;
-        this.state = "enabled";
+        this.state = "stretched";
+        this.ebtn.disabled = true;
     }
 }
 
