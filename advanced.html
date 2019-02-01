@@ -8,7 +8,7 @@
 	<body>
 		<div id ="controls">
           <form style="font-weight: normal" id="surface_geometry">
-            <fieldset class="centered">
+            <fieldset id="geometry-fieldset" class="centered">
             <b>geometry</b>
             <br>
             <table>
@@ -37,7 +37,7 @@
           </form>
           
           <form style="font-weight: normal" id="surface_orientation">
-            <fieldset class="centered">
+            <fieldset id="orientation-fieldset" class="centered">
               <b>orientation</b>
               <br>
               <table>
@@ -114,9 +114,8 @@
               <button type="button" id="remove-line-button" onclick="lineProjector.disableLines()">remove line</button>
               <button type="button" id="roll-button" onclick="rollPressed()">flatten</button>
             </div>
-                
-                
             <div id="sw-container">
+                <!--<div class="centered"><b>scaling function</b></div>-->
                 <div id="sw-graph"></div>
                 <div id="sw-controls"></div>
             </div>

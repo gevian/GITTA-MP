@@ -356,7 +356,9 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
 
 Controls.prototype.disableForms = function()
 {
-	var fieldsets = document.getElementsByTagName('fieldset');
+    var fieldsets = [];
+    fieldsets.push(document.getElementById("geometry-fieldset"));
+    fieldsets.push(document.getElementById("orientation-fieldset"));
 
 	for(var i = 0; i < fieldsets.length; i++) {
 		fieldsets[i].disabled = true;
@@ -365,7 +367,9 @@ Controls.prototype.disableForms = function()
 
 Controls.prototype.enableForms = function()
 {
-	var fieldsets = document.getElementsByTagName('fieldset');
+    var fieldsets = [];
+    fieldsets.push(document.getElementById("geometry-fieldset"));
+    fieldsets.push(document.getElementById("orientation-fieldset"));
 
 	for(var i = 0; i < fieldsets.length; i++) {
 		fieldsets[i].disabled = false;
@@ -394,6 +398,8 @@ Controls.prototype.flattenedToRolled = function(roll)
 	{
 		rollButton.removeAttribute("disabled");
 	}
+    
+    this.stretchWidget.disable();
 }
 
 
@@ -418,6 +424,8 @@ Controls.prototype.rolledToFlattened = function(roll)
 	{
 		rollButton.setAttribute("disabled", "disabled");
 	}
+    
+    
 }
 
 
@@ -425,9 +433,6 @@ Controls.prototype.flattenedToStretched = function()
 {
 	var rollButton = document.getElementById("roll-button");
     rollButton.setAttribute("disabled", "disabled");
-    
-    var unstretchButton = document.getElementById("reset-stretch-button");
-    unstretchButton.removeAttribute("disabled");
 }
 
 
@@ -435,9 +440,6 @@ Controls.prototype.stretchedToFlattened = function()
 {
 	var rollButton = document.getElementById("roll-button");
     rollButton.removeAttribute("disabled");
-    
-    var unstretchButton = document.getElementById("reset-stretch-button");
-    unstretchButton.setAttribute("disabled", "disabled");
 }
 
 

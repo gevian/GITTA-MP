@@ -176,7 +176,7 @@ function Surface(scene, renderer, earth, stretchWidget) {
     this.earth = earth;
     
     this.stretchWidget = stretchWidget;
-	this.stretchWidget.addCallback(this.applyStretchInstructions.bind(this));
+	this.stretchWidget.addCallback(this.receiveSignal.bind(this));
     
 	this.state = "Initializing";
 	
@@ -570,11 +570,23 @@ Surface.prototype.rollAnimated = function(t)
 
 
 
-Surface.prototype.applyStretchInstructions = function(name, data)
+Surface.prototype.receiveSignal = function(name, data)
 {   
+    console.log(name, data);
     if (name == "stretch changed")
     {
         this.scale(data);
+    }
+    else if (name == "state changed")
+    {
+        if (data == "enabled")
+        {
+            this.setStretched(false);
+        }
+        else
+        {
+            this.setStretched(true);            
+        }
     }
 }
 

@@ -80,8 +80,12 @@ function StretchWidget(graphContainer, controlsContainer, maxSource, minTarget, 
 }
 
 StretchWidget.prototype.setState = function(state)
-{   
-    this.sendSignal("state", state);
+{
+    if (this.state == state)
+        return
+
+    this.state = state;
+    this.sendSignal("state changed", state);
 }
 
 
@@ -99,15 +103,15 @@ StretchWidget.prototype.editButtonClicked = function()
         this.enableEditing();
         this.et.nodeValue = "stop editing";
         this.rbtn.disabled = true;
-        this.state = "editing";
+        this.setState("editing");
     }
     else if (this.state == "editing")
     {
         this.disableEditing();
         this.et.nodeValue = "start editing";
         this.rbtn.disabled = false;
-        this.state = "stretched";
         this.ebtn.disabled = true;
+        this.setState("stretched");
     }
 }
 
@@ -144,11 +148,12 @@ StretchWidget.prototype.enable = function()
     
     this.ebtn.disabled = false;
     this.rbtn.disabled = false;
-    this.state = "enabled";
+    this.setState("enabled");
 }
 
 StretchWidget.prototype.disable = function()
 {
+    console.log("disabled clicked");
     this.svg.selectAll("*").remove();
     
     this.svg.classed('sw-enabled', false);    
@@ -158,7 +163,7 @@ StretchWidget.prototype.disable = function()
     
     this.ebtn.disabled = true;
     this.rbtn.disabled = true;    
-    this.state = "disabled";
+   // this.setState("disabled");
 }
 
 StretchWidget.prototype.drawGrid = function(maxSource, minTarget, maxTarget)
@@ -363,9 +368,9 @@ StretchWidget.prototype.startStretchAnimations = function(name, duration)
     this.instructions = pts;
     
     if (name == "identity")
-        this.state = "unstretching";
+        this.setState("unstretching");
     else
-        this.state = "stretching";
+        this.setState("stretching");
     
     this.rbtn.disabled = true;
     this.ebtn.disabled = true;
@@ -416,17 +421,15 @@ StretchWidget.prototype.update = function(delta)
     {
         if (this.state == "stretching")
         {
-            this.state = "stretched";
-            //this.surface.setStretched(true);
             this.ebtn.disabled = true;
             this.rbtn.disabled = false;   
+            this.setState("stretching");
         }
         else if (this.state == "unstretching")
         {
-            this.state = "enabled";
-            //this.surface.setStretched(false);
             this.ebtn.disabled = false;
-            this.rbtn.disabled = false;            
+            this.rbtn.disabled = false;
+            this.setState("enabled");
         }
     }
 }
