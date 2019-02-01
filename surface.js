@@ -750,6 +750,7 @@ Surface.prototype.toggleRoll = function()
 	}
     else if (this.state == "Flattened")
 	{
+        this.stretchWidget.disable();
         this.roll();
     }
 }

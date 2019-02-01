@@ -81,6 +81,7 @@ function StretchWidget(graphContainer, controlsContainer, maxSource, minTarget, 
 
 StretchWidget.prototype.setState = function(state)
 {
+    console.log(state);
     if (this.state == state)
         return
 
@@ -423,7 +424,7 @@ StretchWidget.prototype.update = function(delta)
         {
             this.ebtn.disabled = true;
             this.rbtn.disabled = false;   
-            this.setState("stretching");
+            this.setState("stretched");
         }
         else if (this.state == "unstretching")
         {

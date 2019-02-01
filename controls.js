@@ -398,8 +398,6 @@ Controls.prototype.flattenedToRolled = function(roll)
 	{
 		rollButton.removeAttribute("disabled");
 	}
-    
-    this.stretchWidget.disable();
 }
 
 
