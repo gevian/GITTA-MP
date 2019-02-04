@@ -27,26 +27,32 @@ TutorialControls.prototype.moveCameraToProjectionCenter = function()
 
 TutorialControls.prototype.constructCylinder = function()
 {	
-	var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 4};
-	var axisBoxInstruction = {slider: this.controls.axisBox, target: 4};
+	var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 1};
+	var lowerRadiusBoxInstruction = {slider: this.controls.lowerRadiusBox, target: 1};
+	var axisBoxInstruction = {slider: this.controls.axisBox, target: 2};
+	var geometryOffsetBoxInstruction = {slider: this.controls.geometryOffsetBox, target:0};
 	
-	this.animator.startSliderAnimations([upperRadiusBoxInstruction, axisBoxInstruction], this.animationTime);
+	this.animator.startSliderAnimations([upperRadiusBoxInstruction, axisBoxInstruction, geometryOffsetBoxInstruction, lowerRadiusBoxInstruction], this.animationTime);
 }
 
 TutorialControls.prototype.constructCone = function()
 {
 	var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 0.01};
+	var lowerRadiusBoxInstruction = {slider: this.controls.lowerRadiusBox, target: 2};
 	var axisBoxInstruction = {slider: this.controls.axisBox, target: 4};
+    var geometryOffsetBoxInstruction = {slider: this.controls.geometryOffsetBox, target: 0};
 	
-	this.animator.startSliderAnimations([upperRadiusBoxInstruction, axisBoxInstruction], this.animationTime);
+	this.animator.startSliderAnimations([upperRadiusBoxInstruction, lowerRadiusBoxInstruction, axisBoxInstruction, geometryOffsetBoxInstruction], this.animationTime);
 }
 
 TutorialControls.prototype.constructFrustum = function()
 {
-	var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target:2};
+	var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 0.5};
+	var lowerRadiusBoxInstruction = {slider: this.controls.lowerRadiusBox, target: 2};
 	var axisBoxInstruction = {slider: this.controls.axisBox, target: 4};
+    var geometryOffsetBoxInstruction = {slider: this.controls.geometryOffsetBox, target: 0};
 	
-	this.animator.startSliderAnimations([upperRadiusBoxInstruction, axisBoxInstruction], this.animationTime);
+	this.animator.startSliderAnimations([upperRadiusBoxInstruction, lowerRadiusBoxInstruction, axisBoxInstruction, geometryOffsetBoxInstruction], this.animationTime);
 }
 
 
@@ -168,7 +174,7 @@ TutorialControls.prototype.setProjection = function(name)
 		var lonBoxInstruction = {slider: this.controls.lonBox, target: 0};
 		var rotBoxInstruction = {slider: this.controls.rotBox, target:0};
 		
-		var axisBoxInstruction = {slider: this.controls.axisBox, target:4};
+		var axisBoxInstruction = {slider: this.controls.axisBox, target:8};
 		var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 1};
 		var lowerRadiusBoxInstruction = {slider: this.controls.lowerRadiusBox, target: 1};
 		

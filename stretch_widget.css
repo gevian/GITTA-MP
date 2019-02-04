@@ -45,8 +45,8 @@
 
 .stretch-point {
   stroke-width: 1;
-  stroke: black;
-  fill-opacity: 0.0;
+  fill: #0078d7;
+  fill-opacity: 1.0;
 }
 
 .stretch_path{

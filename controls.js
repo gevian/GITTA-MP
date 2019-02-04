@@ -387,6 +387,13 @@ Controls.prototype.flattenedToRolled = function(roll)
 		tutButtons[i].removeAttribute("disabled");
 	}
 	
+	var tutButtonsScaling = document.querySelectorAll(".tut-button-scaling button");
+	
+	for(var i = 0; i < tutButtonsScaling.length; i++) {
+		tutButtonsScaling[i].setAttribute("disabled", "disabled");
+	}
+    
+    
 	document.getElementById("reset-button").removeAttribute("disabled");
 	document.getElementById("remove-line-button").removeAttribute("disabled");
 	var rollButton = document.getElementById("roll-button");
@@ -411,6 +418,13 @@ Controls.prototype.rolledToFlattened = function(roll)
 		tutButtons[i].setAttribute("disabled", "disabled");
 	}
 
+	var tutButtonsScaling = document.querySelectorAll(".tut-button-scaling button");
+	
+	for(var i = 0; i < tutButtonsScaling.length; i++) {
+		tutButtonsScaling[i].removeAttribute("disabled");
+	}
+    
+    
 	document.getElementById("reset-button").setAttribute("disabled", "disabled");
 	document.getElementById("remove-line-button").setAttribute("disabled", "disabled");
 	var rollButton = document.getElementById("roll-button");

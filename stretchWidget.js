@@ -81,7 +81,6 @@ function StretchWidget(graphContainer, controlsContainer, maxSource, minTarget, 
 
 StretchWidget.prototype.setState = function(state)
 {
-    console.log(state);
     if (this.state == state)
         return
 
@@ -154,7 +153,6 @@ StretchWidget.prototype.enable = function()
 
 StretchWidget.prototype.disable = function()
 {
-    console.log("disabled clicked");
     this.svg.selectAll("*").remove();
     
     this.svg.classed('sw-enabled', false);    
@@ -199,21 +197,21 @@ StretchWidget.prototype.drawGrid = function(maxSource, minTarget, maxTarget)
         .style("font-size", "16px") 
         .text("target")
         
-	this.svg.append("g")
+	this.xAxis = this.svg.append("g")
 	  .attr("class", "axis")
 	  .attr("transform", "translate(" + 0 + ", " + this.widgetHeight + ")")
 	  .call(xAxis)
 
-	this.svg.append("g")
+	this.yAxis = this.svg.append("g")
 	  .attr("class", "axis")
 	  .call(yAxis);
 	  
-	this.svg.append("g")
+	this.yLine = this.svg.append("g")
 	  .attr("class", "axis")
 	  .attr("transform", "translate(" + this.widgetWidth + ", " + 0 + ")")
 	  .call(yLine)
 
-	this.svg.append("g")
+	this.xLine = this.svg.append("g")
 	  .attr("class", "axis")
 	  .call(xLine);
 }
@@ -242,7 +240,12 @@ StretchWidget.prototype.setStretchPoints = function(stretchPoints)
       })
       .attr('r', this.stretchPointSize);
 
-  
+      
+    this.xAxis.moveToBack();
+    this.yAxis.moveToBack();
+    this.xLine.moveToBack();
+    this.yLine.moveToBack();
+    
     var stretchInstructions = [];
     for (var i = 0; i < this.numStretchPoints+1; i++)
     {

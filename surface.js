@@ -572,7 +572,6 @@ Surface.prototype.rollAnimated = function(t)
 
 Surface.prototype.receiveSignal = function(name, data)
 {   
-    console.log(name, data);
     if (name == "stretch changed")
     {
         this.scale(data);
