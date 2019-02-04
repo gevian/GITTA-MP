@@ -126,12 +126,12 @@ var fragmentShaderSource = `
 			
             gl_FragColor = vec4(color.rgb, opacity);
             
-            /* very simple intersection indicator
-            float l = length(globalPositionRolled.xyz);
-            if (l > 0.999 && l < 1.001)
+            // very simple intersection indicator
+            /*float l = length(globalPositionRolled.xyz);
+            if (l > 0.99 && l < 1.01)
                 gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-
             */
+            
             
             //gl_FragColor = vec4(l, 0.0, 0.0, 1.0);
             
