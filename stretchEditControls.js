@@ -1,3 +1,25 @@
+/*
+Copyright (C) 2019 Magnus Heitzler
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/  
+
+/*
+Parts of this code are based on the Transfer Function Widget 1.0 by © 2015 Qingya Shu (GPL v2).
+http://vis.pku.edu.cn/people/qingyashu/tools/tfwidget/ (05.02.2019)
+*/
+
 function StretchEditControls(stretchWidget)
 {    
     this.stretchWidget = stretchWidget;
@@ -34,7 +56,7 @@ function StretchEditControls(stretchWidget)
         var mousePos = d3.mouse(this);
         switch (d3.event.which) {
           case 1:
-            _this.appendControlPoint( mousePos[0], mousePos[1]);
+            _this.addControlPoint( mousePos[0], mousePos[1]);
         }
       })
 }
@@ -387,7 +409,7 @@ StretchEditControls.prototype.drawHandleLines = function() {
 }
 
 
-StretchEditControls.prototype.appendControlPoint = function(source, target) {
+StretchEditControls.prototype.addControlPoint = function(source, target) {
     var p = this.stretchWidget.diagram2normalized({source: source, target: target});
     
     // invalid point location

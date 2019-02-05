@@ -1,11 +1,31 @@
+/*
+Copyright (C) 2019 Magnus Heitzler
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/  
+
+/*
+Parts of this code are based on the d3-extended library (MIT).
+https://github.com/wbkd/d3-extended (05.02.2019)
+*/
 function StretchWidget(graphContainer, controlsContainer, maxSource, minTarget, maxTarget)
 {
     if (maxSource == undefined) maxSource =  2.0;
     if (minTarget == undefined) minTarget = -4.0;
     if (maxTarget == undefined) maxTarget =  4.0;
     
-    // https://github.com/wbkd/d3-extended
-    // http://bl.ocks.org/eesur/4e0a69d57d3bfc8a82c2
+    // 
     d3.selection.prototype.moveToBack = function() {  
       return this.each(function() { 
           var firstChild = this.parentNode.firstChild; 
