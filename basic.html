@@ -84,14 +84,42 @@
                   <td>graticule</td>
                   <td><input type="checkbox" id="graticule-checkbox" checked=""><br></td>
                  </tr>
-                 <tr>
+                 <tr style="display:none">
                   <td>Tissots indicatrices</td>
                   <td><input type="checkbox" id="tissot-checkbox" checked=""><br></td>
                  </tr>
+                 
               </table>
             </fieldset>
           </form>
-            
+          <form style="font-weight: normal; display:none" id="lightsource">
+            <fieldset class="centered">
+              <b>light source</b>
+              <br>
+              <table>
+             <tr>
+              <td class="controls-label">relative latitude</td>
+              <td><input id="lightsource_latitude_slider" class="slider" type="range"  min="-180" max="180"  step="1" value="0"/></td>
+              <td><input id="lightsource_latitude_box"    class="box"    type="number"  min="-180" max="180" step="1" value="0"/></td>
+             </tr>
+             <tr>
+              <td class="controls-label">relative longitude</td>
+              <td><input id="lightsource_longitude_slider" class="slider" type="range"  min="-180" max="180"  step="1" value="0"/></td>
+              <td><input id="lightsource_longitude_box"    class="box"    type="number"  min="-180" max="180" step="1" value="0"/></td>
+             </tr>
+             <tr>
+              <td class="controls-label">offset</td>
+              <td><input id="lightsource_offset_slider" class="slider" type="range"  min="-2"   max="2"   step="0.01" value="0"/></td>
+              <td><input id="lightsource_offset_box"    class="box"    type="number" min="-100" max="100" step="0.01" value="0"/></td>
+             </tr>
+             <tr>
+              <td class="controls-label">scale</td>
+              <td><input id="lightsource_scale_slider" class="slider" type="range"  min="0.01"   max="2"   step="0.01" value="0"/></td>
+              <td><input id="lightsource_scale_box"    class="box"    type="number" min="0.01"   max="100" step="0.01" value="0"/></td>
+             </tr>
+              </table>
+            </fieldset>
+          </form>
           </form>
               <button type="button" id="reset-button" onclick="tutorialControls.resetControls()">reset</button>
               <button type="button" id="remove-line-button" onclick="lineProjector.disableLines()">remove line</button>
@@ -141,7 +169,12 @@
         
 		var tutorialControls = new TutorialControls(controls, sliderAnimator, stretchWidget, projectionCenter, glcanvas);
 		controls.reset();
-		
+		controls.lightSourceScaleBox.value = 0.01;
+        controls.lightSourceScaleBox.oninput();
+        controls.tissotCheckbox.checked = false;
+        controls.tissotCheckbox.onclick();
+        controls.radiusSlider.oninput();
+        
 		var clock  = new THREE.Clock();
 		
 		var animate = function () {

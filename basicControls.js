@@ -16,7 +16,10 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
  
 	this.radiusSlider         = document.getElementById("radius_slider");
 	this.radiusBox            = document.getElementById("radius_box");
- 
+
+	this.lightSourceOffsetSlider    = document.getElementById("lightsource_offset_slider");
+	this.lightSourceOffsetBox       = document.getElementById("lightsource_offset_box");
+
 	this.axisSlider           = document.getElementById("axis_slider");
 	this.upperRadiusSlider    = document.getElementById("upper_radius_slider");
 	this.lowerRadiusSlider    = document.getElementById("lower_radius_slider");
@@ -27,19 +30,36 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
 	this.lowerRadiusBox       = document.getElementById("lower_radius_box");
 	this.geometryOffsetBox    = document.getElementById("geometry_offset_box");
 
-	
+	this.lightSourceScaleSlider     = document.getElementById("lightsource_scale_slider");
+	this.lightSourceScaleBox        = document.getElementById("lightsource_scale_box");
+    
+    this.bordersCheckbox   = document.getElementById("borders-checkbox");
+	this.graticuleCheckbox = document.getElementById("graticule-checkbox");
+	this.tissotCheckbox    = document.getElementById("tissot-checkbox");
+    
+	this.bordersCheckbox.onclick   = bordersChanged;
+	this.graticuleCheckbox.onclick = graticuleChanged;
+	this.tissotCheckbox.onclick    = tissotChanged;
+    
+    this.radiusSlider.oninput = radiusSliderChanged;
 	this.positionSlider.oninput = positionSliderChanged;
 	this.axisSlider.oninput = axisSliderChanged;
 	this.upperRadiusSlider.oninput = upperRadiusSliderChanged;
 	this.lowerRadiusSlider.oninput = lowerRadiusSliderChanged;
 	this.geometryOffsetSlider.oninput = geometryOffsetSliderChanged;
 
+    this.radiusBox.oninput = radiusBoxChanged;
 	this.positionBox.oninput = positionBoxChanged;	
 	this.axisBox.oninput = axisBoxChanged;
 	this.upperRadiusBox.oninput = upperRadiusBoxChanged;
 	this.lowerRadiusBox.oninput = lowerRadiusBoxChanged;
 	this.geometryOffsetBox.oninput = geometryOffsetBoxChanged;
 	
+	this.lightSourceScaleSlider.oninput = lightSourceScaleSliderChanged;
+	this.lightSourceScaleBox.oninput    = lightSourceScaleBoxChanged;
+	
+    this.lightSourceOffsetSlider.oninput = lightSourceOffsetSliderChanged;
+	this.lightSourceOffsetBox.oninput    = lightSourceOffsetBoxChanged;
     
 	this.rollButton = document.getElementById("roll-button");
 	this.rollButton.onclick = rollClicked;
@@ -51,15 +71,12 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
 	}
         
 
-    
-	function positionSliderChanged(event) {
-	   _this.positionBox.oninput = null;
-	   _this.positionBox.value = _this.positionSlider.value;
-	   _this.positionBox.oninput = positionBoxChanged;
-       
-       var v = _this.positionSlider.value;
+        
+    function computeGeometryValues()
+    {
+       var v = 1 - _this.positionSlider.value;
        var r = _this.radiusSlider.value;
-              
+       
        var v_radius = ((1-v) * Math.PI);
        var x = Math.sin(v_radius) * r;
        var y = Math.cos(v_radius) * r;       
@@ -77,15 +94,11 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
        {
            var alpha = Math.atan2(x, y);
            var intersection_y = r / Math.cos(alpha);
-           console.log(intersection_y);
            
            var y_vec1_red = y_vec1 - intersection_y;
            
-
-           console.log(y_vec2);
            x_vec2 -= x_vec1;
            y_vec2 -= y_vec1_red;
-           console.log(y_vec2);       
            
            x_vec1 = 0;
            y_vec1 = intersection_y;
@@ -95,14 +108,11 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
        {
            var alpha = Math.atan2(x, y);
            var intersection_y = r / Math.cos(alpha);
-           console.log(intersection_y);
            
            var y_vec2_red = y_vec2 - intersection_y;
            
-           console.log(y_vec1);
            x_vec1 -= x_vec2;
            y_vec1 -= y_vec2_red;
-           console.log(y_vec1);       
            
            x_vec2 = 0;
            y_vec2 = intersection_y;
@@ -122,7 +132,15 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
        _this.lowerRadiusSlider.oninput();
        _this.upperRadiusSlider.oninput();
        _this.geometryOffsetSlider.oninput();
+    }    
+        
+    
+	function positionSliderChanged(event) {
+	   _this.positionBox.oninput = null;
+	   _this.positionBox.value = _this.positionSlider.value;
+	   _this.positionBox.oninput = positionBoxChanged;
        
+       computeGeometryValues();
 	}
 	
 	function positionBoxChanged(event) {
@@ -130,24 +148,25 @@ function Controls(canvas, earth, surface, stretchWidget, projectionCenter, cutIn
 	   _this.positionSlider.value = _this.positionBox.value;
 	   _this.positionSlider.oninput = positionSliderChanged;
        
-       var v = _this.positionSlider.value;
-       
-       var ur = 2 * v;
-       var lr = 2 * (1 - v);
-       var a  = 2 * ((-Math.abs(v-0.5)) + 1)
-       
-       _this.axisSlider.value = a;
-       _this.upperRadiusSlider.value = ur;
-       _this.lowerRadiusSlider.value = lr;
-       _this.geometryOffsetSlider.value = o;
-       
-       _this.axisSlider.oninput();
-       _this.lowerRadiusSlider.oninput();
-       _this.upperRadiusSlider.oninput();
-       _this.geometryOffsetSlid.oninput();
+       computeGeometryValues();
 	}
         
-        
+	function radiusSliderChanged(event) {
+	   _this.radiusBox.oninput = null;
+	   _this.radiusBox.value = _this.radiusSlider.value;
+	   _this.radiusBox.oninput = radiusBoxChanged;
+       
+       computeGeometryValues();
+	}
+	
+	function radiusBoxChanged(event) {
+	   _this.radiusSlider.oninput = null;
+	   _this.radiusSlider.value = _this.radiusBox.value;
+	   _this.radiusSlider.oninput = radiusSliderChanged;
+       
+       computeGeometryValues();
+	}
+    
 	function orientationSliderChanged(event) {
 	   _this.latBox.oninput = null;
 	   _this.lonBox.oninput = null;
