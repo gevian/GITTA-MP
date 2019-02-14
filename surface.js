@@ -104,9 +104,16 @@ var fragmentShaderSource = `
 		float d1 = a + c;
 		float d2 = a - c;
 		
-		float d = max(d1, d2);
-		
-		return origin + d * dir_vector;
+        
+        vec3 p1 = origin + d1 * dir_vector;
+        vec3 p2 = origin + d2 * dir_vector;        
+        
+        if (distance(p1, fragment_location) < distance(p2, fragment_location))
+        {
+            return p1;
+        }
+        
+        return p2;
 	}
 	
 	
@@ -195,7 +202,7 @@ function Surface(scene, renderer, earth, stretchWidget) {
 	this.stretchWidget.addCallback(this.receiveSignal.bind(this));
     
 	this.state = "Initializing";
-	
+	this.showWireframe = false;
     
     // simplified cylinder geometry adapted from https://github.com/mrdoob/three.js/blob/master/src/geometries/CylinderGeometry.js
     this.bufferGeometry = new THREE.BufferGeometry();
@@ -204,6 +211,9 @@ function Surface(scene, renderer, earth, stretchWidget) {
     
     this.topRadius = 1.0;
     this.bottomRadius = 1.0;
+    
+    //var segmentsRadial = 30;
+    //var segmentsHeight = 10;
     
     var segmentsRadial = 100;
     var segmentsHeight = 50;
@@ -311,14 +321,34 @@ function Surface(scene, renderer, earth, stretchWidget) {
 												vertexShader: vertexShaderSource,
 												fragmentShader: fragmentShaderSource,
 												side: THREE.DoubleSide,
-												transparent: false
+												transparent: false,
+                                                polygonOffset: true,
+                                                depthTest: true,
+                                                polygonOffsetFactor: 2,
+                                                polygonOffsetUnits: -1
                                 } );
                                 
 	this.mesh = new THREE.Mesh( this.bufferGeometry, this.material );	
     
+    if (this.showWireframe)
+    {
+        this.bufferGeometryWireframe = new THREE.BufferGeometry();
+        this.bufferGeometryWireframe.setIndex( indices );
+        this.bufferGeometryWireframe.addAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(this.bufferGeometry.attributes.position.array), 3))
+        this.bufferGeometryWireframe.computeVertexNormals();
+        
+        this.geo = new THREE.WireframeGeometry( this.bufferGeometryWireframe ); // or WireframeGeometry( geometry )
+        this.mat = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 4 } );
+        this.wireframe = new THREE.LineSegments( this.geo, this.mat );
+    }
+    
     this.earthCenter = new THREE.Object3D();
 	
     this.earthCenter.add(this.mesh);
+    if (this.showWireframe)
+    {
+        this.mesh.add(this.wireframe);
+    }
 	this.scene.add(this.earthCenter);	
 	
 	this.updateGeometry();
@@ -343,6 +373,22 @@ Surface.prototype.updateGeometry = function()
 	var n2 = this.stripes[1].getNormal();
 	
 	this.angle = -n2.angleTo(n1);
+    
+    this.updateWireframe();
+}
+
+Surface.prototype.updateWireframe = function()
+{	
+    if (this.showWireframe)
+    {
+        this.mesh.remove(this.wireframe);
+        this.bufferGeometryWireframe.attributes.position.array.set(this.bufferGeometry.attributes.position.array);
+        this.bufferGeometryWireframe.attributes.position.needsUpdate = true;
+        this.geo = new THREE.WireframeGeometry( this.bufferGeometryWireframe ); // or WireframeGeometry( geometry )
+        this.mat = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 4, depthWrite: true } );
+        this.wireframe = new THREE.LineSegments( this.geo, this.mat );
+        this.mesh.add(this.wireframe);
+    }
 }
 
 Surface.prototype.setOrientation = function(lat, lon, rot)
@@ -506,7 +552,8 @@ Surface.prototype.flattenAnimated = function(t)
 	
 	
 	this.bufferGeometry.attributes.position.needsUpdate = true;
-	
+    this.updateWireframe();
+    
 	if (end == this.stripes.length)
 	{
 		return true;
@@ -573,6 +620,7 @@ Surface.prototype.rollAnimated = function(t)
 	}
 	
 	this.bufferGeometry.attributes.position.needsUpdate = true;
+    this.updateWireframe();
     
 	if (end == 0)
 	{
@@ -687,7 +735,7 @@ Surface.prototype.scale = function(targets)
     }
 
     this.bufferGeometry.attributes.position.needsUpdate = true;
-
+    this.updateWireframe();
 }
 
 Surface.prototype.prepareStretching = function()

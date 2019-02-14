@@ -47,7 +47,7 @@ var fragmentShaderEarth = `
 
 function Earth(scene, renderer) {
     var maxAnisotropy = renderer.getMaxAnisotropy();
-    this.countriesTexture = new THREE.TextureLoader().load('images/Countries.png');
+    this.countriesTexture = new THREE.TextureLoader().load('images/Countries-Pale.png');
     this.countriesTexture.magFilter = THREE.LinearFilter;
     this.countriesTexture.minFilter = THREE.LinearMipMapLinearFilter
     this.countriesTexture.anisotropy = maxAnisotropy;

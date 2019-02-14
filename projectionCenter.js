@@ -40,7 +40,7 @@ ProjectionCenter.prototype.reconstructTorus = function(scale)
 	}
 	
 	this.torus = new THREE.Mesh(new THREE.TorusGeometry( this.scale, 0.1, 16, 32 ),
-								new THREE.MeshBasicMaterial({color: 0xffff00}));
+								new THREE.MeshBasicMaterial({color: 0xffff00, transparent: false, opacity: 1.0}));
 								
 	this.torus.rotation.x = Math.PI / 2.0;
 	this.lightCenter.add(this.torus);
