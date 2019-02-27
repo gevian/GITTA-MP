@@ -113,7 +113,7 @@
             </fieldset>
           </form>
              <div class="centered">
-              <button type="button" id="reset-button" onclick="tutorialControls.resetControls()">reset</button>
+              <button type="button" id="reset-button" onclick="tutorialControls.resetControls(1, 'advanced')">reset</button>
               <button type="button" id="remove-line-button" onclick="lineProjector.disableLines()">remove line</button>
               <button type="button" id="roll-button" onclick="rollPressed()">flatten</button>
             </div>
@@ -151,7 +151,7 @@
         
         In the simplest case, the map surface is directly represented as a flat plane as shown by default when opening this web application. If the settings were changed, you can click the button below to reset them.
           <div class="tut-button">
-            <button onclick="tutorialControls.resetControls()">Reset</button>
+            <button onclick="tutorialControls.resetControls(1, 'advanced')">Reset</button>
           </div>
         As you can see, the projection surface is currently a flat disk, touching the earth at the North Pole. The projection center is located at the center of the earth, represented as a yellow sphere. The earth can be imagined as a sphere of coloured glass, effectively coloring each ray that passes through its surface. The rays then paint the projection surface according to their color.
         <br>
@@ -174,7 +174,7 @@
             
             Typically, three different projection surfaces are used: The plane, the cone and the cylinder. A projection based on the plane is shown by default when starting this web application. If the settings have been modified, you can use the following button to enable the default settings.
                 <div class="tut-button">
-                <button onclick="tutorialControls.resetControls()">Reset</button>
+                <button onclick="tutorialControls.resetControls(1, 'advanced')">Reset</button>
                 </div>
             Adjust the "lat" and "lon" values under the "orientation" section of the controls panel to investigate how different positions of the plane affect the resulting projection. Use the buttons below to construct a cone and a cylinder, respectively.
             
@@ -308,8 +308,7 @@
                 </div>  
             </div>
        <div id="tut3" class="tabcontent">
-            In this segment, we will briefly discuss some named map projections. These projections form the class of the so-called "true perspective projections" and are the only common projections that can be constructed using this web application.
-            
+            In this segment, we will briefly discuss some named map projections.          
             Maybe the most simple map projection one can imagine is the gnomonic azimuthal map projection, which is also the default setting in this web application. In this case, the projection surface is the plane touch the North Pole and the light source is located at the center of the earth. Use the following button to construct this map projection:
         
             <div class="tut-button">
@@ -337,12 +336,13 @@
             <button onclick="tutorialControls.setProjection('vertical perspective azimuthal far side')">Vertical perspective Azimuthal, far-side</button>
             </div>
             
+            <!--
             A rather special case of map projection is the so-called oblique perspective non-azimuthal perspective, in which case the surface orientation the vector between the light source and the earth's center is not perpendicular to the projection surface.
             
             <div class="tut-button">
             <button onclick="tutorialControls.setProjection('oblique perspective non-azimuthal')">Oblique perspective non-Azimuthal</button>
             </div>
-            
+            -->
             The only common cylindrical projection constructable with this tool is the central cylindrical projection. In this case, the light source is directly positioned in the center of the earth and the cylinder is touching the earth's surface along a great circle.
             Based on the central cylindrical projection, it is possible to construct the Mercator projection by scaling the flattened map.
             <div class="tut-button">
@@ -414,7 +414,7 @@
         
 		var tutorialControls = new TutorialControls(controls, sliderAnimator, stretchWidget, projectionCenter, glcanvas);
 		controls.reset();
-        tutorialControls.resetControls(0.01);
+        tutorialControls.resetControls(0.01, 'advanced');
 		
 		var clock  = new THREE.Clock();
 		
