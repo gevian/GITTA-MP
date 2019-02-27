@@ -20,9 +20,11 @@ function ProjectionCenter(scene) {
 								 new THREE.MeshBasicMaterial({color: 0xffff00}));
 	
 	this.earthCenter = new THREE.Object3D();
+    this.lightAnchor = new THREE.Object3D();
 	this.lightCenter = new THREE.Object3D();
 	
-	this.earthCenter.add(this.lightCenter);
+	this.earthCenter.add(this.lightAnchor);
+	this.lightAnchor.add(this.lightCenter);
 	//this.lightCenter.add(this.sphere);
 	
 	this.reconstructTorus(1);
@@ -66,12 +68,12 @@ ProjectionCenter.prototype.setOffset = function(offset)
 
 ProjectionCenter.prototype.setLatitude = function(rotation)
 {
-	this.lightCenter.rotation.z = rotation;
+	this.lightAnchor.rotation.z = rotation;
 }
 
 ProjectionCenter.prototype.setLongitude = function(rotation)
 {
-	this.lightCenter.rotation.y = rotation;
+	this.lightAnchor.rotation.y = rotation;
 }
 
 
