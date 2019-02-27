@@ -299,36 +299,56 @@ TutorialControls.prototype.setProjection = function(name)
 
 
 
-TutorialControls.prototype.resetControls = function(duration)
+TutorialControls.prototype.resetControls = function(duration, type)
 {
     if (duration == undefined)
         duration = 1
     
-	this.controls.bordersCheckbox.checked = true;
-	this.controls.bordersCheckbox.onclick();
-
-	this.controls.graticuleCheckbox.checked = true;
-	this.controls.graticuleCheckbox.onclick();
-
-	this.controls.tissotCheckbox.checked = false;
-	this.controls.tissotCheckbox.onclick();
-
+    if (type == undefined)
+        type = "basic"
     
-	var latBoxInstruction = {slider: this.controls.latBox, target:90};
-	var lonBoxInstruction = {slider: this.controls.lonBox, target: 0};
-	var rotBoxInstruction = {slider: this.controls.rotBox, target: 0};
-	
-	var axisBoxInstruction = {slider: this.controls.axisBox, target:0};
-	var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 0.01};
-	var lowerRadiusBoxInstruction = {slider: this.controls.lowerRadiusBox, target: 4};
-	
-	var geometryOffsetBoxInstruction = {slider: this.controls.geometryOffsetBox, target:1};
-	var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 0};
-	var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
-	var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
-	var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
-	
-	this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], duration);
+    if (type == "advanced")
+    {
+        this.controls.bordersCheckbox.checked = true;
+        this.controls.bordersCheckbox.onclick();
+
+        this.controls.graticuleCheckbox.checked = true;
+        this.controls.graticuleCheckbox.onclick();
+
+        this.controls.tissotCheckbox.checked = false;
+        this.controls.tissotCheckbox.onclick();
+
+        
+        var latBoxInstruction = {slider: this.controls.latBox, target:90};
+        var lonBoxInstruction = {slider: this.controls.lonBox, target: 0};
+        var rotBoxInstruction = {slider: this.controls.rotBox, target: 0};
+        
+        var axisBoxInstruction = {slider: this.controls.axisBox, target:0};
+        var upperRadiusBoxInstruction = {slider: this.controls.upperRadiusBox, target: 0.01};
+        var lowerRadiusBoxInstruction = {slider: this.controls.lowerRadiusBox, target: 4};
+        
+        var geometryOffsetBoxInstruction = {slider: this.controls.geometryOffsetBox, target:1};
+        var lightSourceOffsetBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 0};
+        var lightSourceLatitudeBoxInstruction = {slider: this.controls.lightSourceLatitudeBox, target: 0};
+        var lightSourceLongitudeBoxInstruction = {slider: this.controls.lightSourceLongitudeBox, target: 0};
+        var lightSourceScaleBoxInstruction = {slider: this.controls.lightSourceScaleBox, target: 0.01};
+        
+        this.animator.startSliderAnimations([latBoxInstruction, lonBoxInstruction, rotBoxInstruction, axisBoxInstruction, upperRadiusBoxInstruction, lowerRadiusBoxInstruction, geometryOffsetBoxInstruction, lightSourceOffsetBoxInstruction, lightSourceLatitudeBoxInstruction, lightSourceLongitudeBoxInstruction, lightSourceScaleBoxInstruction], duration);
+    }
+    else
+    {
+        this.controls.bordersCheckbox.checked = true;
+        this.controls.bordersCheckbox.onclick();
+
+        this.controls.graticuleCheckbox.checked = true;
+        this.controls.graticuleCheckbox.onclick();
+        
+        var positionBoxInstruction = {slider: this.controls.positionBox, target:1};
+        var radiusBoxInstruction = {slider: this.controls.radiusBox, target: 1};
+        var lightSourceBoxInstruction = {slider: this.controls.lightSourceOffsetBox, target: 0};
+        
+        this.animator.startSliderAnimations([positionBoxInstruction, radiusBoxInstruction, lightSourceBoxInstruction], duration);
+    }
 }
 
 
