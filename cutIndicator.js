@@ -19,7 +19,7 @@ function CutIndicator(surface, scene) {
 	this.scene = scene;
 
     // sprite texture taken from https://en.wikipedia.org/wiki/File:Scissors_icon_black.svg
-    this.spriteMap = new THREE.TextureLoader().load( "images/Scissors_icon_black.svg.png" );
+    this.spriteMap = new THREE.TextureLoader().load( "images/scissors.png" );
     this.spriteMaterial = new THREE.SpriteMaterial( { map: this.spriteMap, color: 0xffffff } );
     this.sprite = new THREE.Sprite( this.spriteMaterial );
     this.sprite.scale.set(0.2, 0.2, 1)
