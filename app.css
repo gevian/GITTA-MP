@@ -53,6 +53,8 @@ vertical-align: middle;
     width: 600px;
     overflow-y:scroll;
     height: 1100px;
+	overflow-x: visible;
+	white-space: normal;
 }
             
 .tab {
@@ -96,6 +98,10 @@ vertical-align: middle;
 
 body {
   font-family: Helvetica;
+  overflow: auto;
+  white-space: nowrap;
+  transform: scale(0.6);
+  transform-origin: 0 0;
 }
 
 
