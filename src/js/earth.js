@@ -13,8 +13,9 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/  
-import * as THREE from 'three';
+*/
+
+import * as THREE from "three";
 
 var vertexShaderEarth = `
     varying vec2 vUv;
@@ -48,80 +49,74 @@ var fragmentShaderEarth = `
 `;
 
 function Earth(scene, renderer) {
-    var maxAnisotropy = renderer.getMaxAnisotropy();
-    this.countriesTexture = new THREE.TextureLoader().load('images/Countries.png');
-    this.countriesTexture.magFilter = THREE.LinearFilter;
-    this.countriesTexture.minFilter = THREE.LinearMipMapLinearFilter
-    this.countriesTexture.anisotropy = maxAnisotropy;
-    
-    this.tissotTexture    = new THREE.TextureLoader().load('images/Tissot.png');
-    this.tissotTexture.magFilter = THREE.LinearFilter;
-    this.tissotTexture.minFilter = THREE.LinearMipMapLinearFilter;    
-    this.tissotTexture.anisotropy = maxAnisotropy;
-    
-    this.graticuleTexture = new THREE.TextureLoader().load('images/Graticule.png');
-    this.graticuleTexture.magFilter = THREE.LinearFilter;
-    this.graticuleTexture.minFilter = THREE.LinearMipMapLinearFilter;   
-    this.graticuleTexture.anisotropy = maxAnisotropy;
-    
-    this.emptyTexture     = new THREE.TextureLoader().load('images/Empty.png');
-    
-	this.scene = scene;
-    
-    var uniforms = {
+  var maxAnisotropy = renderer.getMaxAnisotropy();
+  this.countriesTexture = new THREE.TextureLoader().load(
+    "images/Countries.png"
+  );
+  this.countriesTexture.magFilter = THREE.LinearFilter;
+  this.countriesTexture.minFilter = THREE.LinearMipMapLinearFilter;
+  this.countriesTexture.anisotropy = maxAnisotropy;
 
-      tCountries: { type: "t", value: this.countriesTexture },
-      tGraticule: { type: "t", value: this.graticuleTexture },
-      tTissot:    { type: "t", value: this.tissotTexture }
+  this.tissotTexture = new THREE.TextureLoader().load("images/Tissot.png");
+  this.tissotTexture.magFilter = THREE.LinearFilter;
+  this.tissotTexture.minFilter = THREE.LinearMipMapLinearFilter;
+  this.tissotTexture.anisotropy = maxAnisotropy;
 
-    };
+  this.graticuleTexture = new THREE.TextureLoader().load(
+    "images/Graticule.png"
+  );
+  this.graticuleTexture.magFilter = THREE.LinearFilter;
+  this.graticuleTexture.minFilter = THREE.LinearMipMapLinearFilter;
+  this.graticuleTexture.anisotropy = maxAnisotropy;
 
-    var blendMaterial = new THREE.ShaderMaterial({
+  this.emptyTexture = new THREE.TextureLoader().load("images/Empty.png");
 
-      uniforms: uniforms,
-      vertexShader: vertexShaderEarth,
-      fragmentShader: fragmentShaderEarth,
-      side: THREE.DoubleSide,
-      transparent: true
-      
-    });
+  this.scene = scene;
 
-	this.earthMesh =  new THREE.Mesh(
-                        new THREE.SphereGeometry(1.0, 128, 128),
-                        blendMaterial
-				  );
+  var uniforms = {
+    tCountries: { type: "t", value: this.countriesTexture },
+    tGraticule: { type: "t", value: this.graticuleTexture },
+    tTissot: { type: "t", value: this.tissotTexture }
+  };
 
-	this.scene.add(this.earthMesh);
+  var blendMaterial = new THREE.ShaderMaterial({
+    uniforms: uniforms,
+    vertexShader: vertexShaderEarth,
+    fragmentShader: fragmentShaderEarth,
+    side: THREE.DoubleSide,
+    transparent: true
+  });
+
+  this.earthMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(1.0, 128, 128),
+    blendMaterial
+  );
+
+  this.scene.add(this.earthMesh);
 }
 
-Earth.prototype.enableBordersTexture = function()
-{
-    this.earthMesh.material.uniforms.tCountries.value = this.countriesTexture;
-}
+Earth.prototype.enableBordersTexture = function() {
+  this.earthMesh.material.uniforms.tCountries.value = this.countriesTexture;
+};
 
-Earth.prototype.disableBordersTexture = function()
-{
-    this.earthMesh.material.uniforms.tCountries.value = this.emptyTexture;    
-}
+Earth.prototype.disableBordersTexture = function() {
+  this.earthMesh.material.uniforms.tCountries.value = this.emptyTexture;
+};
 
-Earth.prototype.enableGraticuleTexture = function()
-{
-    this.earthMesh.material.uniforms.tGraticule.value = this.graticuleTexture;
-}
+Earth.prototype.enableGraticuleTexture = function() {
+  this.earthMesh.material.uniforms.tGraticule.value = this.graticuleTexture;
+};
 
-Earth.prototype.disableGraticuleTexture = function()
-{
-    this.earthMesh.material.uniforms.tGraticule.value = this.emptyTexture;    
-}
+Earth.prototype.disableGraticuleTexture = function() {
+  this.earthMesh.material.uniforms.tGraticule.value = this.emptyTexture;
+};
 
-Earth.prototype.enableTissotTexture = function()
-{
-    this.earthMesh.material.uniforms.tTissot.value = this.tissotTexture;
-}
+Earth.prototype.enableTissotTexture = function() {
+  this.earthMesh.material.uniforms.tTissot.value = this.tissotTexture;
+};
 
-Earth.prototype.disableTissotTexture = function()
-{
-    this.earthMesh.material.uniforms.tTissot.value = this.emptyTexture;    
-}
+Earth.prototype.disableTissotTexture = function() {
+  this.earthMesh.material.uniforms.tTissot.value = this.emptyTexture;
+};
 
 export default Earth;

@@ -7,7 +7,7 @@
         <Basic />
     </template>
     <template v-else-if="mode == 'advanced'">
-        <!--<Advanced />-->
+        <Advanced />
     </template>
   </div>
 </template>
@@ -15,7 +15,7 @@
 <script>
 import Index from './components/Index.vue'
 import Basic from './components/Basic.vue'
-//import Advanced from './components/Advanced.vue'
+import Advanced from './components/Advanced.vue'
 
 export default {
   name: 'app',
@@ -26,7 +26,8 @@ export default {
   },
   components: {
     Index,
-    Basic
+    Basic,
+    Advanced
   },
   methods: {
     setMode(mode) {

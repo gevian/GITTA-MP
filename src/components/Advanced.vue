@@ -1,464 +1,812 @@
 <template>
   <div>
-    <h1>Advanced</h1>
-
-		<div id ="controls">
-        <header>
-        GITTA Map Projector
-        </header>
-          <form style="font-weight: normal" id="surface_geometry">
-            <fieldset id="geometry-fieldset" class="centered">
-            <b>geometry</b>
-            <br>
-            <table>
-             <tr>
+    <div id="controls">
+      <header>GITTA Map Projector</header>
+      <form style="font-weight: normal" id="surface_geometry">
+        <fieldset id="geometry-fieldset" class="centered">
+          <b>geometry</b>
+          <br>
+          <table>
+            <tr>
               <td class="controls-label">axis length</td>
-              <td><input id="axis_slider" class="slider" type="range"  min="0" max="8" step="0.01" value="1"/></td>
-              <td><input id="axis_box"    class="box"    type="number" min="0" max="8" step="0.01" value="1"/><br></td>
-             </tr>
-             <tr>
-              <td class="controls-label">upper radius</td>
-              <td><input id="upper_radius_slider" class="slider" type="range"  min="0.01" max="4" step="0.01" value="1"/></td>
-              <td><input id="upper_radius_box"    class="box"    type="number" min="0.01" max="4" step="0.01" value="1"/></td>
-             </tr>
-             <tr>
-              <td class="controls-label">lower radius</td>
-              <td><input id="lower_radius_slider" class="slider" type="range"  min="0.01" max="4" step="0.01" value="1"/></td>
-              <td><input id="lower_radius_box"    class="box"    type="number" min="0.01" max="4" step="0.01" value="1"/></td>
-             </tr>
-             <tr>
-              <td class="controls-label">offset</td>
-              <td><input id="geometry_offset_slider" class="slider" type="range"  min="-2" max="2" step="0.01" value="0"/></td>
-              <td><input id="geometry_offset_box"    class="box"    type="number" min="-2" max="2" step="0.01" value="0"/></td>
-             </tr>
-            </table>
-             </fieldset>
-          </form>
-          
-          <form style="font-weight: normal" id="surface_orientation">
-            <fieldset id="orientation-fieldset" class="centered">
-              <b>orientation</b>
-              <br>
-              <table>
-              <tr>
-                <td class="controls-label">latitude</td>
-                <td><input id="lat_slider" class="slider" type="range" min="-90" max="90" step="1" value="90"/></td>
-                <td><input id="lat_box"    class="box" type="number" min="-90" max="90" step="1" value="90"/><br></td>
-              </tr>
-              <tr>
-                <td class="controls-label">longitude</td>
-                <td><input id="lon_slider" class="slider" type="range" min="-180" max="180" step="1" value="0"/></td>
-                <td><input id="lon_box"    class="box" type="number" min="-180" max="180" step="1" value="0"/></td>
-              </tr>
-              <tr>
-                <td class="controls-label">rotation</td>
-                <td><input id="rot_slider" class="slider" type="range" min="-180" max="180" step="1" value="0"/></td>
-                <td><input id="rot_box"    class="box" type="number" min="-180" max="180" step="1" value="0"/></td>
-              </tr>
-              </table>
-            </fieldset>  
-          </form>
-          
-          <form style="font-weight: normal" id="lightsource">
-            <fieldset class="centered">
-              <b>light source</b>
-              <br>
-              <table>
-             <tr>
-              <td class="controls-label">relative latitude</td>
-              <td><input id="lightsource_latitude_slider" class="slider" type="range"  min="-180" max="180"  step="1" value="0"/></td>
-              <td><input id="lightsource_latitude_box"    class="box"    type="number"  min="-180" max="180" step="1" value="0"/></td>
-             </tr>
-             <tr>
-              <td class="controls-label">relative longitude</td>
-              <td><input id="lightsource_longitude_slider" class="slider" type="range"  min="-180" max="180"  step="1" value="0"/></td>
-              <td><input id="lightsource_longitude_box"    class="box"    type="number"  min="-180" max="180" step="1" value="0"/></td>
-             </tr>
-             <tr>
-              <td class="controls-label">offset</td>
-              <td><input id="lightsource_offset_slider" class="slider" type="range"  min="-2"   max="2"   step="0.01" value="0"/></td>
-              <td><input id="lightsource_offset_box"    class="box"    type="number" min="-100" max="100" step="0.01" value="0"/></td>
-             </tr>
-             <tr>
-              <td class="controls-label">scale</td>
-              <td><input id="lightsource_scale_slider" class="slider" type="range"  min="0.01"   max="2"   step="0.01" value="0"/></td>
-              <td><input id="lightsource_scale_box"    class="box"    type="number" min="0.01"   max="100" step="0.01" value="0"/></td>
-             </tr>
-              </table>
-            </fieldset>
-          </form>
-          
-          <form style="font-weight: normal" id="textures">
-            <fieldset class="centered">
-              <b>layers</b>
-              <br>
-              <table class="center-table">
-                 <tr>
-                  <td>borders</td>
-                  <td><input type="checkbox" id="borders-checkbox" checked=""><br></td>
-                 </tr>
-                 <tr>
-                  <td>graticule</td>
-                  <td><input type="checkbox" id="graticule-checkbox" checked=""><br></td>
-                 </tr>
-                 <tr>
-                  <td>Tissots indicatrices</td>
-                  <td><input type="checkbox" id="tissot-checkbox" checked=""><br></td>
-                 </tr>
-              </table>
-            </fieldset>
-          </form>
-             <div class="centered">
-              <button type="button" id="reset-button" onclick="tutorialControls.resetControls(1, 'advanced')">reset</button>
-              <button type="button" id="remove-line-button" onclick="lineProjector.disableLines()">remove line</button>
-              <button type="button" id="roll-button" onclick="rollPressed()">flatten</button>
-            </div>
-            <div id="sw-container">
+              <td>
+                <input
+                  id="axis_slider"
+                  class="slider"
+                  type="range"
+                  min="0"
+                  max="8"
+                  step="0.01"
+                  value="1"
+                >
+              </td>
+              <td>
+                <input
+                  id="axis_box"
+                  class="box"
+                  type="number"
+                  min="0"
+                  max="8"
+                  step="0.01"
+                  value="1"
+                >
                 <br>
-                <div class="centered"><b>scaling</b></div>
-                <div id="sw-graph"></div>
-                <div id="sw-controls"></div>
-            </div>
-		</div>
-		<div id="webgl_canvas"></div>
-		<div id="explanation">
-			 <!-- Tab links -->
-			<div class="tab">
-              <button id="tut1-button" class="tablinks" onclick="openTab('tut1-button', 'tut1')">Map Construction</button>
-              <button id="tut2-button" class="tablinks" onclick="openTab('tut2-button', 'tut2')">Projection Surfaces</button>
-			  <button id="tut4-button" class="tablinks" onclick="openTab('tut4-button', 'tut4')">Map Distortion Basics</button>
-			  <button id="tut5-button" class="tablinks" onclick="openTab('tut5-button', 'tut5')">Distortion Types</button>
-			  <button id="tut6-button" class="tablinks" onclick="openTab('tut6-button', 'tut6')">The Mercator Projection</button>
-              <button id="tut3-button" class="tablinks" onclick="openTab('tut3-button', 'tut3')">Map Projections</button>
-			</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="controls-label">upper radius</td>
+              <td>
+                <input
+                  id="upper_radius_slider"
+                  class="slider"
+                  type="range"
+                  min="0.01"
+                  max="4"
+                  step="0.01"
+                  value="1"
+                >
+              </td>
+              <td>
+                <input
+                  id="upper_radius_box"
+                  class="box"
+                  type="number"
+                  min="0.01"
+                  max="4"
+                  step="0.01"
+                  value="1"
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="controls-label">lower radius</td>
+              <td>
+                <input
+                  id="lower_radius_slider"
+                  class="slider"
+                  type="range"
+                  min="0.01"
+                  max="4"
+                  step="0.01"
+                  value="1"
+                >
+              </td>
+              <td>
+                <input
+                  id="lower_radius_box"
+                  class="box"
+                  type="number"
+                  min="0.01"
+                  max="4"
+                  step="0.01"
+                  value="1"
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="controls-label">offset</td>
+              <td>
+                <input
+                  id="geometry_offset_slider"
+                  class="slider"
+                  type="range"
+                  min="-2"
+                  max="2"
+                  step="0.01"
+                  value="0"
+                >
+              </td>
+              <td>
+                <input
+                  id="geometry_offset_box"
+                  class="box"
+                  type="number"
+                  min="-2"
+                  max="2"
+                  step="0.01"
+                  value="0"
+                >
+              </td>
+            </tr>
+          </table>
+        </fieldset>
+      </form>
 
-			<!-- Tab content -->
-        <div id="tut1" class="tabcontent">
+      <form style="font-weight: normal" id="surface_orientation">
+        <fieldset id="orientation-fieldset" class="centered">
+          <b>orientation</b>
+          <br>
+          <table>
+            <tr>
+              <td class="controls-label">latitude</td>
+              <td>
+                <input
+                  id="lat_slider"
+                  class="slider"
+                  type="range"
+                  min="-90"
+                  max="90"
+                  step="1"
+                  value="90"
+                >
+              </td>
+              <td>
+                <input
+                  id="lat_box"
+                  class="box"
+                  type="number"
+                  min="-90"
+                  max="90"
+                  step="1"
+                  value="90"
+                >
+                <br>
+              </td>
+            </tr>
+            <tr>
+              <td class="controls-label">longitude</td>
+              <td>
+                <input
+                  id="lon_slider"
+                  class="slider"
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value="0"
+                >
+              </td>
+              <td>
+                <input
+                  id="lon_box"
+                  class="box"
+                  type="number"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value="0"
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="controls-label">rotation</td>
+              <td>
+                <input
+                  id="rot_slider"
+                  class="slider"
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value="0"
+                >
+              </td>
+              <td>
+                <input
+                  id="rot_box"
+                  class="box"
+                  type="number"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value="0"
+                >
+              </td>
+            </tr>
+          </table>
+        </fieldset>
+      </form>
+
+      <form style="font-weight: normal" id="lightsource">
+        <fieldset class="centered">
+          <b>light source</b>
+          <br>
+          <table>
+            <tr>
+              <td class="controls-label">relative latitude</td>
+              <td>
+                <input
+                  id="lightsource_latitude_slider"
+                  class="slider"
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value="0"
+                >
+              </td>
+              <td>
+                <input
+                  id="lightsource_latitude_box"
+                  class="box"
+                  type="number"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value="0"
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="controls-label">relative longitude</td>
+              <td>
+                <input
+                  id="lightsource_longitude_slider"
+                  class="slider"
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value="0"
+                >
+              </td>
+              <td>
+                <input
+                  id="lightsource_longitude_box"
+                  class="box"
+                  type="number"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value="0"
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="controls-label">offset</td>
+              <td>
+                <input
+                  id="lightsource_offset_slider"
+                  class="slider"
+                  type="range"
+                  min="-2"
+                  max="2"
+                  step="0.01"
+                  value="0"
+                >
+              </td>
+              <td>
+                <input
+                  id="lightsource_offset_box"
+                  class="box"
+                  type="number"
+                  min="-100"
+                  max="100"
+                  step="0.01"
+                  value="0"
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="controls-label">scale</td>
+              <td>
+                <input
+                  id="lightsource_scale_slider"
+                  class="slider"
+                  type="range"
+                  min="0.01"
+                  max="2"
+                  step="0.01"
+                  value="0"
+                >
+              </td>
+              <td>
+                <input
+                  id="lightsource_scale_box"
+                  class="box"
+                  type="number"
+                  min="0.01"
+                  max="100"
+                  step="0.01"
+                  value="0"
+                >
+              </td>
+            </tr>
+          </table>
+        </fieldset>
+      </form>
+
+      <form style="font-weight: normal" id="textures">
+        <fieldset class="centered">
+          <b>layers</b>
+          <br>
+          <table class="center-table">
+            <tr>
+              <td>borders</td>
+              <td>
+                <input type="checkbox" id="borders-checkbox" checked>
+                <br>
+              </td>
+            </tr>
+            <tr>
+              <td>graticule</td>
+              <td>
+                <input type="checkbox" id="graticule-checkbox" checked>
+                <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Tissots indicatrices</td>
+              <td>
+                <input type="checkbox" id="tissot-checkbox" checked>
+                <br>
+              </td>
+            </tr>
+          </table>
+        </fieldset>
+      </form>
+      <div class="centered">
+        <button
+          type="button"
+          id="reset-button"
+          onclick="tutorialControls.resetControls(1, 'advanced')"
+        >reset</button>
+        <button
+          type="button"
+          id="remove-line-button"
+          onclick="lineProjector.disableLines()"
+        >remove line</button>
+        <button type="button" id="roll-button" onclick="rollPressed()">flatten</button>
+      </div>
+      <div id="sw-container">
+        <br>
+        <div class="centered">
+          <b>scaling</b>
+        </div>
+        <div id="sw-graph"></div>
+        <div id="sw-controls"></div>
+      </div>
+    </div>
+    <div id="webgl_canvas"></div>
+    <div id="explanation">
+      <!-- Tab links -->
+      <div class="tab">
+        <button
+          id="tut1-button"
+          class="tablinks"
+          onclick="openTab('tut1-button', 'tut1')"
+        >Map Construction</button>
+        <button
+          id="tut2-button"
+          class="tablinks"
+          onclick="openTab('tut2-button', 'tut2')"
+        >Projection Surfaces</button>
+        <button
+          id="tut4-button"
+          class="tablinks"
+          onclick="openTab('tut4-button', 'tut4')"
+        >Map Distortion Basics</button>
+        <button
+          id="tut5-button"
+          class="tablinks"
+          onclick="openTab('tut5-button', 'tut5')"
+        >Distortion Types</button>
+        <button
+          id="tut6-button"
+          class="tablinks"
+          onclick="openTab('tut6-button', 'tut6')"
+        >The Mercator Projection</button>
+        <button
+          id="tut3-button"
+          class="tablinks"
+          onclick="openTab('tut3-button', 'tut3')"
+        >Map Projections</button>
+      </div>
+
+      <!-- Tab content -->
+      <div id="tut1" class="tabcontent">
         The intention of this web application is to demonstrate the construction of map projections. On the left side of the application, you find the controls panel to adjust the parameters of the different objects present in the 3D-scene in the center of this application. To navigate within the 3D-scene, use the left mouse button to rotate, the right mouse button to pan and the middle mouse button to zoom.
         If you want to restore the default settings, use the reset-button in the control panel.
-        
-        <br> A common approach to construct map projections makes use of three geometric objects:
-        
-         <ul>
-          <li> A simplified representation of the earth, typically in the shape of a sphere or a spheroid.</li>
-          <li> A projection center, typically represented as a point.</li>
-          <li> A projection surface, typically in the shape of a plane, cylinder or cone.</li>
-         </ul>
-        
-        In the simplest case, the map surface is directly represented as a flat plane as shown by default when opening this web application. If the settings were changed, you can click the button below to reset them.
-          <div class="tut-button">
-            <button onclick="tutorialControls.resetControls(1, 'advanced')">Reset</button>
-          </div>
-        As you can see, the projection surface is currently a flat disk, touching the earth at the North Pole. The projection center is located at the center of the earth, represented as a yellow sphere. The earth can be imagined as a sphere of coloured glass, effectively coloring each ray that passes through its surface. The rays then paint the projection surface according to their color.
         <br>
-          Shift-click on the earth to visualize the ray originating from the projection center and passing the clicked location. Note how some rays hit the surface while some do not.  
-        <br>
-        Alternatively, click the following button to move the camera to the position of the projection center. Note how the borders of the sphere and the borders painted on the projection surface start to coincide. Move the camera slightly to emphasize this effect.
-          <div class="tut-button">
-          <button onclick="tutorialControls.moveCameraToProjectionCenter()">Move Camera to Projection Center</button>
-          </div>
-        The position of the projection center is an important aspect when constructing map projections. This can be adjusted by changing the "offset" value in the "light source" section of the controls panel. Observe how different positions of the projection center change the resulting projection and the geometry of the rays.
-        <br>
-        
-        Now that you learned the basics of how map projections are constructed, move on to the next section by clicking on the tab "Projection Surfaces" at the top of this panel or click the button below.
-            <div class="tut-button">
-              <button onclick="openTab('tut2-button', 'tut2')">Projection Surfaces</button>
-            </div>  
+A common approach to construct map projections makes use of three geometric objects:
+        <ul>
+          <li>A simplified representation of the earth, typically in the shape of a sphere or a spheroid.</li>
+          <li>A projection center, typically represented as a point.</li>
+          <li>A projection surface, typically in the shape of a plane, cylinder or cone.</li>
+        </ul>In the simplest case, the map surface is directly represented as a flat plane as shown by default when opening this web application. If the settings were changed, you can click the button below to reset them.
+        <div class="tut-button">
+          <button onclick="tutorialControls.resetControls(1, 'advanced')">Reset</button>
+        </div>As you can see, the projection surface is currently a flat disk, touching the earth at the North Pole. The projection center is located at the center of the earth, represented as a yellow sphere. The earth can be imagined as a sphere of coloured glass, effectively coloring each ray that passes through its surface. The rays then paint the projection surface according to their color.
+        <br>Shift-click on the earth to visualize the ray originating from the projection center and passing the clicked location. Note how some rays hit the surface while some do not.
+        <br>Alternatively, click the following button to move the camera to the position of the projection center. Note how the borders of the sphere and the borders painted on the projection surface start to coincide. Move the camera slightly to emphasize this effect.
+        <div class="tut-button">
+          <button
+            onclick="tutorialControls.moveCameraToProjectionCenter()"
+          >Move Camera to Projection Center</button>
+        </div>The position of the projection center is an important aspect when constructing map projections. This can be adjusted by changing the "offset" value in the "light source" section of the controls panel. Observe how different positions of the projection center change the resulting projection and the geometry of the rays.
+        <br>Now that you learned the basics of how map projections are constructed, move on to the next section by clicking on the tab "Projection Surfaces" at the top of this panel or click the button below.
+        <div class="tut-button">
+          <button onclick="openTab('tut2-button', 'tut2')">Projection Surfaces</button>
+        </div>
+      </div>
+
+      <div id="tut2" class="tabcontent">
+        Typically, three different projection surfaces are used: The plane, the cone and the cylinder. A projection based on the plane is shown by default when starting this web application. If the settings have been modified, you can use the following button to enable the default settings.
+        <div class="tut-button">
+          <button onclick="tutorialControls.resetControls(1, 'advanced')">Reset</button>
+        </div>
+Adjust the "lat" and "lon" values under the "orientation" section of the controls panel to investigate how different positions of the plane affect the resulting projection. Use the buttons below to construct a cone and a cylinder, respectively.
+        <div class="tut-button">
+          <button onclick="tutorialControls.constructCone()">Cone</button>
+          <button onclick="tutorialControls.constructCylinder()">Cylinder</button>
+        </div>While the plane is flat by default and hence can be used as a map out-of-the-box once the projection has been calculated, the cylinder and the cone need to be unrolled first to obtain their flat, two-dimensional form. To construct the flat representation based on the current orientation, use the "unroll" button in the controls panel to flatten the surface. Once flattend, use the same button (now labeled "roll") to obtain the original three-dimensional form. The location where these cylinders are "cut" can be adjusted with the "rot" value in the "orientation" section of the controls panel. The cut location is indicated by a red sphere.
+        <br>It is interesting to know that these three projection surfaces, the plane, the cylinder and the plane can be interpreted as special cases of the conical frustum. Use the following button to construct an open conical frustum (i.e., a conical frustum without caps on top and bottom).
+        <div class="tut-button">
+          <button onclick="tutorialControls.constructFrustum()">Frustum</button>
+        </div>
+Based on this surface, you can use the following ways to adjust the parameters in the control panel to construct the three common projection surfaces.
+        <ul>
+          <li>To construct a plane, set the "axis length" to 0, the "upper radius" to 0.01 and the "lower radius" to a value greater 0.01 such as 4 and the offset to 1.</li>
+          <li>To construct a cone, set the "upper radius" to 0.01, the "lower radius" to a value greater 0.01 such as 4 and the axis length to a value greater 0 such as 4 and the offset to 1.</li>
+          <li>To construct a cylinder, set the "upper radius" equal the "lower radius" with a value such as 1 and the "axis length" to a value greater 0 such as 4 and the offset to 0.</li>
+        </ul>Make yourself familiar with these parameters and how they influence the geometry of the projection surface.
+        <br>Now that you learned about the three common projection surfaces and their connection, move on to the next section by clicking on the tab "Map Distortion Basics" at the top of this panel or click on the button below.
+        <div class="tut-button">
+          <button onclick="openTab('tut4-button', 'tut4')">Map Distortion Basics</button>
+        </div>
+      </div>
+
+      <div id="tut4" class="tabcontent">
+        <p>
+          Each map projection distorts the surface of the earth. This should become obvious, for example by carefully comparing the shapes of countries and their representation on the globe.
+          Although these distortions can be precisly mathematically quantified, a more intuitive approach to these distortions can be followed using Tissot's indicatrix.
+          Tissot's indicatrix is a graphical means to analyze such distortions and can be enabled by ticking the box labeled "Tissots indicatrices" in the "layers" section of the controls panel.
+        </p>
+
+        <p>
+          Each indicatrix is constructed as a perfect circle of arbitrary radius covering the earth's surface.
+          Typically multiple indicatrices are constructed to cover the whole globe.
+          Investigating the shape of the indicatrices on a projection surface gives qualitative information on how features are being distorted depending on their location.
+        </p>
+
+        <p>
+          For example, in the case of the Gnomonic Azimuthal projection it can be seen how the indicatrices keep their shapes near the point of contact.
+          However, the farer away from the pole the greater the distortion becomes.
+        </p>
+
+        <p>Click the following button to construct the Gnomonic Azimuthal projection:</p>
+        <div class="tut-button">
+          <button
+            class="tutorial-button"
+            onclick="tutorialControls.setProjection('gnomonic azimuthal')"
+          >Gnomonic Azimuthal Projection</button>
         </div>
 
-        <div id="tut2" class="tabcontent">
-            
-            Typically, three different projection surfaces are used: The plane, the cone and the cylinder. A projection based on the plane is shown by default when starting this web application. If the settings have been modified, you can use the following button to enable the default settings.
-                <div class="tut-button">
-                <button onclick="tutorialControls.resetControls(1, 'advanced')">Reset</button>
-                </div>
-            Adjust the "lat" and "lon" values under the "orientation" section of the controls panel to investigate how different positions of the plane affect the resulting projection. Use the buttons below to construct a cone and a cylinder, respectively.
-            
-                <div class="tut-button">
-                <button onclick="tutorialControls.constructCone()">Cone</button>
-                <button onclick="tutorialControls.constructCylinder()">Cylinder</button>
-                </div>
-            
-            While the plane is flat by default and hence can be used as a map out-of-the-box once the projection has been calculated, the cylinder and the cone need to be unrolled first to obtain their flat, two-dimensional form. To construct the flat representation based on the current orientation, use the "unroll" button in the controls panel to flatten the surface. Once flattend, use the same button (now labeled "roll") to obtain the original three-dimensional form. The location where these cylinders are "cut" can be adjusted with the "rot" value in the "orientation" section of the controls panel. The cut location is indicated by a red sphere.<br>
-            
-            It is interesting to know that these three projection surfaces, the plane, the  cylinder and the plane can be interpreted as special cases of the conical frustum. Use the following button to construct an open conical frustum (i.e., a conical frustum without caps on top and bottom). 
-                <div class="tut-button">
-                <button onclick="tutorialControls.constructFrustum()">Frustum</button>
-                </div>
-            Based on this surface, you can use the following ways to adjust the parameters in the control panel to construct the three common projection surfaces.
-                
-             <ul>
-              <li> To construct a plane, set the "axis length" to 0, the "upper radius" to 0.01 and the "lower radius" to a value greater 0.01 such as 4 and the offset to 1.</li>
-              <li> To construct a cone, set the "upper radius" to 0.01, the "lower radius" to a value greater 0.01 such as 4 and the axis length to a value greater 0 such as 4 and the offset to 1.</li>
-              <li> To construct a cylinder, set the "upper radius" equal the "lower radius" with a value such as 1 and the "axis length" to a value greater 0 such as 4 and the offset to 0.</li>
-             </ul>
-            
-            Make yourself familiar with these parameters and how they influence the geometry of the projection surface.
-            <br>
-            
-            Now that you learned about the three common projection surfaces and their connection, move on to the next section by clicking on the tab "Map Distortion Basics" at the top of this panel or click on the button below.
-                <div class="tut-button">
-                <button onclick="openTab('tut4-button', 'tut4')">Map Distortion Basics</button>
-                </div>
+        <p>
+          In contrast, Tissot's indicatrices of the Stereographic Azimuthal projection do not show such high distortions.
+          In fact, each indicatrix forms a perfect circle. However, their radii increase with larger distances from the point of contact.
+        </p>
+        <p>Click the following button to construct the Stereographic Azimuthal projection:</p>
+        <div class="tut-button">
+          <button
+            class="tutorial-button"
+            onclick="tutorialControls.setProjection('stereographic azimuthal')"
+          >Stereographic Azimuthal Projection</button>
         </div>
- 
-            
-            <div id="tut4" class="tabcontent">
-				<p>Each map projection distorts the surface of the earth. This should become obvious, for example by carefully comparing the shapes of countries and their representation on the globe.
-                Although these distortions can be precisly mathematically quantified, a more intuitive approach to these distortions can be followed using Tissot's indicatrix.
-                Tissot's indicatrix is a graphical means to analyze such distortions and can be enabled by ticking the box labeled "Tissots indicatrices" in the "layers" section of the controls panel.</p>
-				
-                <p>Each indicatrix is constructed as a perfect circle of arbitrary radius covering the earth's surface.
-                Typically multiple indicatrices are constructed to cover the whole globe. 
-                Investigating the shape of the indicatrices on a projection surface gives qualitative information on how features are being distorted depending on their location.</p>
-                
-                <p>For example, in the case of the Gnomonic Azimuthal projection it can be seen how the indicatrices keep their shapes near the point of contact.
-                However, the farer away from the pole the greater the distortion becomes. </p> 
-                
-                <p>Click the following button to construct the Gnomonic Azimuthal projection:</p>
-                <div class="tut-button"><button class="tutorial-button" onclick="tutorialControls.setProjection('gnomonic azimuthal')">Gnomonic Azimuthal Projection</button></div>
-                
-                <p>In contrast, Tissot's indicatrices of the Stereographic Azimuthal projection do not show such high distortions.
-                In fact, each indicatrix forms a perfect circle. However, their radii increase with larger distances from the point of contact.</p>
-                <p>Click the following button to construct the Stereographic Azimuthal projection:</p>
-                <div class="tut-button"><button class="tutorial-button" onclick="tutorialControls.setProjection('stereographic azimuthal')">Stereographic Azimuthal Projection</button></div>
-                
-                <p>How these shapes can be interpreted in detail will be discussed in the next section.</p>
-                
-                <div class="tut-button">
-                  <button onclick="openTab('tut5-button', 'tut5')">Distortion Types</button>
-                </div>  
-			</div>
-            
-			<div id="tut5" class="tabcontent">
-                <p>There are three main types of distortions that are of interest and which can be analyzed with Tissot's indicatrix.              
-                First, an indicatrix forms a perfect circle. In such a case, the map projection preserves the angles encountered on the earth's surface.
-                This means that an angle measured on the map is identical to the angle measured on the respective location on the earth's surface.
-                This property is particular of interest for navigation purposes. A map with this property is also called "conformal".
-                The Stereographic Azimuthal Projection is one example with this property.</p>
-                <div class="tut-button"><button class="tutorial-button" onclick="tutorialControls.setProjection('stereographic azimuthal')">Stereographic Azimuthal Projection</button></div>
-                
-                <p>Second, the diamater of an indicatrix is constant along a specific direction. In such a case, the projection is preserving the length along this direction.
-                Many projections have this property where the projection surface interescts with the globe. A straight-forward example may be the central cylindrical projection where the cylinder touches the ecuator.</p>
-                <div class="tut-button"><button class="tutorial-button" onclick="tutorialControls.setProjection('central cylindrical')">Central Cylindrical</button></div>
-                
-                <p>The same is true for similar projections. For example, Braun's stereographic cylindrical projection touches the globe in the very same way and hence shares this property with the central cylindrical projection.
-                Use the following button to construct Braun's stereographic cylindrical projection:</p>
-                <div class="tut-button"><button class="tutorial-button" onclick="tutorialControls.setProjection('brauns stereographic cylindrical')">Braun's Stereographic Cylindrical Projection</button></div>
-                
-                <p>As shown in the 3D view, this projection can not be constructed with a single projection center.
-                Rather, the projection center changes depending on the longitude. This continuous range of projection centers can be represented as a Torus, which lies exactly at the ecuator.
-                If you are unsure how each point on the globe is mapped on the projection surface, use the Shift key and the Left Mouse Button on the globe to indicate the projection lines.</p>
-                
-                <p>Third, the circle on the map covers the same area as on the globe. In this case, the projection is preserving the feature's areas.
-                One example that has this property is Lambert's equal-area cylindrical projection. As with Braun's stereographic projection, its projection center depends on the longitude.
-                However, the position of each center lies infinitely far away from the projection surface. Use the following button to construct Lambert's equal-area cylindrical projection:</p>
-                <div class="tut-button"><button class="tutorial-button" onclick="tutorialControls.setProjection('lamberts equal area cylindrical')">Lambert's Equal Area Projection</button></div>
-                
-                <p>Note how all the circles have the very same size, although their shapes may highly deviate from each other.</p>
-                <p>Apart from these main properties of map projections, specifically the term "compromising" can be found in the literature, denoting map projections which reduce the distortions mentioned above while not entirely eliminating any of them.</p>
-                
-                <p>Some map projections with useful properties cannot be directly constructed geometrically in the way that was described before.
-                Rather they need to be scaled (i.e., stretched or shrinked) using carefully derived formulas. One famous example for sucha  map projection is the Mercator projection as described in the next section.</p>
-                
-                <div class="tut-button">
-                  <button onclick="openTab('tut6-button', 'tut6')">The Mercator Projection</button>
-                </div>  
-			</div>
-            
-			<div id="tut6" class="tabcontent">
-                <p>The Mercator projection is attributed to Gerhard Mercator, who sought to create a cylindrical map projection that would preserve angles and thus would be beneficial for navigational purposes.
-                The projection is still in use today but severely distorts areas and shapes. Hence, it should be applied with great care.</p>
-                
-                <p>The Mercator projection can not be easily constructed geometrically, but rather requires to scale a flattened cylinder according to specific trigonometric formulas.
-                To illustrate this approach, first the central cylindrical projection needs to be constructed.<p>
-                <div class="tut-button"><button class="tutorial-button" onclick="tutorialControls.setProjection('central cylindrical')">Central Cylindrical Projection</button></div>
-                
-                <p>Use the "flatten" button to create the unrolled representation of the central cylindrical projection.
-                As already described, the central cylindrical projection shows higher distortions the further away a point is from the ecuator.
-                Conformity (i.e., the preservation of angles) can only be achieved if the projection is shrinked.
-                The distance by which a specific point should be shrinked depends on the latitude.</p>
-                
-                <p>You can try to carry out this shrinking manually by using the "scaling" diagram, which gets enabled when a map is unrolled.
-                The scaling diagram depicts by how much a point on the flattened map is moved (i.e., stretched or shrinked) depending on its position along the main unrolled axis.
-                The "source" axis represents the position along the unscaled flattened map. The "target" axis represents the target position a point should be moved to, depending on its source position.</p>
-                
-                <p>Initially, this relationship is linear, i.e., each source position equals the target position and therefore no scaling is applied.
-                This scaling function can be manually modified using interactive Bezier curves. To start editing these curves, push the "start editing" button.
-                You can move around the control points (black) and handles (gray) to adjust the scaling function.
-                Left-clicking into diagram will add a new control point and its handles. Right-clicking on a control point will remove it again.
-                The initial two control-points cannot be removed. The resulting function should be steadily increasing. Else the map will intersect with itself.</p>
-                
-                <p>Investigate how changes in the diagram influence the flattened map. Try creating a scaling function that changes the shapes of the indicatrices to perfect circles.
-                To reset the scaling function, first press the "stop editing" button and afterwards press the "reset" button.</p>
-                
-                <p>You can compare your result with the effective scaling function that was constructed using the Mercator formulas:</p>
 
-                <!--<button class="tutorial-button" onclick="tutorialControls.setProjection('brauns pseudomercator')">Braun's Pseudomercator</button>-->
-                <div class="tut-button-scaling"><button class="tutorial-button" onclick="tutorialControls.setScale('central cylindrical to mercator')" disabled>Scale Central Cylindrical to Mercator</button></div>
-                
-                <p>Once you are finished with investigating the Mercator projection, you can use the "reset" button to undo the scaling operation. Once unscaled, the flattened map can be unrolled again</p>
-                <p>To get an overview on the map projections that can be constructed with the GITTA Map Projector, click on the button below</p>
-                <div class="tut-button">
-                  <button onclick="openTab('tut3-button', 'tut3')">List of Map Projections</button>
-                </div>  
-            </div>
-       <div id="tut3" class="tabcontent">
-            In this segment, we will briefly discuss some named map projections.          
-            Maybe the most simple map projection one can imagine is the gnomonic azimuthal map projection, which is also the default setting in this web application. In this case, the projection surface is the plane touch the North Pole and the light source is located at the center of the earth. Use the following button to construct this map projection:
-        
-            <div class="tut-button">
-            <button onclick="tutorialControls.setProjection('gnomonic azimuthal')">Gnomonic Azimuthal</button>
-            </div>
-            
-            A slightly different map projection is the stereographic azimuthal map projection. In this case, the light source is located at the opposite pole of where the projection plane is touching the earth.
-            
-            <div class="tut-button">
-            <button onclick="tutorialControls.setProjection('stereographic azimuthal')">Stereographic Azimuthal</button>
-            </div>
-        
-            Another variant is the orthographic azimuthal projection. In this case, the projection center is located at an infinitely distant location perpendicular to the projection surface. Note how the projection rays form straight, parallel lines.
-        
-            <div class="tut-button">
-            <button onclick="tutorialControls.setProjection('orthographic azimuthal')">Orthographic Azimuthal</button>
-            </div>
-            
-            The vertical perspective azimuthal projections places the light source outside of the earth's surface. The near-side variant places the light source "above" the projection surface while the far-side variante places the light source "below" the projection surface.
+        <p>How these shapes can be interpreted in detail will be discussed in the next section.</p>
 
-            <div class="tut-button">
-            <button onclick="tutorialControls.setProjection('vertical perspective azimuthal near side')">Vertical perspective Azimuthal, near-side</button>
-            </div>
-            <div class="tut-button">
-            <button onclick="tutorialControls.setProjection('vertical perspective azimuthal far side')">Vertical perspective Azimuthal, far-side</button>
-            </div>
-            
-            <!--
+        <div class="tut-button">
+          <button onclick="openTab('tut5-button', 'tut5')">Distortion Types</button>
+        </div>
+      </div>
+
+      <div id="tut5" class="tabcontent">
+        <p>
+          There are three main types of distortions that are of interest and which can be analyzed with Tissot's indicatrix.
+          First, an indicatrix forms a perfect circle. In such a case, the map projection preserves the angles encountered on the earth's surface.
+          This means that an angle measured on the map is identical to the angle measured on the respective location on the earth's surface.
+          This property is particular of interest for navigation purposes. A map with this property is also called "conformal".
+          The Stereographic Azimuthal Projection is one example with this property.
+        </p>
+        <div class="tut-button">
+          <button
+            class="tutorial-button"
+            onclick="tutorialControls.setProjection('stereographic azimuthal')"
+          >Stereographic Azimuthal Projection</button>
+        </div>
+
+        <p>
+          Second, the diamater of an indicatrix is constant along a specific direction. In such a case, the projection is preserving the length along this direction.
+          Many projections have this property where the projection surface interescts with the globe. A straight-forward example may be the central cylindrical projection where the cylinder touches the ecuator.
+        </p>
+        <div class="tut-button">
+          <button
+            class="tutorial-button"
+            onclick="tutorialControls.setProjection('central cylindrical')"
+          >Central Cylindrical</button>
+        </div>
+
+        <p>
+          The same is true for similar projections. For example, Braun's stereographic cylindrical projection touches the globe in the very same way and hence shares this property with the central cylindrical projection.
+          Use the following button to construct Braun's stereographic cylindrical projection:
+        </p>
+        <div class="tut-button">
+          <button
+            class="tutorial-button"
+            onclick="tutorialControls.setProjection('brauns stereographic cylindrical')"
+          >Braun's Stereographic Cylindrical Projection</button>
+        </div>
+
+        <p>
+          As shown in the 3D view, this projection can not be constructed with a single projection center.
+          Rather, the projection center changes depending on the longitude. This continuous range of projection centers can be represented as a Torus, which lies exactly at the ecuator.
+          If you are unsure how each point on the globe is mapped on the projection surface, use the Shift key and the Left Mouse Button on the globe to indicate the projection lines.
+        </p>
+
+        <p>
+          Third, the circle on the map covers the same area as on the globe. In this case, the projection is preserving the feature's areas.
+          One example that has this property is Lambert's equal-area cylindrical projection. As with Braun's stereographic projection, its projection center depends on the longitude.
+          However, the position of each center lies infinitely far away from the projection surface. Use the following button to construct Lambert's equal-area cylindrical projection:
+        </p>
+        <div class="tut-button">
+          <button
+            class="tutorial-button"
+            onclick="tutorialControls.setProjection('lamberts equal area cylindrical')"
+          >Lambert's Equal Area Projection</button>
+        </div>
+
+        <p>Note how all the circles have the very same size, although their shapes may highly deviate from each other.</p>
+        <p>Apart from these main properties of map projections, specifically the term "compromising" can be found in the literature, denoting map projections which reduce the distortions mentioned above while not entirely eliminating any of them.</p>
+
+        <p>
+          Some map projections with useful properties cannot be directly constructed geometrically in the way that was described before.
+          Rather they need to be scaled (i.e., stretched or shrinked) using carefully derived formulas. One famous example for sucha map projection is the Mercator projection as described in the next section.
+        </p>
+
+        <div class="tut-button">
+          <button onclick="openTab('tut6-button', 'tut6')">The Mercator Projection</button>
+        </div>
+      </div>
+
+      <div id="tut6" class="tabcontent">
+        <p>
+          The Mercator projection is attributed to Gerhard Mercator, who sought to create a cylindrical map projection that would preserve angles and thus would be beneficial for navigational purposes.
+          The projection is still in use today but severely distorts areas and shapes. Hence, it should be applied with great care.
+        </p>
+
+        <p>
+          The Mercator projection can not be easily constructed geometrically, but rather requires to scale a flattened cylinder according to specific trigonometric formulas.
+          To illustrate this approach, first the central cylindrical projection needs to be constructed.
+        </p>
+        <p></p>
+        <div class="tut-button">
+          <button
+            class="tutorial-button"
+            onclick="tutorialControls.setProjection('central cylindrical')"
+          >Central Cylindrical Projection</button>
+        </div>
+
+        <p>
+          Use the "flatten" button to create the unrolled representation of the central cylindrical projection.
+          As already described, the central cylindrical projection shows higher distortions the further away a point is from the ecuator.
+          Conformity (i.e., the preservation of angles) can only be achieved if the projection is shrinked.
+          The distance by which a specific point should be shrinked depends on the latitude.
+        </p>
+
+        <p>
+          You can try to carry out this shrinking manually by using the "scaling" diagram, which gets enabled when a map is unrolled.
+          The scaling diagram depicts by how much a point on the flattened map is moved (i.e., stretched or shrinked) depending on its position along the main unrolled axis.
+          The "source" axis represents the position along the unscaled flattened map. The "target" axis represents the target position a point should be moved to, depending on its source position.
+        </p>
+
+        <p>
+          Initially, this relationship is linear, i.e., each source position equals the target position and therefore no scaling is applied.
+          This scaling function can be manually modified using interactive Bezier curves. To start editing these curves, push the "start editing" button.
+          You can move around the control points (black) and handles (gray) to adjust the scaling function.
+          Left-clicking into diagram will add a new control point and its handles. Right-clicking on a control point will remove it again.
+          The initial two control-points cannot be removed. The resulting function should be steadily increasing. Else the map will intersect with itself.
+        </p>
+
+        <p>
+          Investigate how changes in the diagram influence the flattened map. Try creating a scaling function that changes the shapes of the indicatrices to perfect circles.
+          To reset the scaling function, first press the "stop editing" button and afterwards press the "reset" button.
+        </p>
+
+        <p>You can compare your result with the effective scaling function that was constructed using the Mercator formulas:</p>
+
+        <!--<button class="tutorial-button" onclick="tutorialControls.setProjection('brauns pseudomercator')">Braun's Pseudomercator</button>-->
+        <div class="tut-button-scaling">
+          <button
+            class="tutorial-button"
+            onclick="tutorialControls.setScale('central cylindrical to mercator')"
+            disabled
+          >Scale Central Cylindrical to Mercator</button>
+        </div>
+
+        <p>Once you are finished with investigating the Mercator projection, you can use the "reset" button to undo the scaling operation. Once unscaled, the flattened map can be unrolled again</p>
+        <p>To get an overview on the map projections that can be constructed with the GITTA Map Projector, click on the button below</p>
+        <div class="tut-button">
+          <button onclick="openTab('tut3-button', 'tut3')">List of Map Projections</button>
+        </div>
+      </div>
+      <div id="tut3" class="tabcontent">
+        In this segment, we will briefly discuss some named map projections.
+        Maybe the most simple map projection one can imagine is the gnomonic azimuthal map projection, which is also the default setting in this web application. In this case, the projection surface is the plane touch the North Pole and the light source is located at the center of the earth. Use the following button to construct this map projection:
+        <div class="tut-button">
+          <button onclick="tutorialControls.setProjection('gnomonic azimuthal')">Gnomonic Azimuthal</button>
+        </div>
+A slightly different map projection is the stereographic azimuthal map projection. In this case, the light source is located at the opposite pole of where the projection plane is touching the earth.
+        <div class="tut-button">
+          <button
+            onclick="tutorialControls.setProjection('stereographic azimuthal')"
+          >Stereographic Azimuthal</button>
+        </div>
+Another variant is the orthographic azimuthal projection. In this case, the projection center is located at an infinitely distant location perpendicular to the projection surface. Note how the projection rays form straight, parallel lines.
+        <div class="tut-button">
+          <button
+            onclick="tutorialControls.setProjection('orthographic azimuthal')"
+          >Orthographic Azimuthal</button>
+        </div>
+The vertical perspective azimuthal projections places the light source outside of the earth's surface. The near-side variant places the light source "above" the projection surface while the far-side variante places the light source "below" the projection surface.
+        <div class="tut-button">
+          <button
+            onclick="tutorialControls.setProjection('vertical perspective azimuthal near side')"
+          >Vertical perspective Azimuthal, near-side</button>
+        </div>
+        <div class="tut-button">
+          <button
+            onclick="tutorialControls.setProjection('vertical perspective azimuthal far side')"
+          >Vertical perspective Azimuthal, far-side</button>
+        </div>
+
+        <!--
             A rather special case of map projection is the so-called oblique perspective non-azimuthal perspective, in which case the surface orientation the vector between the light source and the earth's center is not perpendicular to the projection surface.
             
             <div class="tut-button">
             <button onclick="tutorialControls.setProjection('oblique perspective non-azimuthal')">Oblique perspective non-Azimuthal</button>
             </div>
-            -->
-            The only common cylindrical projection constructable with this tool is the central cylindrical projection. In this case, the light source is directly positioned in the center of the earth and the cylinder is touching the earth's surface along a great circle.
-            Based on the central cylindrical projection, it is possible to construct the Mercator projection by scaling the flattened map.
-            <div class="tut-button">
-            <button onclick="tutorialControls.setProjection('central cylindrical')">Central Cylindrical</button>
-            </div>
-            <div class="tut-button-scaling">
-            <button onclick="tutorialControls.setScale('central cylindrical to mercator')" disabled>Scale Central Cylindrical to Mercator</button>
-            </div>
-            
-            A common conical projection is the centrographic conic. Similarly to the gnomonic and the cylindrical projections, this projection places the light source in the center of the earth.
-            
-            <div class="tut-button">
-            <button onclick="tutorialControls.setProjection('centrographic conic')">Centrographic Conic</button>
-            </div>
-            
-            A slightly different construction scheme is followed in the case of Braun's stereographic conic projection. In this case, the light source is centered on the opposite pole of where the cone peak is located.
-
-            <div class="tut-button">
-            <button onclick="tutorialControls.setProjection('brauns stereographic conic')">Braun's Stereographic Conic</button><br></div>
-            
-            Braun's stereographic cylindrical projection assumes a different projection center for each longitude, which is positioned at the ecuator at the opposite side of the globe.
-
-            <div class="tut-button"><button class="tutorial-button" onclick="tutorialControls.setProjection('brauns stereographic cylindrical')">Braun's Stereographic Cylindrical Projection</button></div>
-            
-            Lambert's equal area projection is similar to Braun's stereographic cylindrical projection. However, the projection center is assumed to be infinitely far away from the projection surface.
-
-            <div class="tut-button"><button class="tutorial-button" onclick="tutorialControls.setProjection('lamberts equal area cylindrical')">Lambert's Equal Area Projection</button></div>
-            
-            A projection similar to the Mercator projection can be constructed by placing the projection torus inside the globe.
-
-            <div class="tut-button">
-            <button class="tutorial-button" onclick="tutorialControls.setProjection('brauns pseudomercator')">Braun's Pseudomercator</button>
-            </div>
-            
+        -->
+        The only common cylindrical projection constructable with this tool is the central cylindrical projection. In this case, the light source is directly positioned in the center of the earth and the cylinder is touching the earth's surface along a great circle.
+        Based on the central cylindrical projection, it is possible to construct the Mercator projection by scaling the flattened map.
+        <div class="tut-button">
+          <button
+            onclick="tutorialControls.setProjection('central cylindrical')"
+          >Central Cylindrical</button>
         </div>
+        <div class="tut-button-scaling">
+          <button
+            onclick="tutorialControls.setScale('central cylindrical to mercator')"
+            disabled
+          >Scale Central Cylindrical to Mercator</button>
         </div>
-		
-		<script src="glcanvas.js"></script>
-		<script src="earth.js"></script>
-		<script src="surface.js"></script>
-		<script src="projectionCenter.js"></script>
-		<script src="lineProjector.js"></script>
-		<script src="cutIndicator.js"></script>
-		
-		<script src="sliderAnimator.js"></script>
-		<script src="tutorialControls.js"></script>
-		<script src="controls.js"></script>
-        
-        <script src="stretchWidget.js"></script>
-        <script src="stretchEditControls.js"></script>
-
-		<script>
-
-		var glcanvas = new GLCanvas("webgl_canvas");
-        
-        var earth = new Earth(glcanvas.scene, glcanvas.renderer);
-		var stretchWidget = new StretchWidget("sw-graph", "sw-controls");
-        stretchWidget.disable();
-		var surface = new Surface(glcanvas.scene, glcanvas.renderer, earth, stretchWidget);
-		var projectionCenter = new ProjectionCenter(glcanvas.scene);
-		var cutIndicator = new CutIndicator(surface, glcanvas.scene);
-		var lineProjector = new LineProjector(glcanvas, surface, earth, projectionCenter);
-		
-		var controls = new Controls(glcanvas, earth, surface, stretchWidget, projectionCenter, cutIndicator, lineProjector);
-        var sliderAnimator = new SliderAnimator(controls, surface);
-        
-		var tutorialControls = new TutorialControls(controls, sliderAnimator, stretchWidget, projectionCenter, glcanvas);
-		controls.reset();
-        tutorialControls.resetControls(0.01, 'advanced');
-		
-		var clock  = new THREE.Clock();
-		
-		var animate = function () {
-			var delta = clock.getDelta();
-			requestAnimationFrame(animate);
-
-			glcanvas.update(delta);
-			surface.update(delta);
-			sliderAnimator.update(delta);
-            stretchWidget.update(delta);
-			cutIndicator.updateGeometry();
-		};
-
-		animate();
-		
-
-
-		// tabs
-		function openTab(buttonName, tabName) {
-			// Declare all variables
-			var i, tabcontent, tablinks;
-
-			// Get all elements with class="tabcontent" and hide them
-			tabcontent = document.getElementsByClassName("tabcontent");
-			for (i = 0; i < tabcontent.length; i++) {
-				tabcontent[i].style.display = "none";
-			}
-
-			// Get all elements with class="tablinks" and remove the class "active"
-			tablinks = document.getElementsByClassName("tablinks");
-			for (i = 0; i < tablinks.length; i++) {
-				tablinks[i].className = tablinks[i].className.replace(" active", "");
-			}
-
-			// Show the current tab, and add an "active" class to the button that opened the tab
-			document.getElementById(tabName).style.display = "block";
-			document.getElementById(buttonName).className += " active";
-		}
-
-		document.getElementById("tut1-button").click();
-		
-
-		</script>
+A common conical projection is the centrographic conic. Similarly to the gnomonic and the cylindrical projections, this projection places the light source in the center of the earth.
+        <div class="tut-button">
+          <button
+            onclick="tutorialControls.setProjection('centrographic conic')"
+          >Centrographic Conic</button>
+        </div>
+A slightly different construction scheme is followed in the case of Braun's stereographic conic projection. In this case, the light source is centered on the opposite pole of where the cone peak is located.
+        <div class="tut-button">
+          <button
+            onclick="tutorialControls.setProjection('brauns stereographic conic')"
+          >Braun's Stereographic Conic</button>
+          <br>
+        </div>
+Braun's stereographic cylindrical projection assumes a different projection center for each longitude, which is positioned at the ecuator at the opposite side of the globe.
+        <div class="tut-button">
+          <button
+            class="tutorial-button"
+            onclick="tutorialControls.setProjection('brauns stereographic cylindrical')"
+          >Braun's Stereographic Cylindrical Projection</button>
+        </div>
+Lambert's equal area projection is similar to Braun's stereographic cylindrical projection. However, the projection center is assumed to be infinitely far away from the projection surface.
+        <div class="tut-button">
+          <button
+            class="tutorial-button"
+            onclick="tutorialControls.setProjection('lamberts equal area cylindrical')"
+          >Lambert's Equal Area Projection</button>
+        </div>
+A projection similar to the Mercator projection can be constructed by placing the projection torus inside the globe.
+        <div class="tut-button">
+          <button
+            class="tutorial-button"
+            onclick="tutorialControls.setProjection('brauns pseudomercator')"
+          >Braun's Pseudomercator</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import GLCanvas from "@/js/glcanvas.js";
+import Earth from "@/js/earth.js";
+import Surface from "@/js/surface.js";
+import ProjectionCenter from "@/js/projectionCenter.js";
+import LineProjector from "@/js/lineProjector.js";
+import CutIndicator from "@/js/cutIndicator.js";
+import SliderAnimator from "@/js/sliderAnimator.js";
+import TutorialControls from "@/js/tutorialControls.js";
+import Controls from "@/js/controls.js";
+import StretchWidget from "@/js/stretchWidget.js";
+
+import * as THREE from "three";
+
 export default {
-  name: 'Advanced'
-}
+  name: "Advanced",
+  mounted() {
+    var glcanvas = new GLCanvas("webgl_canvas");
+
+    var earth = new Earth(glcanvas.scene, glcanvas.renderer);
+    var stretchWidget = new StretchWidget("sw-graph", "sw-controls");
+    stretchWidget.disable();
+    var surface = new Surface(
+      glcanvas.scene,
+      glcanvas.renderer,
+      earth,
+      stretchWidget
+    );
+    var projectionCenter = new ProjectionCenter(glcanvas.scene);
+    var cutIndicator = new CutIndicator(surface, glcanvas.scene);
+    var lineProjector = new LineProjector(
+      glcanvas,
+      surface,
+      earth,
+      projectionCenter
+    );
+
+    var controls = new Controls(
+      glcanvas,
+      earth,
+      surface,
+      stretchWidget,
+      projectionCenter,
+      cutIndicator,
+      lineProjector
+    );
+    var sliderAnimator = new SliderAnimator(controls, surface);
+
+    var tutorialControls = new TutorialControls(
+      controls,
+      sliderAnimator,
+      stretchWidget,
+      projectionCenter,
+      glcanvas
+    );
+    controls.reset();
+    tutorialControls.resetControls(0.01, "advanced");
+
+    var clock = new THREE.Clock();
+
+    var animate = function() {
+      var delta = clock.getDelta();
+      requestAnimationFrame(animate);
+
+      glcanvas.update(delta);
+      surface.update(delta);
+      sliderAnimator.update(delta);
+      stretchWidget.update(delta);
+      cutIndicator.updateGeometry();
+    };
+
+    animate();
+
+    // tabs
+    function openTab(buttonName, tabName) {
+      // Declare all variables
+      var i, tabcontent, tablinks;
+
+      // Get all elements with class="tabcontent" and hide them
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+
+      // Get all elements with class="tablinks" and remove the class "active"
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+
+      // Show the current tab, and add an "active" class to the button that opened the tab
+      document.getElementById(tabName).style.display = "block";
+      document.getElementById(buttonName).className += " active";
+    }
+
+    document.getElementById("tut1-button").click();
+  }
+};
 </script>
 
 <style scoped>
