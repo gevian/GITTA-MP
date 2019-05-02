@@ -14,6 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */  
+import * as THREE from 'three';
+
 var vertexShaderEarth = `
     varying vec2 vUv;
 	
@@ -122,3 +124,4 @@ Earth.prototype.disableTissotTexture = function()
     this.earthMesh.material.uniforms.tTissot.value = this.emptyTexture;    
 }
 
+export default Earth;

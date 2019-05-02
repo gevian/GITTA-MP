@@ -13,13 +13,16 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/  
+*/
+
+import * as THREE from 'three';
+
 function CutIndicator(surface, scene) {
 	this.surface = surface;
 	this.scene = scene;
 
     // sprite texture taken from https://en.wikipedia.org/wiki/File:Scissors_icon_black.svg
-    this.spriteMap = new THREE.TextureLoader().load( "images/scissors.png" );
+    this.spriteMap = new THREE.TextureLoader().load("images/scissors.png");
     this.spriteMaterial = new THREE.SpriteMaterial( { map: this.spriteMap, color: 0xffffff } );
     this.sprite = new THREE.Sprite( this.spriteMaterial );
     this.sprite.scale.set(0.2, 0.2, 1)
@@ -41,3 +44,5 @@ CutIndicator.prototype.updateGeometry = function()
 
 	this.sprite.position.set(midPos.x, midPos.y, midPos.z);
 }
+
+export default CutIndicator;

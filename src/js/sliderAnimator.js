@@ -92,3 +92,4 @@ SliderAnimator.prototype.update = function(delta)
 		}
 	}           
 }
+export default SliderAnimator;

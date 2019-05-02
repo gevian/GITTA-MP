@@ -116,7 +116,7 @@
               </table>
             </fieldset>
           </form>
-          </form>
+          <div>
               <button type="button" id="reset-button" onclick="tutorialControls.resetControls()">reset</button>
               <button type="button" id="remove-line-button" onclick="lineProjector.disableLines()">remove line</button>
               <button type="button" id="roll-button" onclick="rollPressed()">flatten</button>
@@ -126,33 +126,34 @@
                 <div class="centered"><b>scaling</b></div>
                 <div id="sw-graph"></div>
                 <div id="sw-controls"></div>
-            </div>
+            </div>  
 		</div>
 		<div id="webgl_canvas"></div>
-		
-		<script src="libs/three.js"></script>
-		<script src="libs/OrbitControls.js"></script>
-		<script src="libs/d3.v4.min.js"></script>
-		
-		<script src="glcanvas.js"></script>
-		<script src="earth.js"></script>
-		<script src="surface.js"></script>
-		<script src="projectionCenter.js"></script>
-		<script src="lineProjector.js"></script>
-		<script src="cutIndicator.js"></script>
-		
-		<script src="sliderAnimator.js"></script>
-		<script src="tutorialControls.js"></script>
-		<script src="basicControls.js"></script>
-        
-        <script src="stretchWidget.js"></script>
-        <script src="stretchEditControls.js"></script>
+  </div>
+</template>
 
-		<script>
+<script>
 
+import GLCanvas from '@/js/glcanvas.js';
+import Earth from '@/js/earth.js'
+import StretchWidget from '@/js/stretchWidget.js'
+import Surface from '@/js/surface.js'
+import ProjectionCenter from "@/js/projectionCenter.js"
+import LineProjector from "@/js/lineProjector.js"
+import CutIndicator from "@/js/cutIndicator.js"
+import SliderAnimator from "@/js/sliderAnimator.js"
+import TutorialControls from "@/js/tutorialControls.js"
+import Controls from "@/js/basicControls.js"
+
+import * as THREE from 'three';
+
+require("@/js/stretchEditControls.js");
+
+export default {
+  name: 'Basic',
+  mounted() {
 		var glcanvas = new GLCanvas("webgl_canvas");
-        
-        var earth = new Earth(glcanvas.scene, glcanvas.renderer);
+    var earth = new Earth(glcanvas.scene, glcanvas.renderer);
 		var stretchWidget = new StretchWidget("sw-graph", "sw-controls");
         stretchWidget.disable();
 		var surface = new Surface(glcanvas.scene, glcanvas.renderer, earth, stretchWidget);
@@ -209,16 +210,7 @@
 			document.getElementById(tabName).style.display = "block";
 			document.getElementById(buttonName).className += " active";
 		}
-
-
-		</script>
-
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'Basic'
+  }
 }
 </script>
 

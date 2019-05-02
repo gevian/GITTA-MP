@@ -19,6 +19,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Parts of this code are based on the d3-extended library (MIT).
 https://github.com/wbkd/d3-extended (05.02.2019)
 */
+
+import * as d3 from "d3"
+
 function StretchWidget(graphContainer, controlsContainer, maxSource, minTarget, maxTarget)
 {
     if (maxSource == undefined) maxSource =  2.0;
@@ -459,5 +462,4 @@ StretchWidget.prototype.update = function(delta)
 }
 
 
-
-
+export default StretchWidget;

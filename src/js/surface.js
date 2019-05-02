@@ -14,6 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */  
+import * as THREE from 'three';
+
 var vertexShaderSource = `
     varying vec4 localPosition;
     varying vec4 globalPosition;
@@ -876,7 +878,4 @@ Surface.prototype.disableTissotTexture = function()
     this.mesh.material.uniforms.tTissot.value = this.earth.emptyTexture;    
 }
 
-
-
-
-
+export default Surface;

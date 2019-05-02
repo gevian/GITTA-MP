@@ -14,6 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */  
+import * as THREE from 'three';
+
 function GLCanvas(canvas_id)
 {
 	var _this = this;
@@ -73,5 +75,4 @@ GLCanvas.prototype.update = function(delta)
 	this.orbitControls.update(delta);
 }
 
-
-
+export default GLCanvas;

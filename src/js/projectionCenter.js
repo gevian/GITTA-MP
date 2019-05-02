@@ -14,6 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */  
+import * as THREE from 'three';
+
 function ProjectionCenter(scene) {
 	this.scene = scene;
 	this.sphere = new THREE.Mesh(new THREE.SphereGeometry(0.1, 32, 32),
@@ -77,3 +79,4 @@ ProjectionCenter.prototype.setLongitude = function(rotation)
 }
 
 
+export default ProjectionCenter;

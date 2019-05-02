@@ -375,9 +375,6 @@
             
         </div>
         </div>
-		<script src="libs/three.js"></script>
-		<script src="libs/OrbitControls.js"></script>
-		<script src="libs/d3.v4.min.js"></script>
 		
 		<script src="glcanvas.js"></script>
 		<script src="earth.js"></script>

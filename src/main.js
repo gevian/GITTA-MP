@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
 
+
+
+
+require("three-orbitcontrols");
+require("d3");
+
 Vue.config.productionTip = false
 
 require("@/css/app.css");

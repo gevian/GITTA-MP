@@ -8,11 +8,10 @@
     <div id="selector">
         Please choose a version ...
         <div id="version-container">
-            <div class="version" id="basic" onmouseover="basicMouseOver()" @click="setMode('basic')">
-                <div ><p style="margin-bottom: 0px">Basic</p>
-                <!--<p style="margin-top: 0px; font-size: 14px;">(under construction)</p>--></div>
+            <div class="version" id="basic" @click="setMode('basic')">
+                <p style="margin-bottom: 0px">Basic</p>
             </div>
-            <div class="version" id="advanced"  onmouseover="advancedMouseOver()" @click="setMode('advanced')">
+            <div class="version" id="advanced" @click="setMode('advanced')">
                 <p>Advanced</p>
             </div>
         </div>
