@@ -1,11 +1,7 @@
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>GITTA Map Projections</title>
-        <link rel='stylesheet' href='app.css' type='text/css'/>
-        <link rel='stylesheet' href='stretch_widget.css' type='text/css'/>
-	</head>
-	<body>
+<template>
+  <div>
+    <h1>Advanced</h1>
+
 		<div id ="controls">
         <header>
         GITTA Map Projector
@@ -459,28 +455,14 @@
 		
 
 		</script>
-    <footer>
+  </div>
+</template>
 
-    <p>GITTA Map Projector has been developed for the <a href="http://www.gitta.info/website/en/html/index.html">GITTA learning platform</a> <br>
-    © Magnus Heitzler, Institute of Cartography and Geoinformation, ETH Zurich (2019)<br>
-    license: <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3</a></p>
+<script>
+export default {
+  name: 'Advanced'
+}
+</script>
 
-    </footer> 
-    <!-- Default Statcounter code for GITTA-MP
-    https://gevian.github.io/GITTA-MP/advanced.html -->
-    <script type="text/javascript">
-    var sc_project=11994579; 
-    var sc_invisible=0; 
-    var sc_security="1506e497"; 
-    var sc_https=1; 
-    var scJsHost = "https://";
-    document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-    "statcounter.com/counter/counter.js'></"+"script>");
-    </script>
-    <noscript><div class="statcounter"><a title="Web Analytics"
-    href="https://statcounter.com/" target="_blank"><img class="statcounter"
-    src="https://c.statcounter.com/11994579/0/1506e497/0/" alt="Web
-    Analytics"></a></div></noscript>
-    <!-- End of Statcounter Code -->
-	</body>
-</html>
+<style scoped>
+</style>
