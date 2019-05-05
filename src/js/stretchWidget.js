@@ -20,9 +20,8 @@ Parts of this code are based on the d3-extended library (MIT).
 https://github.com/wbkd/d3-extended (05.02.2019)
 */
 
-import StretchEditControls from "./stretchEditControls.js";
-
 import * as d3 from "d3";
+import StretchEditControls from "./stretchEditControls.js";
 
 function StretchWidget(
   graphContainer,
@@ -36,8 +35,8 @@ function StretchWidget(
   if (maxTarget == undefined) maxTarget = 4.0;
 
   //
-  d3.selection.prototype.moveToBack = function() {
-    return this.each(function() {
+  d3.selection.prototype.moveToBack = function () {
+    return this.each(function () {
       var firstChild = this.parentNode.firstChild;
       if (firstChild) {
         this.parentNode.insertBefore(this, firstChild);
@@ -45,8 +44,8 @@ function StretchWidget(
     });
   };
 
-  d3.selection.prototype.moveToFront = function() {
-    return this.each(function() {
+  d3.selection.prototype.moveToFront = function () {
+    return this.each(function () {
       this.parentNode.appendChild(this);
     });
   };
@@ -72,12 +71,12 @@ function StretchWidget(
     .attr(
       "viewBox",
       -this.widgetMargin +
-        " " +
-        -this.widgetMargin +
-        " " +
-        (this.widgetWidth + 2 * this.widgetMargin) +
-        " " +
-        (this.widgetHeight + 2 * this.widgetMargin)
+      " " +
+      -this.widgetMargin +
+      " " +
+      (this.widgetWidth + 2 * this.widgetMargin) +
+      " " +
+      (this.widgetHeight + 2 * this.widgetMargin)
     )
     .attr("width", this.widgetWidth + 2 * this.widgetMargin)
     .attr("height", this.widgetHeight + 2 * this.widgetMargin);
@@ -102,7 +101,7 @@ function StretchWidget(
 
   this.ebtn.onclick = this.editButtonClicked.bind(this);
 
-  document.getElementById("sw").oncontextmenu = function() {
+  document.getElementById("sw").oncontextmenu = function () {
     return false;
   };
 
@@ -117,20 +116,20 @@ function StretchWidget(
   this.enable();
 }
 
-StretchWidget.prototype.setState = function(state) {
+StretchWidget.prototype.setState = function (state) {
   if (this.state == state) return;
 
   this.state = state;
   this.sendSignal("state changed", state);
 };
 
-StretchWidget.prototype.setRange = function(maxSource, minTarget, maxTarget) {
+StretchWidget.prototype.setRange = function (maxSource, minTarget, maxTarget) {
   this.maxSource = maxSource;
   this.maxTarget = maxTarget;
   this.minTarget = minTarget;
 };
 
-StretchWidget.prototype.editButtonClicked = function() {
+StretchWidget.prototype.editButtonClicked = function () {
   if (this.state == "enabled") {
     this.enableEditing();
     this.et.nodeValue = "stop editing";
@@ -145,22 +144,22 @@ StretchWidget.prototype.editButtonClicked = function() {
   }
 };
 
-StretchWidget.prototype.resetButtonClicked = function() {
+StretchWidget.prototype.resetButtonClicked = function () {
   if (this.state == "stretched" || this.state == "enabled")
     this.resetStretch(this.defaultDuration);
 };
 
-StretchWidget.prototype.addCallback = function(callback) {
+StretchWidget.prototype.addCallback = function (callback) {
   this.callbacks.push(callback);
 };
 
-StretchWidget.prototype.sendSignal = function(name, data) {
+StretchWidget.prototype.sendSignal = function (name, data) {
   for (var i = 0; i < this.callbacks.length; i++) {
     this.callbacks[i](name, data);
   }
 };
 
-StretchWidget.prototype.enable = function() {
+StretchWidget.prototype.enable = function () {
   this.svg.selectAll("*").remove();
 
   this.svg.classed("sw-enabled", true);
@@ -175,7 +174,7 @@ StretchWidget.prototype.enable = function() {
   this.setState("enabled");
 };
 
-StretchWidget.prototype.disable = function() {
+StretchWidget.prototype.disable = function () {
   this.svg.selectAll("*").remove();
 
   this.svg.classed("sw-enabled", false);
@@ -188,7 +187,7 @@ StretchWidget.prototype.disable = function() {
   // this.setState("disabled");
 };
 
-StretchWidget.prototype.drawGrid = function(maxSource, minTarget, maxTarget) {
+StretchWidget.prototype.drawGrid = function (maxSource, minTarget, maxTarget) {
   var x = d3.scaleLinear().range([0, this.widgetWidth]);
   var y = d3.scaleLinear().range([this.widgetHeight, 0]);
   var xAxis = d3.axisBottom().scale(x);
@@ -255,7 +254,7 @@ StretchWidget.prototype.drawGrid = function(maxSource, minTarget, maxTarget) {
     .call(xLine);
 };
 
-StretchWidget.prototype.setStretchPoints = function(stretchPoints) {
+StretchWidget.prototype.setStretchPoints = function (stretchPoints) {
   this.stretchPoints = stretchPoints;
 
   this.svg.selectAll(".stretch-point").remove();
@@ -266,10 +265,10 @@ StretchWidget.prototype.setStretchPoints = function(stretchPoints) {
     .enter()
     .append("circle")
     .classed("stretch-point", true)
-    .attr("cx", function(d) {
+    .attr("cx", function (d) {
       return d.source;
     })
-    .attr("cy", function(d) {
+    .attr("cy", function (d) {
       d3.select(this).moveToBack();
       return d.target;
     })
@@ -290,56 +289,56 @@ StretchWidget.prototype.setStretchPoints = function(stretchPoints) {
   this.sendSignal("stretch changed", stretchInstructions);
 };
 
-StretchWidget.prototype.stretched2normalized = function(p) {
+StretchWidget.prototype.stretched2normalized = function (p) {
   return {
     source: p.source / this.maxSource,
     target: (p.target - this.minTarget) / (this.maxTarget - this.minTarget)
   };
 };
 
-StretchWidget.prototype.normalized2stretched = function(p) {
+StretchWidget.prototype.normalized2stretched = function (p) {
   return {
     source: p.source * this.maxSource,
     target: p.target * (this.maxTarget - this.minTarget) + this.minTarget
   };
 };
 
-StretchWidget.prototype.normalized2diagram = function(p) {
+StretchWidget.prototype.normalized2diagram = function (p) {
   return {
     source: p.source * this.widgetWidth,
     target: (1 - p.target) * this.widgetHeight
   };
 };
 
-StretchWidget.prototype.diagram2normalized = function(p) {
+StretchWidget.prototype.diagram2normalized = function (p) {
   return {
     source: p.source / this.widgetWidth,
     target: (p.target - this.widgetHeight) / -this.widgetHeight
   };
 };
 
-StretchWidget.prototype.stretched2diagram = function(p) {
+StretchWidget.prototype.stretched2diagram = function (p) {
   return this.normalized2diagram(this.stretched2normalized(p));
 };
 
-StretchWidget.prototype.diagram2stretched = function(p) {
+StretchWidget.prototype.diagram2stretched = function (p) {
   return this.normalized2stretched(this.diagram2normalized(p));
 };
 
-StretchWidget.prototype.enableEditing = function() {
+StretchWidget.prototype.enableEditing = function () {
   this.editControls = new StretchEditControls(this);
 };
 
-StretchWidget.prototype.disableEditing = function() {
+StretchWidget.prototype.disableEditing = function () {
   this.editControls.destroy();
   this.editControls = null;
 };
 
-StretchWidget.prototype.resetStretch = function(duration) {
+StretchWidget.prototype.resetStretch = function (duration) {
   this.startStretchAnimations("identity", duration);
 };
 
-StretchWidget.prototype.getPresetStretchPoints = function(name) {
+StretchWidget.prototype.getPresetStretchPoints = function (name) {
   if (name == "identity") {
     var stretchPoints = [];
     for (var i = 0; i < this.numStretchPoints + 1; i++) {
@@ -376,7 +375,7 @@ StretchWidget.prototype.getPresetStretchPoints = function(name) {
   }
 };
 
-StretchWidget.prototype.startStretchAnimations = function(name, duration) {
+StretchWidget.prototype.startStretchAnimations = function (name, duration) {
   this.duration = duration;
   var pts = this.getPresetStretchPoints(name);
 
@@ -399,7 +398,7 @@ StretchWidget.prototype.startStretchAnimations = function(name, duration) {
   this.ebtn.disabled = true;
 };
 
-StretchWidget.prototype.update = function(delta) {
+StretchWidget.prototype.update = function (delta) {
   if (!(this.state == "stretching" || this.state == "unstretching")) return;
 
   var allFinished = true;

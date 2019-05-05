@@ -47,7 +47,7 @@ function LineProjector(glcanvas, surface, earth, projectionCenter) {
   //this.enableConstructionLines();
 }
 
-LineProjector.prototype.setManualProjectionLine = function(event) {
+LineProjector.prototype.setManualProjectionLine = function (event) {
   event.preventDefault();
 
   if (!event.shiftKey) return;
@@ -82,7 +82,7 @@ LineProjector.prototype.setManualProjectionLine = function(event) {
 };
 
 // TODO: Improve
-LineProjector.prototype.constructLines = function(offsetLat, offsetLon) {
+LineProjector.prototype.constructLines = function (offsetLat, offsetLon) {
   for (var lat = -90; lat <= 90; lat += offsetLat) {
     for (var lon = -180; lon <= 180; lon += offsetLon) {
       var latRadian = (lat / 180) * 2 * Math.PI;
@@ -108,34 +108,34 @@ LineProjector.prototype.constructLines = function(offsetLat, offsetLon) {
   }
 };
 
-LineProjector.prototype.enableLines = function() {
+LineProjector.prototype.enableLines = function () {
   this.manualLine.enable();
 
   this.enableConstructionLines();
 };
 
-LineProjector.prototype.disableLines = function() {
+LineProjector.prototype.disableLines = function () {
   this.manualLine.disable();
 
   this.disableConstructionLines();
 };
 
-LineProjector.prototype.enableConstructionLines = function() {
-  for (var i = 0; i < this.constructionLines.length; i++) {
+LineProjector.prototype.enableConstructionLines = function () {
+  for (let i = 0; i < this.constructionLines.length; i++) {
     this.constructionLines[i].enable();
   }
 };
 
-LineProjector.prototype.disableConstructionLines = function() {
-  for (var i = 0; i < this.constructionLines.length; i++) {
+LineProjector.prototype.disableConstructionLines = function () {
+  for (let i = 0; i < this.constructionLines.length; i++) {
     this.constructionLines[i].disable();
   }
 };
 
-LineProjector.prototype.updateLines = function() {
+LineProjector.prototype.updateLines = function () {
   this.manualLine.update();
 
-  for (var i = 0; i < this.constructionLines.length; i++) {
+  for (let i = 0; i < this.constructionLines.length; i++) {
     this.constructionLines[i].update();
   }
 };
@@ -166,10 +166,8 @@ function ProjectionLine(
   this.update();
 }
 
-ProjectionLine.prototype.update = function() {
+ProjectionLine.prototype.update = function () {
   if (this.state == "Disabled") return;
-
-  var projectionWorldPosition = this.projectionCenter.torus.getWorldPosition();
 
   // calculate torus location
   var torusLocationV3 = new THREE.Vector3(-this.target.x, 0.0, -this.target.z)
@@ -235,17 +233,17 @@ ProjectionLine.prototype.update = function() {
   this.lineGeometry.verticesNeedUpdate = true;
 };
 
-ProjectionLine.prototype.enable = function() {
+ProjectionLine.prototype.enable = function () {
   this.scene.add(this.line);
   this.state = "Enabled";
 };
 
-ProjectionLine.prototype.disable = function() {
+ProjectionLine.prototype.disable = function () {
   this.scene.remove(this.line);
   this.state = "Disabled";
 };
 
-ProjectionLine.prototype.reset = function() {
+ProjectionLine.prototype.reset = function () {
   this.lineGeometry.vertices[0] = new THREE.Vector3();
   this.lineGeometry.vertices[1] = new THREE.Vector3();
 

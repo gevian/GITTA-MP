@@ -36,7 +36,7 @@ function CutIndicator(surface, scene) {
   this.updateGeometry();
 }
 
-CutIndicator.prototype.updateGeometry = function() {
+CutIndicator.prototype.updateGeometry = function () {
   var ll = new THREE.Vector3();
   ll.fromBufferAttribute(
     this.surface.stripes[0].bufferGeometry.attributes.position,

@@ -20,6 +20,8 @@ Parts of this code are based on the Transfer Function Widget 1.0 by © 2015 Qing
 http://vis.pku.edu.cn/people/qingyashu/tools/tfwidget/ (05.02.2019)
 */
 
+import * as d3 from 'd3';
+
 function StretchEditControls(stretchWidget) {
   this.stretchWidget = stretchWidget;
   this.g = this.stretchWidget.svg.append("g").attr("id", "stretch-controls");
@@ -44,13 +46,11 @@ function StretchEditControls(stretchWidget) {
   this.tmpHandle2Source = null;
   this.tmpHandle2Target = null;
 
-  var creatingNewPointPos = {};
-
   this.initializeControls();
   this.refresh();
 
   var _this = this;
-  this.stretchWidget.svg.on("mousedown", function(e) {
+  this.stretchWidget.svg.on("mousedown", function () {
     var mousePos = d3.mouse(this);
     switch (d3.event.which) {
       case 1:
@@ -59,23 +59,23 @@ function StretchEditControls(stretchWidget) {
   });
 }
 
-StretchEditControls.prototype.destroy = function() {
+StretchEditControls.prototype.destroy = function () {
   this.g.remove();
 };
 
-StretchEditControls.prototype.handleIdx2circleIdx = function(i) {
+StretchEditControls.prototype.handleIdx2circleIdx = function (i) {
   return Math.ceil(i / 2.0);
 };
 
-StretchEditControls.prototype.circleIdx2handleIdx = function(i) {
+StretchEditControls.prototype.circleIdx2handleIdx = function (i) {
   return [i * 2 - 1, i * 2];
 };
 
-StretchEditControls.prototype.clamp = function(num) {
+StretchEditControls.prototype.clamp = function (num) {
   return Math.min(Math.max(num, 0.0), this.stretchWidget.widgetHeight);
 };
 
-StretchEditControls.prototype.initializeControls = function() {
+StretchEditControls.prototype.initializeControls = function () {
   this.controlPoints = [];
   this.handles = [];
 
@@ -101,7 +101,7 @@ StretchEditControls.prototype.initializeControls = function() {
   this.handles.push(this.stretchWidget.stretched2diagram(h1));
 };
 
-StretchEditControls.prototype.refresh = function() {
+StretchEditControls.prototype.refresh = function () {
   this.drawPath();
   this.drawControlPoints();
   this.drawHandles();
@@ -109,14 +109,14 @@ StretchEditControls.prototype.refresh = function() {
   this.computeStretchPoints();
 };
 
-StretchEditControls.prototype.drawPath = function() {
+StretchEditControls.prototype.drawPath = function () {
   this.g.select("#target-curve").remove();
 
   this.g
     .append("path")
     .attr(
       "d",
-      function() {
+      function () {
         var str = "M0," + this.controlPoints[0].target;
         for (var i = 0; i < this.controlPoints.length - 1; i++) {
           var nextPoint = this.controlPoints[i + 1];
@@ -149,7 +149,7 @@ StretchEditControls.prototype.drawPath = function() {
     .attr("id", "target-curve");
 };
 
-StretchEditControls.prototype.drawControlPoints = function() {
+StretchEditControls.prototype.drawControlPoints = function () {
   var _this = this;
 
   function dragstart(d, i) {
@@ -183,7 +183,7 @@ StretchEditControls.prototype.drawControlPoints = function() {
 
   function dragmove(d, i) {
     d3.select(this)
-      .attr("cx", function() {
+      .attr("cx", function () {
         if (i != 0 && i != _this.controlPoints.length - 1) {
           _this.deltaX += d3.event.dx;
           var previousX = _this.controlPoints[i - 1].source;
@@ -222,7 +222,7 @@ StretchEditControls.prototype.drawControlPoints = function() {
           return _this.controlPoints[i].source;
         }
       })
-      .attr("cy", function() {
+      .attr("cy", function () {
         if (i != 0 && i != _this.controlPoints.length - 1) {
           _this.deltaY += d3.event.dy;
           var previousY = _this.controlPoints[i - 1].target;
@@ -274,7 +274,7 @@ StretchEditControls.prototype.drawControlPoints = function() {
 
   var drag = d3
     .drag()
-    .subject(function(d) {
+    .subject(function (d) {
       return d;
     })
     .on("start", dragstart)
@@ -289,15 +289,15 @@ StretchEditControls.prototype.drawControlPoints = function() {
     .enter()
     .append("circle")
     .classed("control-point", true)
-    .attr("cx", function(d) {
+    .attr("cx", function (d) {
       return d.source;
     })
-    .attr("cy", function(d) {
+    .attr("cy", function (d) {
       return d.target;
     })
     .attr("r", this.circleRadius)
     .call(drag)
-    .on("mousedown", function(d, i) {
+    .on("mousedown", function (d, i) {
       if (d3.event.which == 3) {
         _this.removeControlPoint(i);
         _this.computeStretchPoints();
@@ -305,7 +305,7 @@ StretchEditControls.prototype.drawControlPoints = function() {
     });
 };
 
-StretchEditControls.prototype.drawHandles = function() {
+StretchEditControls.prototype.drawHandles = function () {
   var _this = this;
 
   function dragstartHandle(d, i) {
@@ -317,26 +317,16 @@ StretchEditControls.prototype.drawHandles = function() {
 
   function dragmoveHandle(d, i) {
     d3.select(this)
-      .attr("cx", function() {
+      .attr("cx", function () {
         _this.deltaXHandle += d3.event.dx;
-        if (i == 0) var previousX = 0;
-        else var previousX = _this.handles[i - 1].source;
-
-        if (i == _this.handles.length - 1) var nextX = 1;
-        else var nextX = _this.handles[i + 1].source;
 
         _this.handles[i].source = _this.tmpSourceHandle + _this.deltaXHandle;
 
         _this.handles[i].source = _this.clamp(_this.handles[i].source);
         return _this.handles[i].source;
       })
-      .attr("cy", function() {
+      .attr("cy", function () {
         _this.deltaYHandle += d3.event.dy;
-        if (i == 0) var previousY = 0;
-        else var previousY = _this.handles[i - 1].target;
-
-        if (i == _this.handles.length - 1) var nextY = 1;
-        else var nextY = _this.handles[i + 1].target;
 
         _this.handles[i].target = _this.tmpTargetHandle + _this.deltaYHandle;
 
@@ -354,7 +344,7 @@ StretchEditControls.prototype.drawHandles = function() {
 
   var dragHandle = d3
     .drag()
-    .subject(function(d) {
+    .subject(function (d) {
       return d;
     })
     .on("start", dragstartHandle)
@@ -369,17 +359,17 @@ StretchEditControls.prototype.drawHandles = function() {
     .enter()
     .append("circle")
     .classed("handle-point", true)
-    .attr("cx", function(d) {
+    .attr("cx", function (d) {
       return d.source;
     })
-    .attr("cy", function(d) {
+    .attr("cy", function (d) {
       return d.target;
     })
     .attr("r", this.circleRadius)
     .call(dragHandle);
 };
 
-StretchEditControls.prototype.drawHandleLines = function() {
+StretchEditControls.prototype.drawHandleLines = function () {
   var _this = this;
   this.g.selectAll(".handle-line").remove();
 
@@ -389,22 +379,22 @@ StretchEditControls.prototype.drawHandleLines = function() {
     .enter()
     .append("line")
     .classed("handle-line", true)
-    .attr("x1", function(d, i) {
+    .attr("x1", function (d, i) {
       return d.source;
     })
-    .attr("x2", function(d, i) {
+    .attr("x2", function (d, i) {
       return _this.controlPoints[_this.handleIdx2circleIdx(i)].source;
     })
-    .attr("y1", function(d, i) {
+    .attr("y1", function (d, i) {
       return d.target;
     })
-    .attr("y2", function(d, i) {
+    .attr("y2", function (d, i) {
       d3.select(this).moveToBack();
       return _this.controlPoints[_this.handleIdx2circleIdx(i)].target;
     });
 };
 
-StretchEditControls.prototype.addControlPoint = function(source, target) {
+StretchEditControls.prototype.addControlPoint = function (source, target) {
   var p = this.stretchWidget.diagram2normalized({
     source: source,
     target: target
@@ -440,13 +430,10 @@ StretchEditControls.prototype.addControlPoint = function(source, target) {
 
   this.handles.splice(rightHandleX1Idx, 0, leftHandle, rightHandle);
 
-  var leftIdx = leftHandleX2Idx;
-  var rightIdx = rightHandleX1Idx + 2;
-
   this.refresh();
 };
 
-StretchEditControls.prototype.removeControlPoint = function(i) {
+StretchEditControls.prototype.removeControlPoint = function (i) {
   if (i == 0 || i == this.controlPoints.length - 1) return;
   this.controlPoints.splice(i, 1);
   var [handleIdx1, handleIdx2] = this.circleIdx2handleIdx(i);
@@ -455,7 +442,7 @@ StretchEditControls.prototype.removeControlPoint = function(i) {
   this.refresh();
 };
 
-StretchEditControls.prototype.computeStretchPoints = function() {
+StretchEditControls.prototype.computeStretchPoints = function () {
   var pathEl = this.g.select("#target-curve").node();
   var pathLength = pathEl.getTotalLength();
 
@@ -498,7 +485,7 @@ StretchEditControls.prototype.computeStretchPoints = function() {
         pts.push(pt);
       }
     }
-    pts.sort(function(a, b) {
+    pts.sort(function (a, b) {
       a.y - b.y;
     });
 
@@ -510,7 +497,7 @@ StretchEditControls.prototype.computeStretchPoints = function() {
 };
 
 // source: GPL3 (https://bl.ocks.org/bricof/f1f5b4d4bc02cad4dea454a3c5ff8ad7)
-StretchEditControls.prototype.line_line_intersect = function(line1, line2) {
+StretchEditControls.prototype.line_line_intersect = function (line1, line2) {
   var x1 = line1.x1,
     x2 = line1.x2,
     x3 = line2.x1,
@@ -541,7 +528,7 @@ StretchEditControls.prototype.line_line_intersect = function(line1, line2) {
   }
 };
 
-StretchEditControls.prototype.btwn = function(a, b1, b2) {
+StretchEditControls.prototype.btwn = function (a, b1, b2) {
   if (a >= b1 && a <= b2) {
     return true;
   }

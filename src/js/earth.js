@@ -95,27 +95,27 @@ function Earth(scene, renderer) {
   this.scene.add(this.earthMesh);
 }
 
-Earth.prototype.enableBordersTexture = function() {
+Earth.prototype.enableBordersTexture = function () {
   this.earthMesh.material.uniforms.tCountries.value = this.countriesTexture;
 };
 
-Earth.prototype.disableBordersTexture = function() {
+Earth.prototype.disableBordersTexture = function () {
   this.earthMesh.material.uniforms.tCountries.value = this.emptyTexture;
 };
 
-Earth.prototype.enableGraticuleTexture = function() {
+Earth.prototype.enableGraticuleTexture = function () {
   this.earthMesh.material.uniforms.tGraticule.value = this.graticuleTexture;
 };
 
-Earth.prototype.disableGraticuleTexture = function() {
+Earth.prototype.disableGraticuleTexture = function () {
   this.earthMesh.material.uniforms.tGraticule.value = this.emptyTexture;
 };
 
-Earth.prototype.enableTissotTexture = function() {
+Earth.prototype.enableTissotTexture = function () {
   this.earthMesh.material.uniforms.tTissot.value = this.tissotTexture;
 };
 
-Earth.prototype.disableTissotTexture = function() {
+Earth.prototype.disableTissotTexture = function () {
   this.earthMesh.material.uniforms.tTissot.value = this.emptyTexture;
 };
 

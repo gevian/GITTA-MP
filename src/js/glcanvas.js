@@ -53,7 +53,7 @@ function GLCanvas(canvas_id) {
 
   this.scene.add(new THREE.AmbientLight(0x111111));
 
-  this.orbitControls.addEventListener("change", function() {
+  this.orbitControls.addEventListener("change", function () {
     var p = _this.camera.position;
     _this.light.position.set(p.x, p.y + 1, p.z);
   });
@@ -76,7 +76,7 @@ function GLCanvas(canvas_id) {
   //this.scene.add( axisHelper );
 }
 
-GLCanvas.prototype.update = function(delta) {
+GLCanvas.prototype.update = function (delta) {
   this.renderer.render(this.scene, this.camera);
   this.orbitControls.update(delta);
 };

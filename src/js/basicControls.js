@@ -120,11 +120,13 @@ function Controls(
     var x_vec2 = x - x_ortho;
     var y_vec2 = y - y_ortho;
 
+    var alpha, intersection_y, y_vec1_red, y_vec2_red;
+    
     if (x_vec1 < 0) {
-      var alpha = Math.atan2(x, y);
-      var intersection_y = r / Math.cos(alpha);
+      alpha = Math.atan2(x, y);
+      intersection_y = r / Math.cos(alpha);
 
-      var y_vec1_red = y_vec1 - intersection_y;
+      y_vec1_red = y_vec1 - intersection_y;
 
       x_vec2 -= x_vec1;
       y_vec2 -= y_vec1_red;
@@ -134,10 +136,10 @@ function Controls(
     }
 
     if (x_vec2 < 0) {
-      var alpha = Math.atan2(x, y);
-      var intersection_y = r / Math.cos(alpha);
+      alpha = Math.atan2(x, y);
+      intersection_y = r / Math.cos(alpha);
 
-      var y_vec2_red = y_vec2 - intersection_y;
+      y_vec2_red = y_vec2 - intersection_y;
 
       x_vec1 -= x_vec2;
       y_vec1 -= y_vec2_red;
@@ -162,7 +164,7 @@ function Controls(
     _this.geometryOffsetSlider.oninput();
   }
 
-  function positionSliderChanged(event) {
+  function positionSliderChanged() {
     _this.positionBox.oninput = null;
     _this.positionBox.value = _this.positionSlider.value;
     _this.positionBox.oninput = positionBoxChanged;
@@ -170,7 +172,7 @@ function Controls(
     computeGeometryValues();
   }
 
-  function positionBoxChanged(event) {
+  function positionBoxChanged() {
     _this.positionSlider.oninput = null;
     _this.positionSlider.value = _this.positionBox.value;
     _this.positionSlider.oninput = positionSliderChanged;
@@ -178,7 +180,7 @@ function Controls(
     computeGeometryValues();
   }
 
-  function radiusSliderChanged(event) {
+  function radiusSliderChanged() {
     _this.radiusBox.oninput = null;
     _this.radiusBox.value = _this.radiusSlider.value;
     _this.radiusBox.oninput = radiusBoxChanged;
@@ -186,7 +188,7 @@ function Controls(
     computeGeometryValues();
   }
 
-  function radiusBoxChanged(event) {
+  function radiusBoxChanged() {
     _this.radiusSlider.oninput = null;
     _this.radiusSlider.value = _this.radiusBox.value;
     _this.radiusSlider.oninput = radiusSliderChanged;
@@ -194,7 +196,7 @@ function Controls(
     computeGeometryValues();
   }
 
-  function orientationSliderChanged(event) {
+  function orientationSliderChanged() {
     _this.latBox.oninput = null;
     _this.lonBox.oninput = null;
     _this.rotBox.oninput = null;
@@ -222,7 +224,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function orientationBoxChanged(event) {
+  function orientationBoxChanged() {
     _this.latSlider.oninput = null;
     _this.lonSlider.oninput = null;
     _this.rotSlider.oninput = null;
@@ -250,7 +252,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function axisSliderChanged(event) {
+  function axisSliderChanged() {
     _this.axisBox.oninput = null;
     _this.axisBox.value = _this.axisSlider.value;
     _this.axisBox.oninput = axisBoxChanged;
@@ -260,7 +262,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function axisBoxChanged(event) {
+  function axisBoxChanged() {
     _this.axisSlider.oninput = null;
     _this.axisSlider.value = _this.axisBox.value;
     _this.axisSlider.oninput = axisSliderChanged;
@@ -270,7 +272,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function upperRadiusSliderChanged(event) {
+  function upperRadiusSliderChanged() {
     _this.upperRadiusBox.oninput = null;
     _this.upperRadiusBox.value = _this.upperRadiusSlider.value;
     _this.upperRadiusBox.oninput = upperRadiusBoxChanged;
@@ -280,7 +282,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function upperRadiusBoxChanged(event) {
+  function upperRadiusBoxChanged() {
     _this.upperRadiusSlider.oninput = null;
     _this.upperRadiusSlider.value = _this.upperRadiusBox.value;
     _this.upperRadiusSlider.oninput = upperRadiusSliderChanged;
@@ -290,7 +292,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function lowerRadiusSliderChanged(event) {
+  function lowerRadiusSliderChanged() {
     _this.lowerRadiusBox.oninput = null;
     _this.lowerRadiusBox.value = _this.lowerRadiusSlider.value;
     _this.lowerRadiusBox.oninput = lowerRadiusBoxChanged;
@@ -300,7 +302,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function lowerRadiusBoxChanged(event) {
+  function lowerRadiusBoxChanged() {
     _this.lowerRadiusSlider.oninput = null;
     _this.lowerRadiusSlider.value = _this.lowerRadiusBox.value;
     _this.lowerRadiusSlider.oninput = lowerRadiusSliderChanged;
@@ -310,7 +312,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function geometryOffsetSliderChanged(event) {
+  function geometryOffsetSliderChanged() {
     _this.geometryOffsetBox.oninput = null;
     _this.geometryOffsetBox.value = _this.geometryOffsetSlider.value;
     _this.geometryOffsetBox.oninput = geometryOffsetBoxChanged;
@@ -320,7 +322,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function geometryOffsetBoxChanged(event) {
+  function geometryOffsetBoxChanged() {
     _this.geometryOffsetSlider.oninput = null;
     _this.geometryOffsetSlider.value = _this.geometryOffsetBox.value;
     _this.geometryOffsetSlider.oninput = geometryOffsetSliderChanged;
@@ -330,7 +332,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function lightSourceOffsetSliderChanged(event) {
+  function lightSourceOffsetSliderChanged() {
     _this.lightSourceOffsetBox.oninput = null;
     _this.lightSourceOffsetBox.value = _this.lightSourceOffsetSlider.value;
     _this.lightSourceOffsetBox.oninput = lightSourceOffsetBoxChanged;
@@ -343,7 +345,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function lightSourceOffsetBoxChanged(event) {
+  function lightSourceOffsetBoxChanged() {
     _this.lightSourceOffsetSlider.oninput = null;
     _this.lightSourceOffsetSlider.value = _this.lightSourceOffsetBox.value;
     _this.lightSourceOffsetSlider.oninput = lightSourceOffsetSliderChanged;
@@ -356,7 +358,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function lightSourceScaleSliderChanged(event) {
+  function lightSourceScaleSliderChanged() {
     _this.lightSourceScaleBox.oninput = null;
     _this.lightSourceScaleBox.value = _this.lightSourceScaleSlider.value;
     _this.lightSourceScaleBox.oninput = lightSourceScaleBoxChanged;
@@ -369,7 +371,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function lightSourceScaleBoxChanged(event) {
+  function lightSourceScaleBoxChanged() {
     _this.lightSourceScaleSlider.oninput = null;
     _this.lightSourceScaleSlider.value = _this.lightSourceScaleBox.value;
     _this.lightSourceScaleSlider.oninput = lightSourceScaleSliderChanged;
@@ -382,7 +384,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function lightSourceLatitudeSliderChanged(event) {
+  function lightSourceLatitudeSliderChanged() {
     _this.lightSourceLatitudeBox.oninput = null;
     _this.lightSourceLatitudeBox.value = _this.lightSourceLatitudeSlider.value;
     _this.lightSourceLatitudeBox.oninput = lightSourceLatitudeBoxChanged;
@@ -397,7 +399,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function lightSourceLatitudeBoxChanged(event) {
+  function lightSourceLatitudeBoxChanged() {
     _this.lightSourceLatitudeSlider.oninput = null;
     _this.lightSourceLatitudeSlider.value = _this.lightSourceLatitudeBox.value;
     _this.lightSourceLatitudeSlider.oninput = lightSourceLatitudeSliderChanged;
@@ -412,7 +414,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function lightSourceLongitudeSliderChanged(event) {
+  function lightSourceLongitudeSliderChanged() {
     _this.lightSourceLongitudeBox.oninput = null;
     _this.lightSourceLongitudeBox.value =
       _this.lightSourceLongitudeSlider.value;
@@ -428,7 +430,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function lightSourceLongitudeBoxChanged(event) {
+  function lightSourceLongitudeBoxChanged() {
     _this.lightSourceLongitudeSlider.oninput = null;
     _this.lightSourceLongitudeSlider.value =
       _this.lightSourceLongitudeBox.value;
@@ -444,7 +446,7 @@ function Controls(
     _this.LineProjector.updateLines();
   }
 
-  function bordersChanged(event) {
+  function bordersChanged() {
     if (_this.bordersCheckbox.checked) {
       _this.earth.enableBordersTexture();
       _this.surface.enableBordersTexture();
@@ -454,7 +456,7 @@ function Controls(
     }
   }
 
-  function graticuleChanged(event) {
+  function graticuleChanged() {
     if (_this.graticuleCheckbox.checked) {
       _this.earth.enableGraticuleTexture();
       _this.surface.enableGraticuleTexture();
@@ -464,7 +466,7 @@ function Controls(
     }
   }
 
-  function tissotChanged(event) {
+  function tissotChanged() {
     if (_this.tissotCheckbox.checked) {
       _this.earth.enableTissotTexture();
       _this.surface.enableTissotTexture();
@@ -475,32 +477,31 @@ function Controls(
   }
 }
 
-Controls.prototype.disableForms = function() {
+Controls.prototype.disableForms = function () {
   var fieldsets = [];
   fieldsets.push(document.getElementById("geometry-fieldset"));
   fieldsets.push(document.getElementById("simple-geometry-fieldset"));
 
-  for (var i = 0; i < fieldsets.length; i++) {
+  for (let i = 0; i < fieldsets.length; i++) {
     fieldsets[i].disabled = true;
   }
 };
 
-Controls.prototype.enableForms = function() {
+Controls.prototype.enableForms = function () {
   var fieldsets = [];
   fieldsets.push(document.getElementById("geometry-fieldset"));
   fieldsets.push(document.getElementById("simple-geometry-fieldset"));
 
-  for (var i = 0; i < fieldsets.length; i++) {
+  for (let i = 0; i < fieldsets.length; i++) {
     fieldsets[i].disabled = false;
   }
 };
 
-Controls.prototype.flattenedToRolled = function(roll) {
+Controls.prototype.flattenedToRolled = function (roll) {
   this.enableForms();
 
   var tutButtons = document.querySelectorAll(".tut-button button");
-
-  for (var i = 0; i < tutButtons.length; i++) {
+  for (let i = 0; i < tutButtons.length; i++) {
     tutButtons[i].removeAttribute("disabled");
   }
 
@@ -508,7 +509,7 @@ Controls.prototype.flattenedToRolled = function(roll) {
     ".tut-button-scaling button"
   );
 
-  for (var i = 0; i < tutButtonsScaling.length; i++) {
+  for (let i = 0; i < tutButtonsScaling.length; i++) {
     tutButtonsScaling[i].setAttribute("disabled", "disabled");
   }
 
@@ -522,12 +523,12 @@ Controls.prototype.flattenedToRolled = function(roll) {
   }
 };
 
-Controls.prototype.rolledToFlattened = function(roll) {
+Controls.prototype.rolledToFlattened = function (roll) {
   this.disableForms();
 
   var tutButtons = document.querySelectorAll(".tut-button button");
 
-  for (var i = 0; i < tutButtons.length; i++) {
+  for (let i = 0; i < tutButtons.length; i++) {
     tutButtons[i].setAttribute("disabled", "disabled");
   }
 
@@ -535,7 +536,7 @@ Controls.prototype.rolledToFlattened = function(roll) {
     ".tut-button-scaling button"
   );
 
-  for (var i = 0; i < tutButtonsScaling.length; i++) {
+  for (let i = 0; i < tutButtonsScaling.length; i++) {
     tutButtonsScaling[i].removeAttribute("disabled");
   }
 
@@ -551,17 +552,17 @@ Controls.prototype.rolledToFlattened = function(roll) {
   }
 };
 
-Controls.prototype.flattenedToStretched = function() {
+Controls.prototype.flattenedToStretched = function () {
   var rollButton = document.getElementById("roll-button");
   rollButton.setAttribute("disabled", "disabled");
 };
 
-Controls.prototype.stretchedToFlattened = function() {
+Controls.prototype.stretchedToFlattened = function () {
   var rollButton = document.getElementById("roll-button");
   rollButton.removeAttribute("disabled");
 };
 
-Controls.prototype.reset = function() {
+Controls.prototype.reset = function () {
   document.getElementById("simple_geometry").reset();
   document.getElementById("surface_geometry").reset();
   document.getElementById("lightsource").reset();

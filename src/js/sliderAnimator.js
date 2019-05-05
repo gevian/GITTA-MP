@@ -25,7 +25,7 @@ function SliderAnimator(controls, surface) {
   this.state = "Rolled";
 }
 
-SliderAnimator.prototype.startSliderAnimations = function(
+SliderAnimator.prototype.startSliderAnimations = function (
   instructions,
   duration
 ) {
@@ -44,14 +44,14 @@ SliderAnimator.prototype.startSliderAnimations = function(
 };
 
 // TODO: Improve increment for large step values; currently it breaks the target animation time
-SliderAnimator.prototype.update = function(delta) {
+SliderAnimator.prototype.update = function (delta) {
   if (this.state == "Animating Sliders") {
     var allFinished = true;
     for (var i = 0; i < this.instructions.length; i++) {
       var instruction = this.instructions[i];
       if (instruction.finished) continue;
 
-      var allFinished = false;
+      allFinished = false;
 
       var deltaValue = delta * instruction.changePerSecond;
       var increment =

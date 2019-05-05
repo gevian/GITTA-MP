@@ -36,7 +36,7 @@ function ProjectionCenter(scene) {
   this.scene.add(this.earthCenter);
 }
 
-ProjectionCenter.prototype.reconstructTorus = function(scale) {
+ProjectionCenter.prototype.reconstructTorus = function (scale) {
   this.scale = parseFloat(scale);
   var lcc = this.lightCenter.children;
 
@@ -57,25 +57,25 @@ ProjectionCenter.prototype.reconstructTorus = function(scale) {
   this.lightCenter.add(this.torus);
 };
 
-ProjectionCenter.prototype.setScale = function(scale) {
+ProjectionCenter.prototype.setScale = function (scale) {
   this.reconstructTorus(scale);
 };
 
-ProjectionCenter.prototype.setOrientation = function(lat, lon, rot) {
+ProjectionCenter.prototype.setOrientation = function (lat, lon, rot) {
   this.earthCenter.rotation.z = lat;
   this.earthCenter.rotation.y = lon;
   this.lightCenter.rotation.y = rot;
 };
 
-ProjectionCenter.prototype.setOffset = function(offset) {
+ProjectionCenter.prototype.setOffset = function (offset) {
   this.lightCenter.position.y = offset;
 };
 
-ProjectionCenter.prototype.setLatitude = function(rotation) {
+ProjectionCenter.prototype.setLatitude = function (rotation) {
   this.lightAnchor.rotation.z = rotation;
 };
 
-ProjectionCenter.prototype.setLongitude = function(rotation) {
+ProjectionCenter.prototype.setLongitude = function (rotation) {
   this.lightAnchor.rotation.y = rotation;
 };
 
