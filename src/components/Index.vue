@@ -1,27 +1,27 @@
 <template>
   <div>
-    <div id="intro">
+    <div class="intro">
       GITTA Map Projector
-      <p style="margin-top: 0px; font-size: 24px;">(under construction)</p>
+      <p class="description">(under construction)</p>
     </div>
 
-    <div id="selector">
+    <div class="selector">
       Please choose a version ...
       <div id="version-container">
-        <div class="version" id="basic" @click="setMode('basic')">
-          <p style="margin-bottom: 0px">Basic</p>
-        </div>
-        <div class="version" id="advanced" @click="setMode('advanced')">
-          <p>Advanced</p>
-        </div>
+        <IndexButton mode="basic" @action="setMode">Basic</IndexButton>
+        <IndexButton mode="advanced" @action="setMode">Advanced</IndexButton>
       </div>
     </div>
   </div>
 </template>
 
+
 <script>
+import IndexButton from "./IndexButton.vue";
+
 export default {
   name: "Index",
+  components: { IndexButton },
   methods: {
     setMode(mode) {
       this.$emit("setMode", mode);
@@ -31,4 +31,33 @@ export default {
 </script>
 
 <style scoped>
+.intro {
+  position: absolute;
+  top: 80px;
+  left: 80px;
+  font-size: 80px;
+  font-family: Helvetica;
+}
+
+.intro .description {
+  margin-top: 0px;
+  font-size: 24px;
+}
+
+.selector {
+  font-size: 30px;
+  font-family: Helvetica;
+
+  width: 500px;
+  height: 400px;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  margin: auto;
+  text-align: center;
+}
 </style>

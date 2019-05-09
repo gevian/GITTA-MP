@@ -357,7 +357,7 @@
         <div id="sw-controls"></div>
       </div>
     </div>
-    <div id="webgl_canvas"></div>
+    <MapCanvas />
     <div id="explanation">
       <!-- Tab links -->
       <div class="tab">
@@ -710,6 +710,8 @@ A projection similar to the Mercator projection can be constructed by placing th
 </template>
 
 <script>
+import MapCanvas from "./MapCanvas.vue"
+
 import GLCanvas from "@/js/glcanvas.js";
 import Earth from "@/js/earth.js";
 import Surface from "@/js/surface.js";
@@ -725,6 +727,9 @@ import * as THREE from "three";
 
 export default {
   name: "Advanced",
+  components: {
+    MapCanvas
+  },
   mounted() {
     var glcanvas = new GLCanvas("webgl_canvas");
 

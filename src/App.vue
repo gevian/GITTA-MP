@@ -1,14 +1,22 @@
 <template>
   <div id="app">
-    <template v-if="mode == 'index'">
-        <Index @setMode="setMode" />
-    </template>
-    <template v-else-if="mode == 'basic'">
-        <Basic />
-    </template>
-    <template v-else-if="mode == 'advanced'">
-        <Advanced />
-    </template>
+    <div class="app-container">
+        <template v-if="mode == 'index'">
+            <Index @setMode="setMode" />
+        </template>
+        <template v-else-if="mode == 'basic'">
+            <Basic />
+        </template>
+        <template v-else-if="mode == 'advanced'">
+            <Advanced />
+        </template>
+    </div>
+
+    <footer>
+      <p>GITTA Map Projector has been developed for the <a href="http://www.gitta.info/website/en/html/index.html">GITTA learning platform</a> <br>
+      © Magnus Heitzler, Institute of Cartography and Geoinformation, ETH Zurich (2019)<br>
+      license: <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3</a></p>
+    </footer>
   </div>
 </template>
 
@@ -44,25 +52,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  background-size: 500px;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
 }
 
-#main {
-    /*background-image: url(images/background.png);   
-    background-color: #fffae2;*/
-    background-size: 500px;
-    background-repeat: no-repeat;
-    
-
-    background-attachment: fixed;
-}
-
-#intro {
-    position: absolute;
-    top: 80px;
-    left: 80px;
-    font-size: 80px;
-    font-family: Helvetica;
+.app-container {
+    height: 100%;
+    padding-top: 60px;
+    padding-bottom: 20px;
 }
 
 footer {
@@ -76,24 +77,6 @@ footer {
     font-family: Helvetica;
 }
 
-
-#selector {
-    font-size: 30px;
-    font-family: Helvetica;
-    
-    width: 500px;
-    height: 400px;
-
-    position: absolute;
-    top:0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    margin: auto;
-    text-align: center;
-}
-
 #version-container
 {
     display: flex;
@@ -102,32 +85,19 @@ footer {
     padding: 20px;
 }
 
-.version {
-    width: 200px;
-    height: 100px;
-
-    justify-content: center;
-    align-items: center;
-    
-    border-radius: 25px;
-    cursor: pointer;
-}
-
-#basic {
-    background-color: #9bef8f;
-}
-
-#advanced {
-    background-color: #81bff9;
-}
-
 #info {
     font-size: 30px;
     font-family: Helvetica;
-    
     position: absolute;
     top: 20%;
     right: 80px;
+}
+
+footer {
+    display: block;
+    padding-left: 10px;
+    text-align: left;
+    font-family: Helvetica;
 }
 
 </style>

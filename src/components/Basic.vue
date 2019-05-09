@@ -359,11 +359,13 @@
         <div id="sw-controls"></div>
       </div>
     </div>
-    <div id="webgl_canvas"></div>
+    <MapCanvas />
   </div>
 </template>
 
 <script>
+import MapCanvas from "./MapCanvas.vue"
+
 import GLCanvas from "@/js/glcanvas.js";
 import Earth from "@/js/earth.js";
 import StretchWidget from "@/js/stretchWidget.js";
@@ -379,6 +381,9 @@ import * as THREE from "three";
 
 export default {
   name: "Basic",
+  components: {
+    MapCanvas
+  },
   mounted() {
     var glcanvas = new GLCanvas("webgl_canvas");
     var earth = new Earth(glcanvas.scene, glcanvas.renderer);
